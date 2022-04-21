@@ -1,0 +1,58 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Parking.Model
+{
+    public class Client: Helpes.ObservableObject
+    {
+
+        public Client()
+        {
+            Vehicles = new ObservableCollection<Vehicle>();
+            ParkingPlaces = new ObservableCollection<ParkingPlace>();
+        }
+
+        public int ClientId { get; set; }
+
+        [Column("OrganizationName", TypeName = "nvarchar")]
+        [MaxLength(50)]
+        private string orgName;
+        public string OrgName
+        {
+            get { return orgName; }
+            set
+            {
+                if (value != orgName)
+                {
+                    orgName = value;
+                    OnPropertyChanged(nameof(OrgName));
+                }
+            }
+        }
+
+        [Column("OrganizationDetals", TypeName = "nvarchar")]
+        [MaxLength(500)]
+        private string orgDetals;
+        public string OrgDetals
+        {
+            get { return orgDetals; }
+            set
+            {
+                if (value != orgDetals)
+                {
+                    orgDetals = value;
+                    OnPropertyChanged(nameof(OrgDetals));
+                }
+            }
+        }
+        public virtual Person PersonCustomer { get; set; }
+        public virtual ObservableCollection<Vehicle> Vehicles { get; set; }
+        public virtual ObservableCollection<ParkingPlace> ParkingPlaces { get; set; }
+    }
+}
