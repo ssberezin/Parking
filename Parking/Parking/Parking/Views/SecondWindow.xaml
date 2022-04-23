@@ -1,0 +1,290 @@
+﻿<Window x:Class="Parking.Views.SecondWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:Parking.Views"
+        mc:Ignorable="d"
+        Title="Стан зайнятості паркувальних місць" Height="480" Width="1000">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.06*"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" >
+            <Menu  FontSize="14" Padding="1"  VerticalAlignment="Top" Margin="0,0,0,1" >
+                <MenuItem Header="Звіти" Height="17"  VerticalAlignment="Top">
+                    <MenuItem Header="Боржники" 
+                                  Command="{Binding CopyDBCommand}"/>
+                    <MenuItem Header="Відвідування парковки ТЗ" Command="{Binding CloseMainWindow}"/>
+                    <MenuItem Header="Виручка каси"  
+                                  Command="{Binding RestoreDBCommand}"/>
+                    <MenuItem Header="Зайнятість місць" Command="{Binding CloseMainWindow}"/>
+                    
+                    <MenuItem Header="Робота користувача" Command="{Binding CloseMainWindow}"/>
+                    
+                </MenuItem>
+
+
+                
+
+                <MenuItem Header="Сервіс"  Height="17"  VerticalAlignment="Top" >
+                    <!--<MenuItem Header="Заполнить БД тестовыми данными" Command="{Binding AddTestCommand}"
+                                  VerticalAlignment="Top"/>-->
+                    <MenuItem Header="Персонал"  VerticalAlignment="Top">
+                        <MenuItem Header="Додати новго працівника" Command="{Binding AddAuthorCommand}"
+                                   VerticalAlignment="Top"/>
+                        <MenuItem Header="Список працівників" 
+                                  VerticalAlignment="Top"
+                                  Command="{Binding CallAuthorListWindowCommand}"/>
+                    </MenuItem>
+                    <MenuItem Header="Користувачі">
+                        <MenuItem Header="Додати нового користувача" Command="{Binding UsrOps.AddNewUserCommand}"
+                                  VerticalAlignment="Top"/>
+                        <MenuItem Header="Список користувачів" Command="{Binding UsrOps.ShowUsersListCommand}"
+                                  VerticalAlignment="Top"/>
+                        <MenuItem Header="Зміна користувача" Command="{Binding UsrOps.ChangeUserCommand}"
+                                        CommandParameter="{Binding ElementName=RootWindow}"
+                                  VerticalAlignment="Top"/>
+                    </MenuItem>
+                    <!--показать список клиентов не будет работать пока нормально не увязать на контекст. Да и нахер  его от сюда убрать ...-->
+                    <MenuItem Header="Список кліентів" Command="{Binding CallClientListCommand}"
+                                  VerticalAlignment="Top"/>
+                    
+                </MenuItem>
+               
+                
+                <MenuItem Header="Основні дії"  Height="17"  VerticalAlignment="Top" >
+                    <MenuItem Header="Паркувальні місця">
+                        <MenuItem Header="Додати" Command="{Binding UsrOps.AddNewUserCommand}"
+                                  VerticalAlignment="Top"  >
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"  >
+                                <xctk:IntegerUpDown   Width="50" MaxLength="4"
+                                     
+                                    Value="{Binding Client.Course, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center"
+                                    ToolTip="Год поступления"/>
+                                <Button Content="Ok" Width="30" />
+                            </StackPanel>
+                            
+                        </MenuItem>
+                        <MenuItem Header="Видалити" Command="{Binding UsrOps.ShowUsersListCommand}"
+                                  VerticalAlignment="Top"/>                        
+                    </MenuItem>
+                    <MenuItem Header="Зайняти паркувальне місце" Foreground="Green" Command="{Binding ShowTomorrowOrdersCommand}"/>
+                    <MenuItem Header="Звільнити паркувальне місце" Foreground="Brown" Command="{Binding ShowTomorrowOrdersCommand}"/>
+                </MenuItem>
+
+            </Menu>
+            <Button Content="Фільтри" Background="White" Foreground="Black"/>
+        </StackPanel>
+        <TextBlock Grid.Column ="1" Text="Інформація про авто і клієнта" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+        <TextBlock Grid.Column ="2" Text="Фото автівки" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="6">
+            <Border BorderBrush="Gray"  BorderThickness="2">
+                <StackPanel Background="LightSalmon">
+                    <StackPanel  >
+                        <TextBlock Text="Власник " FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text=" ПІБ  або назва організації" FontWeight="Bold" Foreground="Blue" FontSize="20" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center" >
+                        <TextBlock Text="№ телефона " FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text=" телефон " FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <Border BorderBrush="Gray"  BorderThickness="1">
+                <StackPanel>
+                    <StackPanel >
+                        <TextBlock Text="Довірена особа " FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text=" ПІБ  " FontWeight="Bold" Foreground="Blue" FontSize="20" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center" >
+                        <TextBlock Text="№ телефона " FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text=" телефон " FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            
+            
+                <Border BorderBrush="Gray" Background="LightBlue" BorderThickness="2">
+                    <StackPanel HorizontalAlignment="Center" >
+                        <TextBlock Text="Реэстраційний номер: " FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text=" номер держ реєстрації " FontWeight="Bold" Foreground="Green" FontSize="20"/>
+                    </StackPanel>
+                </Border>                
+                <StackPanel HorizontalAlignment="Center" >
+                    <TextBlock Text="Колір ТЗ " FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text=" колір " FontWeight="Bold" Foreground="Black" FontSize="20" HorizontalAlignment="Center"/>
+                </StackPanel>
+            
+            <Border BorderBrush="Gray"  BorderThickness="2">
+                <StackPanel HorizontalAlignment="Center" >
+                    <TextBlock Text="ТИП ТЗ " FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text=" легкова, вантажна ... " FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+            
+                <StackPanel HorizontalAlignment="Center" >
+                    <TextBlock Text="Послуга паркування дійсна до : " FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text=" дата  " FontWeight="Bold" Foreground="Blue" FontSize="20" HorizontalAlignment="Center"/>
+                </StackPanel>
+            
+            <Border BorderBrush="Gray"  BorderThickness="2">
+                <StackPanel HorizontalAlignment="Center" >
+                    <TextBlock Text="Прострочено чи ні? " FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text=" так/ні " FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>               
+        </StackPanel>
+        <ScrollViewer Grid.Column="2" Grid.Row="1">
+            <StackPanel>
+                <Grid Height="150" Margin="3">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid.Background>
+                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Height="150" Margin="3">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid.Background>
+                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Height="150" Margin="3">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid.Background>
+                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Height="150" Margin="3">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid.Background>
+                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Height="150" Margin="3">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid.Background>
+                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Height="150" Margin="3">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid.Background>
+                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Height="150" Margin="3">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid.Background>
+                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Height="150" Margin="3">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid.Background>
+                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                </Grid>
+            </StackPanel>            
+        </ScrollViewer>
+        <DataGrid x:Name="GridOrders" ItemsSource="{Binding Records}" Grid.Row="1" Grid.Column="0"
+                  SelectedItem="{Binding SelectedRecord}"                 
+                  Margin="3"            
+                  AutoGenerateColumns="False" SelectionMode="Single"
+                  IsReadOnly="True"    VerticalAlignment="Top"  >
+            <DataGrid.InputBindings>
+                <MouseBinding
+                MouseAction="LeftDoubleClick"
+                Command="{Binding EditOrderCommand}"
+                    CommandParameter="{Binding ElementName=GridOrders, Path=SelectedItem}"/>
+            </DataGrid.InputBindings>
+
+            <!--<DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    --><!--задаем фон заказам, которые разбиты на несколько подзаказов-->
+                    <!--set the background for orders that are divided into several suborders--><!--
+                    <Setter Property="Foreground"
+                           Value="{Binding Status, Converter={StaticResource StringToBrushConverter}}" />
+                    <Setter Property="Background" 
+                            Value="{Binding OrderCount ,Converter={StaticResource StringToBrushConverter}}"/>
+                    --><!--"Status" , "OrderCount" we can find in  "MainViewModel.cs"--><!--
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            --><!--задачаем фон и цвет шрифта записиси заказа со статусом "-отказ от выполнения-"-->
+                            <!--set the background and font color of the order record with the status "rejection"--><!--
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Status}" Value="отказ от выполнения" />
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Background" Value="#FFE4C58E" />
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>-->
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Обновить Ctrl+R" Command="{Binding UpdateOrederList}"/>
+                    <!--"UpdateOrederList" we can find in  "MainViewModel.cs"-->
+                    <MenuItem Header="Зайняти паркувальне місце"                               
+                             CommandParameter="{Binding ElementName=GridOrders, Path=SelectedItem}"
+                    Command="{Binding EditOrderCommand}"                 
+                    IsEnabled="{Binding SelectedItem,
+                     Converter={StaticResource NullBoolConverter}, ElementName=GridOrders}"/>
+                    <MenuItem Header="Звільнити паркувальне місце"                               
+                             CommandParameter="{Binding ElementName=GridOrders, Path=SelectedItem}"
+                             Command="{Binding  ClientInfoCommand}"                 
+                    IsEnabled="{Binding SelectedItem,
+                     Converter={StaticResource NullBoolConverter}, ElementName=GridOrders}"/>
+                    <MenuItem Header="Правити данні"                                                            
+                             Command="{Binding  CallClientOrdersInfoCommand}"/>
+                    <MenuItem Header="Роздрук квитанції"                                                            
+                             Command="{Binding  CallClientOrdersInfoCommand}"/>
+                    <!--<MenuItem Header="Изменить статус" >-->
+                    <!--<MenuItem Header="Готов" Command="{Binding SetReadyStatusCommand}"/>
+                        <MenuItem Header="Отдан заказчику" Command="{Binding SetClientGivenStatusCommand}"/>-->
+                    <MenuItem Header="Змінити статус" Background="LightGray"  Foreground="Black" >
+
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox   MinWidth="200"   
+                                            SelectedIndex="0"
+                                             HorizontalContentAlignment="Left"
+                                             IsEditable="False" IsSynchronizedWithCurrentItem="True"
+                                             ItemsSource="{Binding Source={StaticResource SortedStatuses2}, 
+                                                UpdateSourceTrigger=PropertyChanged}" 
+                                             DisplayMemberPath="StatusName"
+                                             SelectedItem="{Binding Status2 , UpdateSourceTrigger=PropertyChanged}" >
+                            </ComboBox>
+                            <Button Content=" Ok " Command="{Binding ChangeStatusCommand }"/>
+                        </StackPanel>
+
+                    </MenuItem>
+                    <!--</MenuItem>-->
+                    <MenuItem Header="Історія зайнятості паркувального місця  ">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Text="{Binding ChangeOrderNumber, UpdateSourceTrigger=PropertyChanged}" MaxLength="6" Margin="3" MinWidth="150" TextAlignment="Center" VerticalAlignment="Center" 
+                                     ToolTip="Только целочисленное значение"/>
+                            <Button Content="Заменить" Background="Blue" Command="{Binding ChangeOrderNumberCommand}"  MinWidth="250" />
+                        </StackPanel>
+
+                    </MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <!--all the binding elements of the DataGrid element can be found in the class "MainViewModel.cs"-->
+            <DataGrid.Columns>
+                <DataGridTextColumn Width="0.355*" Binding="{Binding OrderNumber}"  Header="№ місця"/>
+                <DataGridTextColumn Width="0.5*" Binding="{Binding ClientName, UpdateSourceTrigger=PropertyChanged}" Header="Статус"/>
+              
+                <DataGridTextColumn Width="0.35*"  Binding="{Binding  DateOfReception, Converter={StaticResource dateFormatConverter}, UpdateSourceTrigger=PropertyChanged}" Header="Заїхав/виїхав"/>
+                
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

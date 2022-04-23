@@ -16,6 +16,7 @@ namespace Parking.Model
         {
             Clients = new ObservableCollection<Client>();
             Employees = new ObservableCollection<Employee>();
+            ContactsData = new ObservableCollection<Contacts>();
         }
 
 
@@ -69,20 +70,20 @@ namespace Parking.Model
             }
         }
 
-        [Column("Photo", TypeName = "image")]
-        private byte[] photo;
-        public byte[] Photo
-        {
-            get { return photo; }
-            set
-            {
-                if (value != photo)
-                {
-                    photo = value;
-                    OnPropertyChanged(nameof(Photo));
-                }
-            }
-        }
+        //[Column("Photo", TypeName = "image")]
+        //private byte[] photo;
+        //public byte[] Photo
+        //{
+        //    get { return photo; }
+        //    set
+        //    {
+        //        if (value != photo)
+        //        {
+        //            photo = value;
+        //            OnPropertyChanged(nameof(Photo));
+        //        }
+        //    }
+        //}
 
         private bool male;
         public bool Male
@@ -127,23 +128,11 @@ namespace Parking.Model
             }
         }
 
-        [Column("Adress", TypeName = "nvarchar")]
-        [MaxLength(500)]
-        private string adress;
-        public string Adress
-        {
-            get { return adress; }
-            set
-            {
-                if (value != adress)
-                {
-                    adress = value;
-                    OnPropertyChanged(nameof(Adress));
-                }
-            }
-        }
+       
 
         public virtual ObservableCollection<Client> Clients { get; set; }
         public virtual ObservableCollection<Employee> Employees { get; set; }
+
+        public virtual ObservableCollection<Contacts> ContactsData { get; set; }
     }
 }

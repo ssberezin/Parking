@@ -6,11 +6,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         x:Name="LogWindow"
         WindowStyle="None"
-        xmlns:scm1="clr-namespace:System.ComponentModel;assembly=WindowsBase" 
-        
+        xmlns:scm1="clr-namespace:System.ComponentModel;assembly=WindowsBase" xmlns:viewmodel="clr-namespace:Parking.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:Authorezation}"
         mc:Ignorable="d"
          WindowStartupLocation="CenterScreen"
-        Title="Авторизация" MaxHeight="180" MaxWidth="375" MinHeight="180" MinWidth="375" Height="180" Width="375"
+        MaxHeight="180" MaxWidth="375" MinHeight="180" MinWidth="375" Height="180" Width="375"
         Background="LightGray">
     <Window.InputBindings>
         <KeyBinding Gesture="Esc" Command="{Binding CloseLogWinCommand}"
@@ -37,7 +36,7 @@
 
         <TextBox x:Name="Login" Grid.Column="1" Grid.ColumnSpan="2"  Margin="5" 
                  Background="White"  MaxLength="30" HorizontalContentAlignment="Center"                 
-                 Text="{Binding  User.UserNickName , Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center"
+                 Text="{Binding  UserLogin , Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center"
                   TextAlignment="Center"  TabIndex="0">
             
         </TextBox>
@@ -51,41 +50,14 @@
         <PasswordBox x:Name="passwordBox"  Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1"
                       Margin="5.2,5.4,0,5.2" Background="White" HorizontalAlignment="Left"
                       PasswordChar="*" Width="230" TabIndex="1" HorizontalContentAlignment="Center"
-                     VerticalAlignment="Stretch"/>
+                     VerticalAlignment="Stretch" VerticalContentAlignment="Center"/>
         <TextBlock Padding="10,0" x:Name="plain" />
 
 
-        <Viewbox MaxHeight="18"  Stretch="Uniform" Margin="2" HorizontalAlignment="Right" Grid.Row="2"
-                 
-                     VerticalAlignment="Center" >
-           
-            <Grid>
-                <Viewbox MaxHeight="18"  Stretch="Uniform" Margin="2" HorizontalAlignment="Right"
-                 
-                     VerticalAlignment="Bottom" >
-                    <TextBlock Text="Не зареєстровані" FontWeight="Bold" Cursor="Hand"
-                           Foreground="Blue" >
-                    </TextBlock>
-                </Viewbox>
-
-                <Button Content="Не зареєстровані?" FontWeight="Bold" Cursor="Hand"
-                           Foreground="Blue"  Opacity="0" TabIndex="2"
-                           Command="{Binding  NewRigistrationCommand }"
-                           CommandParameter="{Binding DataContext, RelativeSource=
-                                 {RelativeSource AncestorType={x:Type Window}}}"
-                           >
-
-                </Button>
-            </Grid>
-
-
-
+        <Viewbox MaxHeight="18"  Stretch="Uniform" Margin="2" HorizontalAlignment="Right" Grid.Row="2"                 
+                     VerticalAlignment="Center" >   
         </Viewbox>
 
-        <!--<Button  Grid.Row="2" Grid.Column="1" Content="+ Я" Background="Yellow"  Foreground="Black"               
-                TabIndex="4"
-                 Command="{Binding RegisteringDafaultUserCommand}">
-        </Button>-->
         <Button  Grid.Row="2" Grid.Column="2" Content="Ok" Background="Blue" Foreground="White"                
                 TabIndex="3" >
             <!-- For using few commands we have setup Microsoft.Xaml.Behaviors.Wpf NuGet package 
