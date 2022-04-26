@@ -87,6 +87,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpes\BoolToBrushConverterForInOut.cs" />
+    <Compile Include="Helpes\BoolToBrushConverterForStatus.cs" />
+    <Compile Include="Helpes\BoolToStringConverter2.cs" />
+    <Compile Include="Helpes\BoolToStringConverter.cs" />
+    <Compile Include="Helpes\ParkingPlaceRecord.cs" />
     <Compile Include="Model\Contacts.cs" />
     <Compile Include="ViewModel\Authorezation.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

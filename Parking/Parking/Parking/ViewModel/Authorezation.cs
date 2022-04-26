@@ -13,6 +13,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 using System.Configuration;
+using Parking.Views;
 
 namespace Parking.ViewModel
 {
@@ -82,7 +83,11 @@ namespace Parking.ViewModel
                     User Fuser = db.Users.Where(u => u.Login == user1.Login && u.Pass == user1.Pass && u.SomeEmployee.FireDate==null).FirstOrDefault();
                     if (Fuser != null)
                     {
-                       //start main window
+                        //start main window
+                        SecondWindow nextWindow;
+                        nextWindow = new SecondWindow(Fuser.UserId);
+                        showWindow.ShowWindow(nextWindow);
+                        showWindow.CloseWindow(win);//closing authorization window
                     }
                     else
                         dialogService.ShowMessage("Не вірна пара логін-пароль або дані застарілі");
@@ -166,9 +171,10 @@ namespace Parking.ViewModel
 
                     emp1.Users.Add(user1);
 
-                    pers1.Employees.Add(emp1);                
+                    pers1.Employees.Add(emp1);
 
-                   
+                    pers1.Clients.Add(client1);
+
                     client1.ParkingPlaces.Add(parkingPlace1);
 
 
@@ -214,27 +220,23 @@ namespace Parking.ViewModel
                 {
                     db.Database.ExecuteSqlCommand
                         (@"
-                           Create Proc sp_UserIdentification 
-                            @login nvarchar(50),
-                            @pass nvarchar(500)
-
+                          Create proc sp_GetparkingPlacesRecords
                             as
-                            Select Users.UserId
-                            From Users 
-                            Where users.Login=@login and users.Pass=@pass                     
+                            Select PP.ParkingPlaceId 'ParkingPlaceId', PP.ParkPlaceNumber 'PlaceNumber', PP.FreeStatus 'FreeStatus', PP.Released 'WentInOrWentOut',
+	                             Cl.ClientId 'ClientId', Cl.OrgName 'OrgName',
+	                             Pers.PersonId 'PersonId',   Pers.SecondName 'SecondName', Pers.FirstName 'FirstName', Pers.Patronimic 'Patronimic',
+	                             Ctn.ContactsId 'ContactsId', Ctn.Phone 'Phone', Veh.VehicleId 'VehicleId', Veh.RegNumber 'VehicleRegNumber', Veh.Color 'VehicleColor', Veh.TypeName 'VehicleTypeName',
+	                             PPL.ParkingPlaceLogId  'PPLId', PPL.DeadLine 'DeadLine'
+                            From ParkingPlaces as PP 
+                            left join Clients as Cl on PP.SomeClient_ClientId=Cl.ClientId
+                            left Join People as Pers on Cl.PersonCustomer_PersonId = pers.PersonId
+                            left join Vehicles as Veh on Cl.ClientId=Veh.ClientOwner_ClientId
+                            left join Contacts as Ctn on Ctn.SomePerson_PersonId=Pers.PersonId
+                            left join ParkingPlaceLogs as PPL on PPL.SomeParkingPlace_ParkingPlaceId=PP.ParkingPlaceId
+                            Where PP.FreeStatus=0                    
 
                         ");
-                    //db.Database.ExecuteSqlCommand
-                    //    (@"
-                    //     Create Proc sp_UserIdentification 
-                    //        @login nvarchar(50),
-                    //        @pass nvarchar(500)
-                    //        as
-                    //        Select UserId
-                    //        From Users 
-                    //        Where users.Login=@login and users.Pass=@pass                            
-                    //        ");
-
+                   
                     db.SaveChanges();
 
 
@@ -262,6 +264,14 @@ namespace Parking.ViewModel
             }
         }
 
+        private RelayCommand closeLogWinCommand;
+        public RelayCommand CloseLogWinCommand => closeLogWinCommand ?? (closeLogWinCommand = new RelayCommand(
+                    (obj) =>
+                    {
+
+                        showWindow.CloseWindow(obj as Window);
+                    }
+                    ));
 
 
     }

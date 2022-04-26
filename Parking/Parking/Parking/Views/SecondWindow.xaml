@@ -4,14 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:local="clr-namespace:Parking.Views"
+        xmlns:local="clr-namespace:Parking.Views" 
+        xmlns:viewmodel="clr-namespace:Parking.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
+        xmlns:helpes ="clr-namespace:Parking.Helpes"
         mc:Ignorable="d"
-        Title="Стан зайнятості паркувальних місць" Height="480" Width="1000">
+        Title="Стан зайнятості паркувальних місць" Height="480" Width="800">
+    <Window.Resources>
+        <ResourceDictionary>
+            <helpes:BoolToStringConverter x:Key="boolToStringConverter"/>
+            <helpes:BoolToStringConverter2 x:Key="boolToStringConverter2"/>
+            <helpes:BoolToBrushConverterForStatus x:Key="boolToBrushConverterForStatus"/>
+            <helpes:BoolToBrushConverterForInOut x:Key="boolToBrushConverterForInOut"/>
+            
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.5*"/>
             <ColumnDefinition/>
-            <ColumnDefinition/>
+       
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.06*"/>
@@ -84,7 +95,7 @@
             <Button Content="Фільтри" Background="White" Foreground="Black"/>
         </StackPanel>
         <TextBlock Grid.Column ="1" Text="Інформація про авто і клієнта" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-        <TextBlock Grid.Column ="2" Text="Фото автівки" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+        <!--<TextBlock Grid.Column ="2" Text="Фото автівки" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>-->
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="6">
             <Border BorderBrush="Gray"  BorderThickness="2">
                 <StackPanel Background="LightSalmon">
@@ -142,58 +153,58 @@
                 </StackPanel>
             </Border>               
         </StackPanel>
-        <ScrollViewer Grid.Column="2" Grid.Row="1">
+        <!--<ScrollViewer Grid.Column="2" Grid.Row="1">
             <StackPanel>
                 <Grid Height="150" Margin="3">
                     <Grid.Background>
                         <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid.Background>
-                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
                 </Grid>
                 <Grid Height="150" Margin="3">
                     <Grid.Background>
                         <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid.Background>
-                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
                 </Grid>
                 <Grid Height="150" Margin="3">
                     <Grid.Background>
                         <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid.Background>
-                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
                 </Grid>
                 <Grid Height="150" Margin="3">
                     <Grid.Background>
                         <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid.Background>
-                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
                 </Grid>
                 <Grid Height="150" Margin="3">
                     <Grid.Background>
                         <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid.Background>
-                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
                 </Grid>
                 <Grid Height="150" Margin="3">
                     <Grid.Background>
                         <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid.Background>
-                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
                 </Grid>
                 <Grid Height="150" Margin="3">
                     <Grid.Background>
                         <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid.Background>
-                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
                 </Grid>
                 <Grid Height="150" Margin="3">
                     <Grid.Background>
                         <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid.Background>
-                    <Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />
+                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
                 </Grid>
             </StackPanel>            
-        </ScrollViewer>
+        </ScrollViewer>-->
         <DataGrid x:Name="GridOrders" ItemsSource="{Binding Records}" Grid.Row="1" Grid.Column="0"
                   SelectedItem="{Binding SelectedRecord}"                 
                   Margin="3"            
@@ -206,19 +217,18 @@
                     CommandParameter="{Binding ElementName=GridOrders, Path=SelectedItem}"/>
             </DataGrid.InputBindings>
 
-            <!--<DataGrid.RowStyle>
+            <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
-                    --><!--задаем фон заказам, которые разбиты на несколько подзаказов-->
-                    <!--set the background for orders that are divided into several suborders--><!--
-                    <Setter Property="Foreground"
-                           Value="{Binding Status, Converter={StaticResource StringToBrushConverter}}" />
-                    <Setter Property="Background" 
-                            Value="{Binding OrderCount ,Converter={StaticResource StringToBrushConverter}}"/>
-                    --><!--"Status" , "OrderCount" we can find in  "MainViewModel.cs"--><!--
-                    <Style.Triggers>
+                    <!--here we are setting the background for orders that are free-->
+                    <Setter Property="Background"
+                           Value="{Binding SomeParkingPlace.FreeStatus, Converter={StaticResource boolToBrushConverterForStatus}}" />
+                    <Setter Property="Foreground" 
+                            Value="{Binding SomeParkingPlace.Released ,Converter={StaticResource boolToBrushConverterForInOut}}"/>
+                   
+                    <!--<Style.Triggers>
                         <MultiDataTrigger>
-                            --><!--задачаем фон и цвет шрифта записиси заказа со статусом "-отказ от выполнения-"-->
-                            <!--set the background and font color of the order record with the status "rejection"--><!--
+                            --><!--задачаем фон и цвет шрифта записиси заказа со статусом "-отказ от выполнения-"
+                            set the background and font color of the order record with the status "rejection"--><!--
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding Status}" Value="отказ от выполнения" />
                             </MultiDataTrigger.Conditions>
@@ -226,13 +236,13 @@
                                 <Setter Property="Background" Value="#FFE4C58E" />
                             </MultiDataTrigger.Setters>
                         </MultiDataTrigger>
-                    </Style.Triggers>
+                    </Style.Triggers>-->
                 </Style>
-            </DataGrid.RowStyle>-->
-            <DataGrid.ContextMenu>
+            </DataGrid.RowStyle>
+            <!--<DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Обновить Ctrl+R" Command="{Binding UpdateOrederList}"/>
-                    <!--"UpdateOrederList" we can find in  "MainViewModel.cs"-->
+                    --><!--"UpdateOrederList" we can find in  "MainViewModel.cs"--><!--
                     <MenuItem Header="Зайняти паркувальне місце"                               
                              CommandParameter="{Binding ElementName=GridOrders, Path=SelectedItem}"
                     Command="{Binding EditOrderCommand}"                 
@@ -247,13 +257,13 @@
                              Command="{Binding  CallClientOrdersInfoCommand}"/>
                     <MenuItem Header="Роздрук квитанції"                                                            
                              Command="{Binding  CallClientOrdersInfoCommand}"/>
-                    <!--<MenuItem Header="Изменить статус" >-->
+                    --><!--<MenuItem Header="Изменить статус" >-->
                     <!--<MenuItem Header="Готов" Command="{Binding SetReadyStatusCommand}"/>
-                        <MenuItem Header="Отдан заказчику" Command="{Binding SetClientGivenStatusCommand}"/>-->
+                        <MenuItem Header="Отдан заказчику" Command="{Binding SetClientGivenStatusCommand}"/>--><!--
                     <MenuItem Header="Змінити статус" Background="LightGray"  Foreground="Black" >
 
                         <StackPanel Orientation="Horizontal">
-                            <ComboBox   MinWidth="200"   
+                            --><!--<ComboBox   MinWidth="200"   
                                             SelectedIndex="0"
                                              HorizontalContentAlignment="Left"
                                              IsEditable="False" IsSynchronizedWithCurrentItem="True"
@@ -261,12 +271,12 @@
                                                 UpdateSourceTrigger=PropertyChanged}" 
                                              DisplayMemberPath="StatusName"
                                              SelectedItem="{Binding Status2 , UpdateSourceTrigger=PropertyChanged}" >
-                            </ComboBox>
+                            </ComboBox>--><!--
                             <Button Content=" Ok " Command="{Binding ChangeStatusCommand }"/>
                         </StackPanel>
 
                     </MenuItem>
-                    <!--</MenuItem>-->
+                    --><!--</MenuItem>--><!--
                     <MenuItem Header="Історія зайнятості паркувального місця  ">
                         <StackPanel Orientation="Horizontal">
                             <TextBox Text="{Binding ChangeOrderNumber, UpdateSourceTrigger=PropertyChanged}" MaxLength="6" Margin="3" MinWidth="150" TextAlignment="Center" VerticalAlignment="Center" 
@@ -276,14 +286,14 @@
 
                     </MenuItem>
                 </ContextMenu>
-            </DataGrid.ContextMenu>
+            </DataGrid.ContextMenu>-->
             <!--all the binding elements of the DataGrid element can be found in the class "MainViewModel.cs"-->
             <DataGrid.Columns>
-                <DataGridTextColumn Width="0.355*" Binding="{Binding OrderNumber}"  Header="№ місця"/>
-                <DataGridTextColumn Width="0.5*" Binding="{Binding ClientName, UpdateSourceTrigger=PropertyChanged}" Header="Статус"/>
-              
-                <DataGridTextColumn Width="0.35*"  Binding="{Binding  DateOfReception, Converter={StaticResource dateFormatConverter}, UpdateSourceTrigger=PropertyChanged}" Header="Заїхав/виїхав"/>
-                
+                <DataGridTextColumn Width="0.355*" Binding="{Binding SomeParkingPlace.ParkPlaceNumber}"  Header="№ місця"/>
+                <DataGridTextColumn Width="0.5*" Binding="{Binding SomeParkingPlace.FreeStatus, Converter={StaticResource boolToStringConverter}, UpdateSourceTrigger=PropertyChanged}" Header="Статус"/>
+
+                <DataGridTextColumn Width="0.35*"  Binding="{Binding  SomeParkingPlace.Released,Converter={StaticResource boolToStringConverter2}, UpdateSourceTrigger=PropertyChanged}" Header="Заїхав/виїхав"/>
+
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

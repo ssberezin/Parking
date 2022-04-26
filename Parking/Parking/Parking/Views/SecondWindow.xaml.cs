@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Parking.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,10 @@ namespace Parking.Views
     /// </summary>
     public partial class SecondWindow : Window
     {
-        public SecondWindow()
+        public SecondWindow(int UserId)
         {
             InitializeComponent();
+            DataContext =new MainViewModel(UserId);
         }
     }
 }
