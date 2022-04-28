@@ -8,7 +8,7 @@
         xmlns:viewmodel="clr-namespace:Parking.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
         xmlns:helpes ="clr-namespace:Parking.Helpes"
         mc:Ignorable="d"
-        Title="Стан зайнятості паркувальних місць" Height="480" Width="800">
+        Title="Стан зайнятості паркувальних місць" Height="550" Width="800">
     <Window.Resources>
         <ResourceDictionary>
             <helpes:BoolToStringConverter x:Key="boolToStringConverter"/>
@@ -94,30 +94,34 @@
             </Menu>
             <Button Content="Фільтри" Background="White" Foreground="Black"/>
         </StackPanel>
-        <TextBlock Grid.Column ="1" Text="Інформація про авто і клієнта" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+        <TextBlock Grid.Column ="1" Text="Інформація про траспортний засіб і клієнта" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
         <!--<TextBlock Grid.Column ="2" Text="Фото автівки" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>-->
-        <StackPanel Grid.Row="1" Grid.Column="1" Margin="6">
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="6" Visibility="{Binding VisaBility, UpdateSourceTrigger=PropertyChanged}">
             <Border BorderBrush="Gray"  BorderThickness="2">
                 <StackPanel Background="LightSalmon">
                     <StackPanel  >
                         <TextBlock Text="Власник " FontWeight="Bold" HorizontalAlignment="Center"/>
-                        <TextBlock Text=" ПІБ  або назва організації" FontWeight="Bold" Foreground="Blue" FontSize="20" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding OrgName, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="16" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel  >
+                        <TextBlock Text="Водій " FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding Driver, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="16" HorizontalAlignment="Center"/>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center" >
                         <TextBlock Text="№ телефона " FontWeight="Bold" HorizontalAlignment="Center"/>
-                        <TextBlock Text=" телефон " FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding MainPhone, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="16" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
             <Border BorderBrush="Gray"  BorderThickness="1">
                 <StackPanel>
-                    <StackPanel >
+                    <StackPanel HorizontalAlignment="Center">
                         <TextBlock Text="Довірена особа " FontWeight="Bold" HorizontalAlignment="Center"/>
-                        <TextBlock Text=" ПІБ  " FontWeight="Bold" Foreground="Blue" FontSize="20" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding TrustedPerson, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="20"/>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center" >
                         <TextBlock Text="№ телефона " FontWeight="Bold" HorizontalAlignment="Center"/>
-                        <TextBlock Text=" телефон " FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding TrustPhone, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="20"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -126,30 +130,30 @@
                 <Border BorderBrush="Gray" Background="LightBlue" BorderThickness="2">
                     <StackPanel HorizontalAlignment="Center" >
                         <TextBlock Text="Реэстраційний номер: " FontWeight="Bold" HorizontalAlignment="Center"/>
-                        <TextBlock Text=" номер держ реєстрації " FontWeight="Bold" Foreground="Green" FontSize="20"/>
+                    <TextBlock Text="{Binding RegNumber, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20"/>
                     </StackPanel>
                 </Border>                
                 <StackPanel HorizontalAlignment="Center" >
                     <TextBlock Text="Колір ТЗ " FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text=" колір " FontWeight="Bold" Foreground="Black" FontSize="20" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Black" FontSize="16" HorizontalAlignment="Center"/>
                 </StackPanel>
             
             <Border BorderBrush="Gray"  BorderThickness="2">
                 <StackPanel HorizontalAlignment="Center" >
                     <TextBlock Text="ТИП ТЗ " FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text=" легкова, вантажна ... " FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding VType, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Border>
             
                 <StackPanel HorizontalAlignment="Center" >
                     <TextBlock Text="Послуга паркування дійсна до : " FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text=" дата  " FontWeight="Bold" Foreground="Blue" FontSize="20" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding DeadLine, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="20" HorizontalAlignment="Center"/>
                 </StackPanel>
             
             <Border BorderBrush="Gray"  BorderThickness="2">
                 <StackPanel HorizontalAlignment="Center" >
                     <TextBlock Text="Прострочено чи ні? " FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text=" так/ні " FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding OutOfDeadLine, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Border>               
         </StackPanel>
@@ -209,7 +213,8 @@
                   SelectedItem="{Binding SelectedRecord}"                 
                   Margin="3"            
                   AutoGenerateColumns="False" SelectionMode="Single"
-                  IsReadOnly="True"    VerticalAlignment="Top"  >
+                  IsReadOnly="True"    VerticalAlignment="Top"
+                  RowHeight="30" FontSize="15">
             <DataGrid.InputBindings>
                 <MouseBinding
                 MouseAction="LeftDoubleClick"

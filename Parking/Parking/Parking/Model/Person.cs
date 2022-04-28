@@ -19,8 +19,13 @@ namespace Parking.Model
             ContactsData = new ObservableCollection<Contacts>();
         }
 
-
+        [Key]
         public int PersonId { get; set; }
+
+        [ForeignKey("TrustedPerson")]
+        public int? TrustedPerson_Id { get; set; }
+        
+        public Person TrustedPerson { get; set; }
 
         [Column("FirstName", TypeName = "nvarchar")]
         [MaxLength(50)]
@@ -70,21 +75,6 @@ namespace Parking.Model
             }
         }
 
-        //[Column("Photo", TypeName = "image")]
-        //private byte[] photo;
-        //public byte[] Photo
-        //{
-        //    get { return photo; }
-        //    set
-        //    {
-        //        if (value != photo)
-        //        {
-        //            photo = value;
-        //            OnPropertyChanged(nameof(Photo));
-        //        }
-        //    }
-        //}
-
         private bool male;
         public bool Male
         {
@@ -128,11 +118,11 @@ namespace Parking.Model
             }
         }
 
-       
 
         public virtual ObservableCollection<Client> Clients { get; set; }
         public virtual ObservableCollection<Employee> Employees { get; set; }
 
         public virtual ObservableCollection<Contacts> ContactsData { get; set; }
+       
     }
 }

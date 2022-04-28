@@ -3,6 +3,7 @@ using Parking.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
@@ -26,16 +27,182 @@ namespace Parking.ViewModel
                 if (selectedRecord != value)
                 {
                     selectedRecord = value;
-                    OnPropertyChanged(nameof(SelectedRecord));
+                    OnPropertyChanged2(nameof(SelectedRecord));
                 }
             }
         }
 
+        private ParkingPlaceRecord currentRecord;
+        public ParkingPlaceRecord CurrentRecord
+        {
+            get { return currentRecord; }
+            set
+            {
+                if (currentRecord != value)
+                {
+                    currentRecord = value;
+                    OnPropertyChanged(nameof(currentRecord));
+                }
+            }
+        }
 
+        private string outOfDeadLine;
+        public string OutOfDeadLine
+        {
+            get { return outOfDeadLine; }
+            set
+            {
+                if (outOfDeadLine != value)
+                {
+                    outOfDeadLine = value;
+                    OnPropertyChanged(nameof(OutOfDeadLine));
+                }
+            }
+        }
+
+        private string orgName;
+        public string OrgName
+        {
+            get { return orgName; }
+            set
+            {
+                if (orgName != value)
+                {
+                    orgName = value;
+                    OnPropertyChanged(nameof(OrgName));
+                }
+            }
+        }
+
+        private string mainPhone;
+        public string MainPhone
+        {
+            get { return mainPhone; }
+            set
+            {
+                if (mainPhone != value)
+                {
+                    mainPhone = value;
+                    OnPropertyChanged(nameof(MainPhone));
+                }
+            }
+        }
+
+        private string trustPhone;
+        public string TrustPhone
+        {
+            get { return trustPhone; }
+            set
+            {
+                if (trustPhone != value)
+                {
+                    trustPhone = value;
+                    OnPropertyChanged(nameof(TrustPhone));
+                }
+            }
+        }
+        private string driver;
+        public string Driver
+        {
+            get { return driver; }
+            set
+            {
+                if (driver != value)
+                {
+                    driver = value;
+                    OnPropertyChanged(nameof(Driver));
+                }
+            }
+        }
+
+        private string trustedPerson;
+        public string TrustedPerson
+        {
+            get { return trustedPerson; }
+            set
+            {
+                if (trustedPerson != value)
+                {
+                    trustedPerson = value;
+                    OnPropertyChanged(nameof(TrustedPerson));
+                }
+            }
+        }
+
+        private string regNumber;
+        public string RegNumber
+        {
+            get { return regNumber; }
+            set
+            {
+                if (regNumber != value)
+                {
+                    regNumber = value;
+                    OnPropertyChanged(nameof(RegNumber));
+                }
+            }
+        }
+
+        private string color;
+        public string Color
+        {
+            get { return color; }
+            set
+            {
+                if (value != color)
+                {
+                    color = value;
+                    OnPropertyChanged(nameof(Color));
+                }
+            }
+        }
+
+        private string vType;
+        public string VType
+        {
+            get { return vType; }
+            set
+            {
+                if (vType != value)
+                {
+                    vType = value;
+                    OnPropertyChanged(nameof(VType));
+                }
+            }
+        }
+
+        private string deadLine;
+        public string DeadLine
+        {
+            get { return deadLine; }
+            set
+            {
+                if (deadLine != value)
+                {
+                    deadLine = value;
+                    OnPropertyChanged(nameof(DeadLine));
+                }
+            }
+        }
+
+        private string visaBility;
+        public string VisaBility
+        {
+            get { return visaBility; }
+            set
+            {
+                if (visaBility != value)
+                {
+                    visaBility = value;
+                    OnPropertyChanged(nameof(VisaBility));
+                }
+            }
+        }
         public MainViewModel()
         {
             showWindow = new DefaultShowWindowService();
             dialogService = new DefaultDialogService();
+            VisaBility = "Visible";//for display vehicle type  and  owner infor
         }
 
         int incomUserId { get; set; }
@@ -44,9 +211,12 @@ namespace Parking.ViewModel
         {
             showWindow = new DefaultShowWindowService();
             dialogService = new DefaultDialogService();
+            VisaBility = "Visible";//for display vehicle type  and  owner infor            
             incomUserId = UserId;
             Records = new ObservableCollection<ParkingPlaceRecord>();
             DefaultDataLoad();
+
+            PropertyChanged2 += ChangeSelectedRecord;
         }
 
 
@@ -85,9 +255,10 @@ namespace Parking.ViewModel
                                     ParkingPlaceId = (int)result.GetValue(0),
                                     ParkPlaceNumber = (int)result.GetValue(2),
                                     FreeStatus = (bool)result.GetValue(1),
-                                    Released = (bool)result.GetValue(3)
+                                    Released = (bool)result.GetValue(3)                                    
                                 }
                             };
+
                             Records.Add(record);
                         };                        
                     }
@@ -120,14 +291,13 @@ namespace Parking.ViewModel
             }
         }
 
-        private void DefaultDataLoad2()
+        
+        private void ChangeSelectedRecord(object sender, PropertyChangedEventArgs e)
         {
 
-            //here we are forming data for datagid at SecondWindow.xaml. The main info.
+           
+            string sqlExpression = "sp_GetparkingPlacesRecord";
 
-            ObservableCollection<ParkingPlaceRecord> tmpRecords = new ObservableCollection<ParkingPlaceRecord>();
-            string sqlExpression = "sp_GetparkingPlacesRecords";
-            
             var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
             var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
 
@@ -135,22 +305,24 @@ namespace Parking.ViewModel
             {
                 try
                 {
-
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
                     command.CommandType = System.Data.CommandType.StoredProcedure;
-
+                    SqlParameter firstParam = new SqlParameter
+                    {
+                        ParameterName = "@ppId",
+                        Value = SelectedRecord.SomeParkingPlace.ParkingPlaceId
+                    };
+                    command.Parameters.Add(firstParam);
 
                     SqlDataReader result = command.ExecuteReader();
 
-
                     if (result.HasRows)
-                    {
-                        ParkingPlaceRecord record;
+                    {                       
 
                         while (result.Read())
                         {
-                            record = new ParkingPlaceRecord()
+                            CurrentRecord = new ParkingPlaceRecord()
                             {
                                 SomeParkingPlace = new ParkingPlace
                                 {
@@ -158,87 +330,81 @@ namespace Parking.ViewModel
                                     ParkPlaceNumber = (int)result.GetValue(1),
                                     FreeStatus = (bool)result.GetValue(2),
                                     Released = (bool)result.GetValue(3)
-                                },
-                                SomeClient = new Client
+                                }
+                            };
+
+                            if (!SelectedRecord.SomeParkingPlace.FreeStatus.Value)
+                            {                               
+
+                                CurrentRecord.SomeClient = new Client
                                 {
                                     ClientId = (int)result.GetValue(4),
                                     OrgName = (string)result.GetValue(5)
-                                },
-                                SomePerson = new Person
+                                };
+
+                                CurrentRecord.SomePerson = new Person
                                 {
                                     PersonId = (int)result.GetValue(6),
                                     SecondName = (string)result.GetValue(7),
                                     FirstName = (string)result.GetValue(8),
                                     Patronimic = (string)result.GetValue(9)
-                                },
-                                SomeContacts = new Contacts
+
+                                };
+                                CurrentRecord.SomeContacts = new Contacts
                                 {
                                     ContactsId = (int)result.GetValue(10),
                                     Phone = (string)result.GetValue(11)
-                                },
-                                SomeVehicle = new Vehicle
+                                };
+                                CurrentRecord.SomeVehicle = new Vehicle
                                 {
                                     VehicleId = (int)result.GetValue(12),
                                     RegNumber = (string)result.GetValue(13),
                                     Color = (string)result.GetValue(14),
                                     TypeName = (string)result.GetValue(15)
-                                },
-                                SomeParkingPlaceLog = new ParkingPlaceLog
+                                };
+                                CurrentRecord.SomeParkingPlaceLog = new ParkingPlaceLog
                                 {
                                     ParkingPlaceLogId = (int)result.GetValue(16),
                                     DeadLine = (DateTime)result.GetValue(17)
+                                };
+
+                                if (CurrentRecord.SomeClient.OrgName == null || CurrentRecord.SomeClient.OrgName == "не вказано")
+                                    CurrentRecord.SomeClient.OrgName = CurrentRecord.SomePerson.SecondName + " " + CurrentRecord.SomePerson.FirstName + " " + CurrentRecord.SomePerson.Patronimic;
+
+                                if (!(result.GetValue(18) is System.DBNull))
+                                    CurrentRecord.SomePerson.TrustedPerson_Id = (int?)result.GetValue(18);
+
+                                if (CurrentRecord.SomePerson.TrustedPerson_Id != null)
+                                {
+
+                                    GetTrustedPerson(CurrentRecord.SomePerson.TrustedPerson_Id.Value, out Person nPerson, out Contacts nContacts);
+                                    CurrentRecord.TrustedPerson = nPerson;
+                                    CurrentRecord.TrContacts = nContacts;
+                                    TrustedPerson = nPerson.SecondName + " " + nPerson.FirstName + " " + nPerson.Patronimic;
+                                    TrustPhone = nContacts.Phone;
                                 }
+                                VisaBility = "Visible";
+                                Driver = (string)result.GetValue(7) + " " + (string)result.GetValue(8) + " " + (string)result.GetValue(7);
+                                OrgName = result.GetValue(4) is System.DBNull ? Driver : (string)result.GetValue(5);
+                                MainPhone = (string)result.GetValue(11);
+                                RegNumber = (string)result.GetValue(13);
+                                Color = (string)result.GetValue(14);
+                                DateTime dt = (DateTime)result.GetValue(17);
+                                DeadLine = new DateTime(dt.Year, dt.Month, dt.Day).ToString();
+                                VType = (string)result.GetValue(15);
+                                OutOfDeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine > DateTime.Now ? "не просрочено" : "просрочено";
 
-
-                            };
-                            tmpRecords.Add(record);
-                        };
-
-                        int ParkingPlaceeCount=0;
-
-                        //attempt to know count of parking places
-                        sqlExpression = "sp_GetparkingPlacesCount";
-                        command = new SqlCommand(sqlExpression, connection);
-                        command.CommandType = System.Data.CommandType.StoredProcedure;
-                        result = command.ExecuteReader();
-
-                        if (result.HasRows)
-                        {
-                            while (result.Read())
-                            {
-                                ParkingPlaceeCount = (int)result.GetValue(0);
-                            }
-                        }
-                        else
-                            dialogService.ShowMessage("Щось пішло не так при зчитуванні кількості паркувальних місць");
-
-                        int j = 0;
-                        for (int i = 1; i <= ParkingPlaceeCount; i++)
-                        {
-                            if (j< tmpRecords.Count() && tmpRecords[j].SomeParkingPlace.ParkPlaceNumber == i)
-                            {
-                                Records.Add(tmpRecords[j]);
-                                j++;
                             }
                             else
-                            {
-                                ParkingPlaceRecord pprecord = new ParkingPlaceRecord();
-                                pprecord.SomeParkingPlace = new ParkingPlace
-                                {
-                                    ParkingPlaceId = i,
-                                    ParkPlaceNumber = i,
-                                    FreeStatus = true,
-                                    Released = false
-                                };
-                                Records.Add(pprecord);
-                            }                           
-                        }
+                                VisaBility = "Hidden";
+                                    
+                        };
+                        
                     }
                     else
                         dialogService.ShowMessage("Щось пішло не так при зчитуванні данних про паркувальні місця");
                 }
 
-               
                 catch (ArgumentNullException ex)
                 {
                     dialogService.ShowMessage(ex.Message);
@@ -259,9 +425,80 @@ namespace Parking.ViewModel
                 {
                     dialogService.ShowMessage(ex.Message);
                 }
-            
+
             }
         }
+
+        private void GetTrustedPerson(int trustedPersId,out Person nPerson, out Contacts nContacts )
+        {
+
+            nPerson = new Person();
+            nContacts = new Contacts();
+
+            string sqlExpression = "sp_GetTrustedPerson";
+
+            var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
+            var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
+
+            using (SqlConnection connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
+            {
+                try
+                {
+                    
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(sqlExpression, connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    SqlParameter firstParam = new SqlParameter
+                    {
+                        ParameterName = "@TrustPersId",
+                        Value = trustedPersId
+                    };
+
+                    command.Parameters.Add(firstParam);
+
+                    
+                    SqlDataReader result = command.ExecuteReader();
+
+                    if (result.HasRows)
+                    {
+                        while (result.Read())
+                        {
+                            nPerson.PersonId = CurrentRecord.SomePerson.TrustedPerson_Id.Value;
+                            nPerson.SecondName = (string)result.GetValue(0);
+                            nPerson.FirstName = (string)result.GetValue(1);
+                            nPerson.Patronimic = (string)result.GetValue(2);
+                            
+                            nContacts = new Contacts { ContactsId = (int)result.GetValue(3), Phone = (string)result.GetValue(4) };
+                        };
+                        
+                    }
+                    else
+                        dialogService.ShowMessage("Щось пішло не так при зчитуванні данних про паркувальні місця");
+                }
+
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }               
+            }
+        }
+
 
     }
 }

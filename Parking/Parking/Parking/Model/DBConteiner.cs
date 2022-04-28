@@ -29,7 +29,7 @@ namespace Parking.Model
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<ParkingPlace> ParkingPlaces { get; set; }
         public virtual DbSet<ParkingPlaceLog> ParkingPlaceLogs { get; set; }
-        public virtual DbSet<Person> Persons { get; set; }
+        public virtual DbSet<Person> Persons { get; set; }     
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Vehicle> Vehicles { get; set; }
         public virtual DbSet<Contacts> Contacts { get; set; }

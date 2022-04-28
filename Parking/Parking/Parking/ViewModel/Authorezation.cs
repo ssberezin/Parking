@@ -135,11 +135,7 @@ namespace Parking.ViewModel
 
                     db.SaveChanges();
 
-                    Vehicle SomeVehicle1 = new Vehicle { Color = "Чорний", RegNumber = "AE2865BO", DateOfmanufacture = new DateTime(2020, 12, 12), TypeName = "легкове авто" };
-                    //Vehicle Somevehicle2 = db.Vehicles.Add(new Vehicle { Color = "Зелений", RegNumber = "AА2662BВ", DateOfmanufacture = new DateTime(2019, 10, 1), TypeName = "легкове авто" });
-                    //Vehicle Somevehicle3 = db.Vehicles.Add(new Vehicle { Color = "Жовтий", RegNumber = "AE3855BХ", DateOfmanufacture = new DateTime(2015, 10, 25), TypeName = "легкове авто" });
-                    //Vehicle Somevehicle4 = db.Vehicles.Add(new Vehicle { Color = "Коричневий", RegNumber = "AE2865BO", DateOfmanufacture = new DateTime(2020, 12, 12), TypeName = "легкове авто" });
-                   // db.Vehicles.Add(SomeVehicle1);
+                    Vehicle SomeVehicle1 = new Vehicle { Color = "Чорний", RegNumber = "AE2865BO", DateOfmanufacture = new DateTime(2020, 12, 12), TypeName = "легкове авто" };                    
 
                     Client client1 = new Client { OrgName = "ТОВ \"Парковка\"", OrgDetals = "надання послуг з паркування" };
 
@@ -152,7 +148,23 @@ namespace Parking.ViewModel
                     Person pers1 = new Person { FirstName = "Іван",SecondName="Петров", Patronimic="Ігоревич", Male = true, DayBirthday=new DateTime(1978,10,15) };
                     pers1.ContactsData.Add(ct1);
 
-                    db.Persons.Add(pers1);
+                     db.Persons.Add(pers1);
+                    db.SaveChanges();
+
+                    //adiing trusted person
+                    Client clientTrustPers1 = new Client { OrgName = "не вказано", OrgDetals = "не вказано" };
+                    Contacts ctTrustPers1 = new Contacts { Adress = "м.Харків, вул.Барвінкова, б.45, кв.21", Phone = "+380956080621" };
+                    db.Contacts.Add(ctTrustPers1);
+                    Person pers2 = new Person { FirstName = "Ігор", SecondName = "Івнов", Patronimic = "Вікторович", Male = true, DayBirthday = new DateTime(1984, 09, 21) };
+                    db.Persons.Add(pers2);
+                    pers2.ContactsData.Add(ctTrustPers1);
+                    pers2.Clients.Add(clientTrustPers1);
+                    db.Clients.Add(clientTrustPers1);
+
+                    db.Entry(pers1).State = EntityState.Modified;
+                    pers1.TrustedPerson = pers2;
+
+                    
 
                     Employee emp1 = new Employee { Salary = 20000, HireDate = new DateTime (2018, 10,15), Position = "адміністратор", Description = "добрий працівник"};
 
@@ -161,6 +173,7 @@ namespace Parking.ViewModel
                     ParkingPlace parkingPlace1 = db.ParkingPlaces.Where(pp => pp.ParkPlaceNumber == 1).FirstOrDefault();
                     db.Entry(parkingPlace1).State = EntityState.Modified;
                     parkingPlace1.FreeStatus = false;
+                    
 
                     ParkingPlaceLog log1 = new ParkingPlaceLog() { BookingDate = DateTime.Now, DeadLine = DateTime.Now.AddDays(30), Money = 1500, PayingDate = DateTime.Now };
 
@@ -220,23 +233,48 @@ namespace Parking.ViewModel
                 {
                     db.Database.ExecuteSqlCommand
                         (@"
-                          Create proc sp_GetparkingPlacesRecords
+                         create proc sp_GetparkingPlacesRecord
+                            @ppId int
                             as
                             Select PP.ParkingPlaceId 'ParkingPlaceId', PP.ParkPlaceNumber 'PlaceNumber', PP.FreeStatus 'FreeStatus', PP.Released 'WentInOrWentOut',
 	                             Cl.ClientId 'ClientId', Cl.OrgName 'OrgName',
 	                             Pers.PersonId 'PersonId',   Pers.SecondName 'SecondName', Pers.FirstName 'FirstName', Pers.Patronimic 'Patronimic',
 	                             Ctn.ContactsId 'ContactsId', Ctn.Phone 'Phone', Veh.VehicleId 'VehicleId', Veh.RegNumber 'VehicleRegNumber', Veh.Color 'VehicleColor', Veh.TypeName 'VehicleTypeName',
-	                             PPL.ParkingPlaceLogId  'PPLId', PPL.DeadLine 'DeadLine'
+	                             PPL.ParkingPlaceLogId  'PPLId', PPL.DeadLine 'DeadLine', Pers.TrustedPerson_Id 'TrustedPerson_Id'
                             From ParkingPlaces as PP 
                             left join Clients as Cl on PP.SomeClient_ClientId=Cl.ClientId
                             left Join People as Pers on Cl.PersonCustomer_PersonId = pers.PersonId
                             left join Vehicles as Veh on Cl.ClientId=Veh.ClientOwner_ClientId
                             left join Contacts as Ctn on Ctn.SomePerson_PersonId=Pers.PersonId
                             left join ParkingPlaceLogs as PPL on PPL.SomeParkingPlace_ParkingPlaceId=PP.ParkingPlaceId
-                            Where PP.FreeStatus=0                    
+
+                            Where PP.ParkingPlaceId = @ppId                      
 
                         ");
-                   
+
+                    db.Database.ExecuteSqlCommand
+                       (@"
+                         create proc sp_GetTrustedPerson
+                            @TrustPersId int
+                            as
+                            Select 
+	                             Pers.SecondName 'SecondName', Pers.FirstName 'FirstName', Pers.Patronimic 'Patronimic',
+	                             Ctn.ContactsId 'ContactsId', Ctn.Phone 'Phone' 
+                            From  People as Pers
+                            join Contacts as Ctn on Ctn.SomePerson_PersonId=Pers.PersonId
+                            Where  pers.PersonId=@TrustPersId                 
+
+                        ");
+
+                    db.Database.ExecuteSqlCommand
+                       (@"
+                         Create proc sp_GetAllParkingPlaces
+                            as
+                            Select *
+                            from ParkingPlaces              
+
+                        ");
+
                     db.SaveChanges();
 
 

@@ -57,6 +57,34 @@ namespace Parking.Helpes
             }
         }
 
+        private Person trustedPerson;
+        public Person TrustedPerson
+        {
+            get { return trustedPerson; }
+            set
+            {
+                if (trustedPerson != value)
+                {
+                    trustedPerson = value;
+                    OnPropertyChanged(nameof(trustedPerson));
+                }
+            }
+        }
+
+        private Contacts trContacts;
+        public Contacts TrContacts
+        {
+            get { return trContacts; }
+            set
+            {
+                if (trContacts != value)
+                {
+                    trContacts = value;
+                    OnPropertyChanged(nameof(trContacts));
+                }
+            }
+        }
+
         private Contacts someContacts;
         public Contacts SomeContacts
         {
@@ -99,118 +127,7 @@ namespace Parking.Helpes
             }
         }
 
-        //private int parkingPlaceId;
-        //public int ParkingPlaceId
-        //{
-        //    get { return parkingPlaceId; }
-        //    set
-        //    {
-        //        if (parkingPlaceId != value)
-        //        {
-        //            parkingPlaceId = value;
-        //            OnPropertyChanged(nameof(ParkingPlaceId));
-        //        }
-        //    }
-        //}
-
-        //private int parkingPlaceNumber;
-        //public int ParkingPlaceNumber
-        //{
-        //    get { return parkingPlaceNumber; }
-        //    set
-        //    {
-        //        if (parkingPlaceNumber != value)
-        //        {
-        //            parkingPlaceNumber = value;
-        //            OnPropertyChanged(nameof(ParkingPlaceNumber));
-        //        }
-        //    }
-        //}
-
-        //private bool freeStatus;
-        //public bool FreeStatus
-        //{
-        //    get { return freeStatus; }
-        //    set
-        //    {
-        //        if (freeStatus != value)
-        //        {
-        //            freeStatus = value;
-        //            OnPropertyChanged(nameof(FreeStatus));
-        //        }
-        //    }
-        //}
-
-        //private bool released;
-        //public bool Released
-        //{
-        //    get { return released; }
-        //    set
-        //    {
-        //        if (released != value)
-        //        {
-        //            released = value;
-        //            OnPropertyChanged(nameof(Released));
-        //        }
-        //    }
-        //}
-
-        //private int clientId;
-        //public int ClientId
-        //{
-        //    get { return clientId; }
-        //    set
-        //    {
-        //        if (clientId != value)
-        //        {
-        //            clientId = value;
-        //            OnPropertyChanged(nameof(ClientId));
-        //        }
-        //    }
-        //}
-
-        //private string  orgName;
-        //public string OrgName
-        //{
-        //    get { return orgName; }
-        //    set
-        //    {
-        //        if (orgName != value)
-        //        {
-        //            orgName = value;
-        //            OnPropertyChanged(nameof(OrgName));
-        //        }
-        //    }
-        //}
-
-        //private int personId;
-        //public int PersonId
-        //{
-        //    get { return personId; }
-        //    set
-        //    {
-        //        if (personId != value)
-        //        {
-        //            personId = value;
-        //            OnPropertyChanged(nameof(PersonId));
-        //        }
-        //    }
-        //}
-
-        //private string orgName;
-        //public string OrgName
-        //{
-        //    get { return orgName; }
-        //    set
-        //    {
-        //        if (orgName != value)
-        //        {
-        //            orgName = value;
-        //            OnPropertyChanged(nameof(OrgName));
-        //        }
-        //    }
-        //}
-
+       
 
 
 
