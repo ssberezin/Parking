@@ -1,5 +1,6 @@
 ﻿using Parking.Helpes;
 using Parking.Model;
+using Parking.Views.PersonOperations;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -205,14 +206,14 @@ namespace Parking.ViewModel
             VisaBility = "Visible";//for display vehicle type  and  owner infor
         }
 
-        int incomUserId { get; set; }
+        int IncomUserId { get; set; }
 
         public MainViewModel(int UserId)
         {
             showWindow = new DefaultShowWindowService();
             dialogService = new DefaultDialogService();
             VisaBility = "Visible";//for display vehicle type  and  owner infor            
-            incomUserId = UserId;
+            IncomUserId = UserId;
             Records = new ObservableCollection<ParkingPlaceRecord>();
             DefaultDataLoad();
 
@@ -497,6 +498,28 @@ namespace Parking.ViewModel
                     dialogService.ShowMessage(ex.Message);
                 }               
             }
+        }
+
+        private RelayCommand callStuffListCommand;
+        public RelayCommand CallStuffListCommand => callStuffListCommand ?? (callStuffListCommand = new RelayCommand(
+                    (obj) =>
+                    {
+                        CallStuffListWindow(IncomUserId);
+                    }
+                    ));
+        private void CallStuffListWindow(int UserId)
+        {
+
+            EmployeeWindow empWindow = new EmployeeWindow(UserId);
+            showWindow.ShowDialog(empWindow);
+
+            //here we are needding to update record and selected record
+            //if (TMPStaticClass.CurrentOrder != null)
+            //{
+            //    Records record = GetRecord(TMPStaticClass.CurrentOrder.OrderLineId);
+            //    Records.Add(record);
+            //}
+            //TMPStaticClass.CurrentOrder = null;
         }
 
 

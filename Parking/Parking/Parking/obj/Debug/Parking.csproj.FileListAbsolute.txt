@@ -68,4 +68,6 @@ D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\bin\Debug\zh
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\SecondWindow.g.cs
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\SecondWindow.baml
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\GeneratedInternalTypeHelper.g.cs
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\PersonOperations\EmployeeWindow.g.cs
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\PersonOperations\EmployeeWindow.baml
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.AssemblyReference.cache

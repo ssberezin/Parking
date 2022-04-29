@@ -275,6 +275,21 @@ namespace Parking.ViewModel
 
                         ");
 
+                    db.Database.ExecuteSqlCommand
+                       (@"
+                         create proc sp_GetEmployeesRecords
+                            as
+                            Select Emp.EmployeeId  'EmployeeId', Emp.Salary 'Salary', Emp.HireDate 'HireDate', Emp.FireDate 'FireDate', Emp.Description 'Description',
+	                               pers.PersonId  'PersonId', pers.SecondName 'SecondName', pers.FirstName 'FirstName', pers.Patronimic 'Patronimic', pers.Male 'Male',
+	                               pers.Female 'Female', pers.DayBirthday 'DayBirthday', pers.Photo 'Photo',
+	                               ctn.ContactsId 'ContactsId', ctn.Phone 'Phone', ctn.Adress 'Adress', users.AccessName 'Status'
+                            From Employees as Emp
+                            join People as pers on Emp.SomePerson_PersonId=Pers.PersonId
+                            join Contacts as ctn on Pers.PersonId=Ctn.SomePerson_PersonId
+                            left join Users on Users.SomeEmployee_EmployeeId = Emp.EmployeeId              
+
+                        ");
+
                     db.SaveChanges();
 
 

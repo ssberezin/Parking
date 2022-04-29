@@ -53,7 +53,7 @@
                                    VerticalAlignment="Top"/>
                         <MenuItem Header="Список працівників" 
                                   VerticalAlignment="Top"
-                                  Command="{Binding CallAuthorListWindowCommand}"/>
+                                  Command="{Binding CallStuffListCommand}"/>
                     </MenuItem>
                     <MenuItem Header="Користувачі">
                         <MenuItem Header="Додати нового користувача" Command="{Binding UsrOps.AddNewUserCommand}"

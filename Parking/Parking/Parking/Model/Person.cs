@@ -118,6 +118,21 @@ namespace Parking.Model
             }
         }
 
+        [Column("Photo", TypeName = "image")]
+        //for storing image of persone
+        private byte[] photo;
+        public byte[] Photo
+        {
+            get { return photo; }
+            set
+            {
+                if (value != photo)
+                {
+                    photo = value;
+                    OnPropertyChanged(nameof(Photo));
+                }
+            }
+        }
 
         public virtual ObservableCollection<Client> Clients { get; set; }
         public virtual ObservableCollection<Employee> Employees { get; set; }

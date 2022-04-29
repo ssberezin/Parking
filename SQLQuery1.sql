@@ -33,7 +33,7 @@ From  People as Pers
 join Contacts as Ctn on Ctn.SomePerson_PersonId=Pers.PersonId
 Where  pers.PersonId=@TrustPersId
 
-execute sp_GetTrustedPerson '2'
+execute sp_GetTrustedPerson '1'
 
 select *
 From People 

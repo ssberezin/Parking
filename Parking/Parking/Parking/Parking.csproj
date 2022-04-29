@@ -91,10 +91,16 @@
     <Compile Include="Helpes\BoolToBrushConverterForStatus.cs" />
     <Compile Include="Helpes\BoolToStringConverter2.cs" />
     <Compile Include="Helpes\BoolToStringConverter.cs" />
+    <Compile Include="Helpes\ImagePathConverter.cs" />
     <Compile Include="Helpes\ParkingPlaceRecord.cs" />
     <Compile Include="Model\Contacts.cs" />
     <Compile Include="ViewModel\Authorezation.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\PersonOperations\EmployeeRecord.cs" />
+    <Compile Include="ViewModel\PersonOperations\EmployeeWindowContext.cs" />
+    <Compile Include="Views\PersonOperations\EmployeeWindow.xaml.cs">
+      <DependentUpon>EmployeeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SecondWindow.xaml.cs">
       <DependentUpon>SecondWindow.xaml</DependentUpon>
     </Compile>
@@ -118,6 +124,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\Buttons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PersonOperations\EmployeeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -161,7 +171,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Helpes\Images\default_avatar.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
