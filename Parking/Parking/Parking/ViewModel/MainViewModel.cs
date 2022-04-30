@@ -61,116 +61,7 @@ namespace Parking.ViewModel
             }
         }
 
-        private string orgName;
-        public string OrgName
-        {
-            get { return orgName; }
-            set
-            {
-                if (orgName != value)
-                {
-                    orgName = value;
-                    OnPropertyChanged(nameof(OrgName));
-                }
-            }
-        }
-
-        private string mainPhone;
-        public string MainPhone
-        {
-            get { return mainPhone; }
-            set
-            {
-                if (mainPhone != value)
-                {
-                    mainPhone = value;
-                    OnPropertyChanged(nameof(MainPhone));
-                }
-            }
-        }
-
-        private string trustPhone;
-        public string TrustPhone
-        {
-            get { return trustPhone; }
-            set
-            {
-                if (trustPhone != value)
-                {
-                    trustPhone = value;
-                    OnPropertyChanged(nameof(TrustPhone));
-                }
-            }
-        }
-        private string driver;
-        public string Driver
-        {
-            get { return driver; }
-            set
-            {
-                if (driver != value)
-                {
-                    driver = value;
-                    OnPropertyChanged(nameof(Driver));
-                }
-            }
-        }
-
-        private string trustedPerson;
-        public string TrustedPerson
-        {
-            get { return trustedPerson; }
-            set
-            {
-                if (trustedPerson != value)
-                {
-                    trustedPerson = value;
-                    OnPropertyChanged(nameof(TrustedPerson));
-                }
-            }
-        }
-
-        private string regNumber;
-        public string RegNumber
-        {
-            get { return regNumber; }
-            set
-            {
-                if (regNumber != value)
-                {
-                    regNumber = value;
-                    OnPropertyChanged(nameof(RegNumber));
-                }
-            }
-        }
-
-        private string color;
-        public string Color
-        {
-            get { return color; }
-            set
-            {
-                if (value != color)
-                {
-                    color = value;
-                    OnPropertyChanged(nameof(Color));
-                }
-            }
-        }
-
-        private string vType;
-        public string VType
-        {
-            get { return vType; }
-            set
-            {
-                if (vType != value)
-                {
-                    vType = value;
-                    OnPropertyChanged(nameof(VType));
-                }
-            }
-        }
+        
 
         private string deadLine;
         public string DeadLine
@@ -340,7 +231,7 @@ namespace Parking.ViewModel
                                 CurrentRecord.SomeClient = new Client
                                 {
                                     ClientId = (int)result.GetValue(4),
-                                    OrgName = (string)result.GetValue(5)
+                                    OrgName = result.GetValue(4) is System.DBNull ? (string)result.GetValue(7) + " " + (string)result.GetValue(8) + " " + (string)result.GetValue(7) : (string)result.GetValue(5)
                                 };
 
                                 CurrentRecord.SomePerson = new Person
@@ -380,19 +271,12 @@ namespace Parking.ViewModel
 
                                     GetTrustedPerson(CurrentRecord.SomePerson.TrustedPerson_Id.Value, out Person nPerson, out Contacts nContacts);
                                     CurrentRecord.TrustedPerson = nPerson;
-                                    CurrentRecord.TrContacts = nContacts;
-                                    TrustedPerson = nPerson.SecondName + " " + nPerson.FirstName + " " + nPerson.Patronimic;
-                                    TrustPhone = nContacts.Phone;
+                                    CurrentRecord.TrContacts = nContacts;                                    
+                                    
                                 }
-                                VisaBility = "Visible";
-                                Driver = (string)result.GetValue(7) + " " + (string)result.GetValue(8) + " " + (string)result.GetValue(7);
-                                OrgName = result.GetValue(4) is System.DBNull ? Driver : (string)result.GetValue(5);
-                                MainPhone = (string)result.GetValue(11);
-                                RegNumber = (string)result.GetValue(13);
-                                Color = (string)result.GetValue(14);
+                                VisaBility = "Visible";                               
                                 DateTime dt = (DateTime)result.GetValue(17);
-                                DeadLine = new DateTime(dt.Year, dt.Month, dt.Day).ToString();
-                                VType = (string)result.GetValue(15);
+                                DeadLine = new DateTime(dt.Year, dt.Month, dt.Day).ToString("dd/MM/yyyy");                                
                                 OutOfDeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine > DateTime.Now ? "не просрочено" : "просрочено";
 
                             }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
@@ -43,10 +44,11 @@ namespace Parking.ViewModel.PersonOperations
                 if (value != currentRecord)
                 {
                     currentRecord = value;
-                    OnPropertyChanged2(nameof(CurrentRecord));
+                    OnPropertyChanged(nameof(CurrentRecord));
                 }
             }
         }
+       
 
         private string defaultPhoto;
         public string DefaultPhoto
@@ -70,6 +72,7 @@ namespace Parking.ViewModel.PersonOperations
             UserId = userId;
             EmployeeRecords = new ObservableCollection<EmployeeRecord>();
             DefaultDataLoad();
+            PropertyChanged += GetRecordDetales;
         }
 
         
@@ -121,6 +124,7 @@ namespace Parking.ViewModel.PersonOperations
                             record.PhoneNumber = (string)result.GetValue(14);
                             record.Adress = (string)result.GetValue(15);
                             record.Status = (string)result.GetValue(16);
+                            record.Position = (string)result.GetValue(17);
 
                             EmployeeRecords.Add(record);
                         };
@@ -151,6 +155,13 @@ namespace Parking.ViewModel.PersonOperations
                 }
 
             }
+
+        }
+
+        private void GetRecordDetales(object sender, PropertyChangedEventArgs e)
+        {
+            CurrentRecord = SelectetRecord;
+            //FirstName = SelectetRecord.FirstName;
 
 
         }

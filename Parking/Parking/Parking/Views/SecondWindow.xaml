@@ -101,15 +101,22 @@
                 <StackPanel Background="LightSalmon">
                     <StackPanel  >
                         <TextBlock Text="Власник " FontWeight="Bold" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding OrgName, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="16" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding CurrentRecord.SomeClient.OrgName, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="16" HorizontalAlignment="Center"/>
                     </StackPanel>
                     <StackPanel  >
                         <TextBlock Text="Водій " FontWeight="Bold" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding Driver, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="16" HorizontalAlignment="Center"/>
+                        <!--<TextBlock Text="{Binding Driver, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="16" HorizontalAlignment="Center"/>-->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding CurrentRecord.SomePerson.SecondName, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="16" HorizontalAlignment="Center"/>
+                            <TextBlock Text=" "/>
+                            <TextBlock Text="{Binding CurrentRecord.SomePerson.FirstName, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="16" HorizontalAlignment="Center"/>
+                            <TextBlock Text=" "/>
+                            <TextBlock Text="{Binding CurrentRecord.SomePerson.Patronimic, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="16" HorizontalAlignment="Center"/>
+                        </StackPanel>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center" >
                         <TextBlock Text="№ телефона " FontWeight="Bold" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding MainPhone, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="16" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding  CurrentRecord.SomeContacts.Phone, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="16" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -117,11 +124,18 @@
                 <StackPanel>
                     <StackPanel HorizontalAlignment="Center">
                         <TextBlock Text="Довірена особа " FontWeight="Bold" HorizontalAlignment="Center"/>
-                            <TextBlock Text="{Binding TrustedPerson, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="20"/>
+                        <!--<TextBlock Text="{Binding CurrentRecord.TrustedPerson, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="20"/>-->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding CurrentRecord.TrustedPerson.SecondName, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="16" HorizontalAlignment="Center"/>
+                            <TextBlock Text=" "/>
+                            <TextBlock Text="{Binding CurrentRecord.TrustedPerson.FirstName, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="16" HorizontalAlignment="Center"/>
+                            <TextBlock Text=" "/>
+                            <TextBlock Text="{Binding CurrentRecord.TrustedPerson.Patronimic, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="16" HorizontalAlignment="Center"/>
+                        </StackPanel>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center" >
                         <TextBlock Text="№ телефона " FontWeight="Bold" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding TrustPhone, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="20"/>
+                        <TextBlock Text="{Binding CurrentRecord.TrContacts.Phone, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="20"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -130,18 +144,18 @@
                 <Border BorderBrush="Gray" Background="LightBlue" BorderThickness="2">
                     <StackPanel HorizontalAlignment="Center" >
                         <TextBlock Text="Реэстраційний номер: " FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="{Binding RegNumber, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20"/>
+                    <TextBlock Text="{Binding CurrentRecord.SomeVehicle.RegNumber, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20"/>
                     </StackPanel>
                 </Border>                
                 <StackPanel HorizontalAlignment="Center" >
                     <TextBlock Text="Колір ТЗ " FontWeight="Bold" HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Black" FontSize="16" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding CurrentRecord.SomeVehicle.Color, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Black" FontSize="16" HorizontalAlignment="Center"/>
                 </StackPanel>
             
             <Border BorderBrush="Gray"  BorderThickness="2">
                 <StackPanel HorizontalAlignment="Center" >
                     <TextBlock Text="ТИП ТЗ " FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="{Binding VType, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding CurrentRecord.SomeVehicle.TypeName, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Border>
             

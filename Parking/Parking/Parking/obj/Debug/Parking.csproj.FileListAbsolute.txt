@@ -71,3 +71,6 @@ D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Ge
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\PersonOperations\EmployeeWindow.g.cs
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\PersonOperations\EmployeeWindow.baml
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.AssemblyReference.cache
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\ParkPlacesOps\ParkPlaceEditWindow.g.cs
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\ParkPlacesOps\ParkPlaceEditWindow.baml
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.SuggestedBindingRedirects.cache

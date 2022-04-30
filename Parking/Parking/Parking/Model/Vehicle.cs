@@ -11,16 +11,11 @@ namespace Parking.Model
 {
     public class Vehicle: Helpes.ObservableObject
     {
-        public Vehicle()
-        {
-
-            VPhoto = new byte[8];
-        }
+       
 
         public int VehicleId { get; set; }
 
-        byte[] VPhoto;
-
+        
 
 
        [Column("RegNumber", TypeName = "nvarchar")]
@@ -88,20 +83,20 @@ namespace Parking.Model
             }
         }
 
-        //[Column("VPhoto", TypeName = "image")]
-        //private byte[] vPhoto;
-        //public byte[] VPhoto
-        //{
-        //    get { return vPhoto; }
-        //    set
-        //    {
-        //        if (value != vPhoto)
-        //        {
-        //            vPhoto = value;
-        //            OnPropertyChanged(nameof(vPhoto));
-        //        }
-        //    }
-        //}
+        [Column("VPhoto", TypeName = "image")]
+        private byte[] vPhoto;
+        public byte[] VPhoto
+        {
+            get { return vPhoto; }
+            set
+            {
+                if (value != vPhoto)
+                {
+                    vPhoto = value;
+                    OnPropertyChanged(nameof(vPhoto));
+                }
+            }
+        }
 
 
 
