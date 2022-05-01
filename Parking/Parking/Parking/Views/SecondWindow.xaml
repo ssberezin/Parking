@@ -139,90 +139,40 @@
                     </StackPanel>
                 </StackPanel>
             </Border>
-            
-            
-                <Border BorderBrush="Gray" Background="LightBlue" BorderThickness="2">
-                    <StackPanel HorizontalAlignment="Center" >
-                        <TextBlock Text="Реэстраційний номер: " FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="{Binding CurrentRecord.SomeVehicle.RegNumber, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20"/>
-                    </StackPanel>
-                </Border>                
+
+
+            <Border BorderBrush="Gray" Background="LightBlue" BorderThickness="2">
                 <StackPanel HorizontalAlignment="Center" >
-                    <TextBlock Text="Колір ТЗ " FontWeight="Bold" HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding CurrentRecord.SomeVehicle.Color, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Black" FontSize="16" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Реэстраційний номер: " FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding CurrentRecord.SomeVehicle.RegNumber, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20"/>
                 </StackPanel>
-            
+            </Border>
+            <StackPanel HorizontalAlignment="Center" >
+                <TextBlock Text="Колір ТЗ " FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding CurrentRecord.SomeVehicle.Color, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Black" FontSize="16" HorizontalAlignment="Center"/>
+            </StackPanel>
+
             <Border BorderBrush="Gray"  BorderThickness="2">
                 <StackPanel HorizontalAlignment="Center" >
                     <TextBlock Text="ТИП ТЗ " FontWeight="Bold" HorizontalAlignment="Center"/>
                     <TextBlock Text="{Binding CurrentRecord.SomeVehicle.TypeName, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Border>
-            
-                <StackPanel HorizontalAlignment="Center" >
-                    <TextBlock Text="Послуга паркування дійсна до : " FontWeight="Bold" HorizontalAlignment="Center"/>
+
+            <StackPanel HorizontalAlignment="Center" >
+                <TextBlock Text="Послуга паркування дійсна до : " FontWeight="Bold" HorizontalAlignment="Center"/>
                 <TextBlock Text="{Binding DeadLine, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Blue" FontSize="20" HorizontalAlignment="Center"/>
-                </StackPanel>
-            
+            </StackPanel>
+
             <Border BorderBrush="Gray"  BorderThickness="2">
                 <StackPanel HorizontalAlignment="Center" >
                     <TextBlock Text="Прострочено чи ні? " FontWeight="Bold" HorizontalAlignment="Center"/>
                     <TextBlock Text="{Binding OutOfDeadLine, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
                 </StackPanel>
-            </Border>               
+            </Border>
         </StackPanel>
-        <!--<ScrollViewer Grid.Column="2" Grid.Row="1">
-            <StackPanel>
-                <Grid Height="150" Margin="3">
-                    <Grid.Background>
-                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
-                    </Grid.Background>
-                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
-                </Grid>
-                <Grid Height="150" Margin="3">
-                    <Grid.Background>
-                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
-                    </Grid.Background>
-                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
-                </Grid>
-                <Grid Height="150" Margin="3">
-                    <Grid.Background>
-                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
-                    </Grid.Background>
-                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
-                </Grid>
-                <Grid Height="150" Margin="3">
-                    <Grid.Background>
-                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
-                    </Grid.Background>
-                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
-                </Grid>
-                <Grid Height="150" Margin="3">
-                    <Grid.Background>
-                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
-                    </Grid.Background>
-                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
-                </Grid>
-                <Grid Height="150" Margin="3">
-                    <Grid.Background>
-                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
-                    </Grid.Background>
-                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
-                </Grid>
-                <Grid Height="150" Margin="3">
-                    <Grid.Background>
-                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
-                    </Grid.Background>
-                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
-                </Grid>
-                <Grid Height="150" Margin="3">
-                    <Grid.Background>
-                        <ImageBrush ImageSource="{Binding DefaultPhoto, UpdateSourceTrigger=PropertyChanged}"/>
-                    </Grid.Background>
-                    --><!--<Image Source="{Binding Path = Usver.Persone.Photo, Converter={StaticResource imagePathConverter}, Mode=OneWay}" VerticalAlignment="Center" />--><!--
-                </Grid>
-            </StackPanel>            
-        </ScrollViewer>-->
+
+       
         <DataGrid x:Name="GridOrders" ItemsSource="{Binding Records}" Grid.Row="1" Grid.Column="0"
                   SelectedItem="{Binding SelectedRecord}"                 
                   Margin="3"            
@@ -232,8 +182,7 @@
             <DataGrid.InputBindings>
                 <MouseBinding
                 MouseAction="LeftDoubleClick"
-                Command="{Binding EditOrderCommand}"
-                    CommandParameter="{Binding ElementName=GridOrders, Path=SelectedItem}"/>
+                Command="{Binding EditparkPlaceCommand}" />
             </DataGrid.InputBindings>
 
             <DataGrid.RowStyle>
@@ -244,58 +193,28 @@
                     <Setter Property="Foreground" 
                             Value="{Binding SomeParkingPlace.Released ,Converter={StaticResource boolToBrushConverterForInOut}}"/>
                    
-                    <!--<Style.Triggers>
-                        <MultiDataTrigger>
-                            --><!--задачаем фон и цвет шрифта записиси заказа со статусом "-отказ от выполнения-"
-                            set the background and font color of the order record with the status "rejection"--><!--
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding Status}" Value="отказ от выполнения" />
-                            </MultiDataTrigger.Conditions>
-                            <MultiDataTrigger.Setters>
-                                <Setter Property="Background" Value="#FFE4C58E" />
-                            </MultiDataTrigger.Setters>
-                        </MultiDataTrigger>
-                    </Style.Triggers>-->
+                   
                 </Style>
             </DataGrid.RowStyle>
-            <!--<DataGrid.ContextMenu>
+            <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Обновить Ctrl+R" Command="{Binding UpdateOrederList}"/>
-                    --><!--"UpdateOrederList" we can find in  "MainViewModel.cs"--><!--
+                    "UpdateOrederList" we can find in  "MainViewModel.cs"
                     <MenuItem Header="Зайняти паркувальне місце"                               
                              CommandParameter="{Binding ElementName=GridOrders, Path=SelectedItem}"
-                    Command="{Binding EditOrderCommand}"                 
-                    IsEnabled="{Binding SelectedItem,
-                     Converter={StaticResource NullBoolConverter}, ElementName=GridOrders}"/>
+                    Command="{Binding EditOrderCommand}"/>
                     <MenuItem Header="Звільнити паркувальне місце"                               
                              CommandParameter="{Binding ElementName=GridOrders, Path=SelectedItem}"
-                             Command="{Binding  ClientInfoCommand}"                 
-                    IsEnabled="{Binding SelectedItem,
-                     Converter={StaticResource NullBoolConverter}, ElementName=GridOrders}"/>
-                    <MenuItem Header="Правити данні"                                                            
-                             Command="{Binding  CallClientOrdersInfoCommand}"/>
+                             Command="{Binding  ClientInfoCommand}" />
+                    <MenuItem Header="Редагувати"                                                            
+                             Command="{Binding   EditparkPlaceCommand}"/>
                     <MenuItem Header="Роздрук квитанції"                                                            
                              Command="{Binding  CallClientOrdersInfoCommand}"/>
-                    --><!--<MenuItem Header="Изменить статус" >-->
-                    <!--<MenuItem Header="Готов" Command="{Binding SetReadyStatusCommand}"/>
-                        <MenuItem Header="Отдан заказчику" Command="{Binding SetClientGivenStatusCommand}"/>--><!--
-                    <MenuItem Header="Змінити статус" Background="LightGray"  Foreground="Black" >
-
-                        <StackPanel Orientation="Horizontal">
-                            --><!--<ComboBox   MinWidth="200"   
-                                            SelectedIndex="0"
-                                             HorizontalContentAlignment="Left"
-                                             IsEditable="False" IsSynchronizedWithCurrentItem="True"
-                                             ItemsSource="{Binding Source={StaticResource SortedStatuses2}, 
-                                                UpdateSourceTrigger=PropertyChanged}" 
-                                             DisplayMemberPath="StatusName"
-                                             SelectedItem="{Binding Status2 , UpdateSourceTrigger=PropertyChanged}" >
-                            </ComboBox>--><!--
-                            <Button Content=" Ok " Command="{Binding ChangeStatusCommand }"/>
-                        </StackPanel>
-
+                    <MenuItem Header="Изменить статус" >
+                    <MenuItem Header="Готов" Command="{Binding SetReadyStatusCommand}"/>
+                        <MenuItem Header="Отдан заказчику" Command="{Binding SetClientGivenStatusCommand}"/>
+                 
                     </MenuItem>
-                    --><!--</MenuItem>--><!--
                     <MenuItem Header="Історія зайнятості паркувального місця  ">
                         <StackPanel Orientation="Horizontal">
                             <TextBox Text="{Binding ChangeOrderNumber, UpdateSourceTrigger=PropertyChanged}" MaxLength="6" Margin="3" MinWidth="150" TextAlignment="Center" VerticalAlignment="Center" 
@@ -305,8 +224,8 @@
 
                     </MenuItem>
                 </ContextMenu>
-            </DataGrid.ContextMenu>-->
-            <!--all the binding elements of the DataGrid element can be found in the class "MainViewModel.cs"-->
+            </DataGrid.ContextMenu>
+            
             <DataGrid.Columns>
                 <DataGridTextColumn Width="0.355*" Binding="{Binding SomeParkingPlace.ParkPlaceNumber}"  Header="№ місця"/>
                 <DataGridTextColumn Width="0.5*" Binding="{Binding SomeParkingPlace.FreeStatus, Converter={StaticResource boolToStringConverter}, UpdateSourceTrigger=PropertyChanged}" Header="Статус"/>

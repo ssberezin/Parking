@@ -96,6 +96,8 @@
     <Compile Include="Model\Contacts.cs" />
     <Compile Include="ViewModel\Authorezation.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\ParkPlacesOps\CompareStates.cs" />
+    <Compile Include="ViewModel\ParkPlacesOps\ParkPlaceWindowContext.cs" />
     <Compile Include="ViewModel\PersonOperations\EmployeeRecord.cs" />
     <Compile Include="ViewModel\PersonOperations\EmployeeWindowContext.cs" />
     <Compile Include="Views\ParkPlacesOps\ParkPlaceEditWindow.xaml.cs">
@@ -182,7 +184,7 @@
     <Resource Include="Images\default_avatar.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModel\ParkPlacesOps\" />
+    <Resource Include="Images\default_vehicle_picture.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -1,5 +1,6 @@
 ﻿using Parking.Helpes;
 using Parking.Model;
+using Parking.Views.ParkPlacesOps;
 using Parking.Views.PersonOperations;
 using System;
 using System.Collections.Generic;
@@ -245,7 +246,8 @@ namespace Parking.ViewModel
                                 CurrentRecord.SomeContacts = new Contacts
                                 {
                                     ContactsId = (int)result.GetValue(10),
-                                    Phone = (string)result.GetValue(11)
+                                    Phone = (string)result.GetValue(11),
+                                    Adress = result.GetValue(19) is System.DBNull ? null : (string)result.GetValue(19)
                                 };
                                 CurrentRecord.SomeVehicle = new Vehicle
                                 {
@@ -387,24 +389,21 @@ namespace Parking.ViewModel
         private RelayCommand callStuffListCommand;
         public RelayCommand CallStuffListCommand => callStuffListCommand ?? (callStuffListCommand = new RelayCommand(
                     (obj) =>
-                    {
-                        CallStuffListWindow(IncomUserId);
+                    {                        
+                        EmployeeWindow empWindow = new EmployeeWindow(IncomUserId);
+                        showWindow.ShowDialog(empWindow);
                     }
                     ));
-        private void CallStuffListWindow(int UserId)
-        {
 
-            EmployeeWindow empWindow = new EmployeeWindow(UserId);
-            showWindow.ShowDialog(empWindow);
+        private RelayCommand editparkPlaceCommand;
+        public RelayCommand EditparkPlaceCommand => editparkPlaceCommand ?? (editparkPlaceCommand = new RelayCommand(
+                    (obj) =>
+                    {
+                        ParkPlaceEditWindow parkWindow = new ParkPlaceEditWindow(IncomUserId, CurrentRecord);
+                        showWindow.ShowDialog(parkWindow);
+                    }
+                    ));
 
-            //here we are needding to update record and selected record
-            //if (TMPStaticClass.CurrentOrder != null)
-            //{
-            //    Records record = GetRecord(TMPStaticClass.CurrentOrder.OrderLineId);
-            //    Records.Add(record);
-            //}
-            //TMPStaticClass.CurrentOrder = null;
-        }
 
 
     }

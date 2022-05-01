@@ -233,14 +233,14 @@ namespace Parking.ViewModel
                 {
                     db.Database.ExecuteSqlCommand
                         (@"
-                         create proc sp_GetparkingPlacesRecord
+                         Create proc sp_GetparkingPlacesRecord
                             @ppId int
                             as
                             Select PP.ParkingPlaceId 'ParkingPlaceId', PP.ParkPlaceNumber 'PlaceNumber', PP.FreeStatus 'FreeStatus', PP.Released 'WentInOrWentOut',
 	                             Cl.ClientId 'ClientId', Cl.OrgName 'OrgName',
 	                             Pers.PersonId 'PersonId',   Pers.SecondName 'SecondName', Pers.FirstName 'FirstName', Pers.Patronimic 'Patronimic',
 	                             Ctn.ContactsId 'ContactsId', Ctn.Phone 'Phone', Veh.VehicleId 'VehicleId', Veh.RegNumber 'VehicleRegNumber', Veh.Color 'VehicleColor', Veh.TypeName 'VehicleTypeName',
-	                             PPL.ParkingPlaceLogId  'PPLId', PPL.DeadLine 'DeadLine', Pers.TrustedPerson_Id 'TrustedPerson_Id'
+	                             PPL.ParkingPlaceLogId  'PPLId', PPL.DeadLine 'DeadLine', Pers.TrustedPerson_Id 'TrustedPerson_Id', Ctn.Adress 'DriversAdress'
                             From ParkingPlaces as PP 
                             left join Clients as Cl on PP.SomeClient_ClientId=Cl.ClientId
                             left Join People as Pers on Cl.PersonCustomer_PersonId = pers.PersonId
@@ -248,7 +248,7 @@ namespace Parking.ViewModel
                             left join Contacts as Ctn on Ctn.SomePerson_PersonId=Pers.PersonId
                             left join ParkingPlaceLogs as PPL on PPL.SomeParkingPlace_ParkingPlaceId=PP.ParkingPlaceId
 
-                            Where PP.ParkingPlaceId = @ppId                      
+                            Where PP.ParkingPlaceId = @ppId                 
 
                         ");
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Parking.Helpes;
+using Parking.ViewModel.ParkPlacesOps;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,14 +16,13 @@ using System.Windows.Shapes;
 
 namespace Parking.Views.ParkPlacesOps
 {
-    /// <summary>
-    /// Логика взаимодействия для ParkPlaceEditWindow.xaml
-    /// </summary>
+  
     public partial class ParkPlaceEditWindow : Window
     {
-        public ParkPlaceEditWindow()
+        public ParkPlaceEditWindow(int UserId, ParkingPlaceRecord parkRecord)
         {
             InitializeComponent();
+            DataContext = new ParkPlaceWindowContext(UserId, parkRecord);
         }
     }
 }
