@@ -7,7 +7,10 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 
 namespace Parking.ViewModel.ParkPlacesOps
 {
@@ -103,6 +106,48 @@ namespace Parking.ViewModel.ParkPlacesOps
             }
         }
 
+        private string ownerPhone1;
+        public string OwnerPhone1
+        {
+            get { return ownerPhone1; }
+            set
+            {
+                if (ownerPhone1 != value)
+                {
+                    ownerPhone1 = value;
+                    OnPropertyChanged3(nameof(OwnerPhone1));
+                }
+            }
+        }
+
+        private string trustPhone;
+        public string TrustPhone
+        {
+            get { return trustPhone; }
+            set
+            {
+                if (trustPhone != value)
+                {
+                    trustPhone = value;
+                    OnPropertyChanged4(nameof(TrustPhone));
+                }
+            }
+        }
+
+        private string regNumber;
+        public string RegNumber
+        {
+            get { return regNumber; }
+            set
+            {
+                if (regNumber != value)
+                {
+                    regNumber = value;
+                    OnPropertyChanged5(nameof(RegNumber));
+                }
+            }
+        }
+
         private string messageForChangeParkPlace;
         public string MessageForChangeParkPlace
         {
@@ -158,6 +203,9 @@ namespace Parking.ViewModel.ParkPlacesOps
             CurrentRecord = parkRecord;
             CurrentRecord.SomeClient.OrgName = CurrentRecord.SomeClient.OrgName == null ?"фізична особа": CurrentRecord.SomeClient.OrgName;            
             NextDeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value;
+            OwnerPhone1 = CurrentRecord.SomeContacts.Phone;
+            TrustPhone = CurrentRecord.TrContacts.Phone;
+            RegNumber = CurrentRecord.SomeVehicle.RegNumber;
             FreeParkingPlacesList = new ObservableCollection<int>();
             FillFreeParkPlacesList();
             ProlongDate = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value;
@@ -166,6 +214,10 @@ namespace Parking.ViewModel.ParkPlacesOps
 
 
             PropertyChanged2 += ChangeProlongData;
+            PropertyChanged3 += NumberValidationPhone1;
+            PropertyChanged4 += NumberValidationPhone2;
+            PropertyChanged5 += RegNumberValidation;
+
         }
 
         private void ChangeProlongData(object sender, PropertyChangedEventArgs e)
@@ -175,7 +227,40 @@ namespace Parking.ViewModel.ParkPlacesOps
                 ProlonDaysCount = res.ToString()+" дн.";
         }
 
-            private void FillFreeParkPlacesList()
+        private static readonly Regex regex = new Regex("[^0-9+]+"); //regex that matches disallowed text
+        private void NumberValidationPhone1(object sender, PropertyChangedEventArgs e)
+        {
+            if (regex.IsMatch(OwnerPhone1))
+            {
+                OwnerPhone1 = CurrentRecord.SomeContacts.Phone;
+                dialogService.ShowMessage("Ви намагаєтеся ввести в поле номеру телефона некорректні данні.");
+            }
+           
+        }
+
+        private void NumberValidationPhone2(object sender, PropertyChangedEventArgs e)
+        {
+            if (regex.IsMatch(TrustPhone))
+            {
+                TrustPhone = CurrentRecord.TrContacts.Phone;
+                dialogService.ShowMessage("Ви намагаєтеся ввести в поле номеру телефона некорректні данні.");
+            }
+
+        }
+
+        private static readonly Regex regexRegNumer = new Regex("[^0-9][^A-Z]+"); //regex that matches disallowed text
+        private void RegNumberValidation(object sender, PropertyChangedEventArgs e)
+        {
+            CurrentRecord.SomeVehicle.RegNumber = CurrentRecord.SomeVehicle.RegNumber.ToUpper();
+            if (regexRegNumer.IsMatch(CurrentRecord.SomeVehicle.RegNumber))
+            {
+                RegNumber = CurrentRecord.SomeVehicle.RegNumber;
+                dialogService.ShowMessage("Ви намагаєтеся ввести в поле номеру \n держ реэстрації не корректні данні.");
+            }
+
+        }
+
+        private void FillFreeParkPlacesList()
         {
             FreeParkingPlacesList.Clear();
             using (DBConteiner  db = new DBConteiner())
@@ -270,6 +355,79 @@ namespace Parking.ViewModel.ParkPlacesOps
             tmp.FreeparkPlace = FreeparkPlace;
             return tmp;
         }
+
+
+        private void SaveData()
+        {
+            CurrentState = SetState();
+            if (!ValidationInputData())
+                return;
+            //next we have to save data to DB
+
+
+
+        }
+        private bool ValidationInputData()
+        {
+            if (!CurrentState.CompareObjects(PreviousState, CurrentState)) //if there wasn't any changes            
+                return false;
+
+            //Phone nubers validations
+            string tmpPh = lib.PhoneNumberValidation(OwnerPhone1);
+            if (tmpPh is null)
+            {
+                dialogService.ShowMessage("Поле телефона власника заповнене не корректно.\nВідкорегуйте");
+                return false;
+            }
+            else
+                CurrentRecord.SomeContacts.Phone = OwnerPhone1;
+
+            if (lib.PhoneNumberValidation(TrustPhone) is null)
+            {
+                dialogService.ShowMessage("Поле телефона фласника заповнене не корректно.\nВідкорегуйте");
+                return false;
+            }
+            else
+                CurrentRecord.TrContacts.Phone = TrustPhone;
+            if (CurrentRecord.SomeClient.OrgName is null || CurrentRecord.SomePerson.SecondName is null ||
+                CurrentRecord.SomePerson.FirstName is null || CurrentRecord.SomePerson.Patronimic is null ||
+                CurrentRecord.TrustedPerson.SecondName is null || CurrentRecord.TrustedPerson.FirstName is null ||
+                CurrentRecord.TrustedPerson.Patronimic is null ||
+                CurrentRecord.SomeClient.OrgName =="" || CurrentRecord.SomePerson.SecondName == "" ||
+                CurrentRecord.SomePerson.FirstName == "" || CurrentRecord.SomePerson.Patronimic == "" ||
+                CurrentRecord.TrustedPerson.SecondName == "" || CurrentRecord.TrustedPerson.FirstName == "" ||
+                CurrentRecord.TrustedPerson.Patronimic == ""
+                )
+            {
+                dialogService.ShowMessage("Одне або декілька полів з особистими данними\n" +
+                    "вони не повинні бути пустими." +
+                    ".\n\t\tВідкорегуйте");
+                return false;
+            }
+            if (CurrentRecord.SomeVehicle.Color is null || CurrentRecord.SomeVehicle.Color == "")
+            {
+                dialogService.ShowMessage("Не заданий колір транспортного засобу." +
+                    ".\n\t\tВідкорегуйте");
+                return false;
+            }
+            if (RegNumber is null || RegNumber=="" || RegNumber.Length<8 )
+            {
+                dialogService.ShowMessage("Значення номера держ. реэстрації НЕ корректне.\n або не задано\n \t\t Відкорегуйте" +
+                    ".\n\t\tВідкорегуйте");
+                return false;
+            }
+            return true;
+        }
+
+        private RelayCommand cencelWindowCommand;
+
+        public RelayCommand CencelWindowCommand => cencelWindowCommand ?? (cencelWindowCommand = new RelayCommand(
+                    (obj) =>
+                    {
+
+                        showWindow.CloseWindow(obj as Window);
+                    }
+                    ));
 
     }
 

@@ -145,7 +145,7 @@ namespace Parking.ViewModel
 
                     db.Contacts.Add(ct1);
 
-                    Person pers1 = new Person { FirstName = "Іван",SecondName="Петров", Patronimic="Ігоревич", Male = true, DayBirthday=new DateTime(1978,10,15) };
+                    Person pers1 = new Person { FirstName = "Іван",SecondName="Петров", Patronimic="Ігоревич", Male = true, Female=false, DayBirthday=new DateTime(1978,10,15) };
                     pers1.ContactsData.Add(ct1);
 
                      db.Persons.Add(pers1);
@@ -155,7 +155,7 @@ namespace Parking.ViewModel
                     Client clientTrustPers1 = new Client { OrgName = "не вказано", OrgDetals = "не вказано" };
                     Contacts ctTrustPers1 = new Contacts { Adress = "м.Харків, вул.Барвінкова, б.45, кв.21", Phone = "+380956080621" };
                     db.Contacts.Add(ctTrustPers1);
-                    Person pers2 = new Person { FirstName = "Ігор", SecondName = "Івнов", Patronimic = "Вікторович", Male = true, DayBirthday = new DateTime(1984, 09, 21) };
+                    Person pers2 = new Person { FirstName = "Ігор", SecondName = "Івнов", Patronimic = "Вікторович", Male = true, Female=false, DayBirthday = new DateTime(1984, 09, 21) };
                     db.Persons.Add(pers2);
                     pers2.ContactsData.Add(ctTrustPers1);
                     pers2.Clients.Add(clientTrustPers1);
