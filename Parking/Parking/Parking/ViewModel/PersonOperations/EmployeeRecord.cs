@@ -73,33 +73,21 @@ namespace Parking.ViewModel.PersonOperations
             }
         }
 
-        private bool male;
-        public bool Male
+        private bool sex;
+        public bool Sex
         {
-            get { return male; }
+            get { return sex; }
             set
             {
-                if (value != male)
+                if (value != sex)
                 {
-                    male = value;
-                    OnPropertyChanged2(nameof(Male));
+                    sex = value;
+                    OnPropertyChanged2(nameof(Sex));
                 }
             }
         }
 
-        private bool female;
-        public bool Female
-        {
-            get { return female; }
-            set
-            {
-                if (value != female)
-                {
-                    female = value;
-                    OnPropertyChanged2(nameof(Female));
-                }
-            }
-        }
+        
 
        
         private DateTime? dayBirthday;

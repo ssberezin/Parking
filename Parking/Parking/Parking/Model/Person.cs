@@ -75,33 +75,34 @@ namespace Parking.Model
             }
         }
 
-        private bool male;
-        public bool Male
+        [Column("Sex", TypeName = "bool")]        
+        private bool sex;
+        public bool Sex
         {
-            get { return male; }
+            get { return sex; }
             set
             {
-                if (value != male)
+                if (value != sex)
                 {
-                    male = value;
-                    OnPropertyChanged(nameof(Male));
+                    sex = value;
+                    OnPropertyChanged(nameof(Sex));
                 }
             }
         }
 
-        private bool female;
-        public bool Female
-        {
-            get { return female; }
-            set
-            {
-                if (value != female)
-                {
-                    female = value;
-                    OnPropertyChanged(nameof(Female));
-                }
-            }
-        }
+        //private bool female;
+        //public bool Female
+        //{
+        //    get { return female; }
+        //    set
+        //    {
+        //        if (value != female)
+        //        {
+        //            female = value;
+        //            OnPropertyChanged(nameof(Female));
+        //        }
+        //    }
+        //}
 
         [Column(TypeName = "datetime2")]        
         private DateTime? dayBirthday;

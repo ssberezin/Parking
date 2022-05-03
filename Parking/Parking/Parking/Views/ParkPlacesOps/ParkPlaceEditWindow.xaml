@@ -9,11 +9,11 @@
         d:DataContext="{d:DesignInstance Type=parkplacesops:ParkPlaceWindowContext}"
         
         mc:Ignorable="d"
-        Title="ParkPlaceEditWindow" Height="570" Width="800">
+        Title="ParkPlaceEditWindow" Height="570" Width="730">
     <Border BorderBrush="YellowGreen" BorderThickness="4" >
         <Grid Margin="4">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.32*"/>
+                <ColumnDefinition Width="0.41*"/>
 
 
                 <ColumnDefinition   />
@@ -55,8 +55,8 @@
                                 <TextBox  Text="{Binding CurrentRecord.SomePerson.Patronimic, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left"  Margin="3" VerticalContentAlignment="Center"/>
                                 <StackPanel Orientation="Horizontal" >
                                     <TextBlock  Text="Стать: " FontSize="12" FontWeight="Bold" VerticalAlignment="Center" />
-                                    <RadioButton GroupName="A" Content="Жіноча " VerticalAlignment="Center" IsChecked="{Binding CurrentRecord.SomePerson.Female,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <RadioButton GroupName="A" Content=" Чоловіча" VerticalAlignment="Center" IsChecked="{Binding CurrentRecord.SomePerson.Male,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <RadioButton GroupName="A" Content="Жіноча " VerticalAlignment="Center" IsChecked="{Binding CurrentRecord.SomePerson.Sex,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <RadioButton GroupName="A" Content=" Чоловіча" VerticalAlignment="Center" />
                                 </StackPanel>
                                 <TextBlock  Text="№ телефона: " FontSize="12" FontWeight="Bold" Grid.Row="4" VerticalAlignment="Center"/>
                                 <TextBox   Text="{Binding OwnerPhone1, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="13" HorizontalAlignment="Left"  Margin="3" VerticalContentAlignment="Center"/>
@@ -74,12 +74,12 @@
            
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1.1*"/>
+                    <RowDefinition Height="0.9*"/>
                     <RowDefinition/>                    
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="1.2*"/>
+                    <ColumnDefinition Width="1.3*"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
@@ -88,22 +88,29 @@
                         <StackPanel HorizontalAlignment="Center">
                             <TextBlock  Text="Довірена особа " FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FFBD0000"/>
                             <TextBlock  Text="Прізвище: " FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
-                            <TextBox Grid.Column="1" Text="{Binding CurrentRecord.TrustedPerson.SecondName, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Margin="3" VerticalContentAlignment="Center"/>
+                            <TextBox Grid.Column="1" Text="{Binding CurrentRecord.TrustedPerson.SecondName, UpdateSourceTrigger=PropertyChanged}" MinWidth="170" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Margin="3" VerticalContentAlignment="Center"/>
                             <TextBlock  Text="Ім'я: " FontSize="12" FontWeight="Bold" Grid.Row="1" VerticalAlignment="Center"/>
                             <TextBox  Text="{Binding CurrentRecord.TrustedPerson.FirstName, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left"  Margin="3" VerticalContentAlignment="Center"/>
                             <TextBlock  Text="По батькові: " FontSize="12" FontWeight="Bold" Grid.Row="2" VerticalAlignment="Center"/>
                             <TextBox  Text="{Binding CurrentRecord.TrustedPerson.Patronimic, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left"  Margin="3" VerticalContentAlignment="Center"/>
                             <StackPanel Orientation="Horizontal" >
                                 <TextBlock  Text="Стать: " FontSize="12" FontWeight="Bold" VerticalAlignment="Center" />
-                                <RadioButton GroupName="A" Content="Жіноча " VerticalAlignment="Center" IsChecked="{Binding CurrentRecord.TrustedPerson.Female, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                                <RadioButton GroupName="A" Content=" Чоловіча" VerticalAlignment="Center" IsChecked="{Binding CurrentRecord.TrustedPerson.Male, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                <RadioButton GroupName="A" Content="Жіноча " VerticalAlignment="Center" IsChecked="{Binding CurrentRecord.TrustedPerson.Sex, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                <RadioButton GroupName="A" Content=" Чоловіча" VerticalAlignment="Center" />
                             </StackPanel>
                             <TextBlock  Text="№ телефона: " FontSize="12" FontWeight="Bold" Grid.Row="4" VerticalAlignment="Center"/>
                             <TextBox  Text="{Binding TrustPhone , UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"/>
                             <Border Background="LightYellow"    Margin="3" BorderBrush="Gray" BorderThickness="1">
                                 <StackPanel>
-                                    <TextBlock Text="Тип транспортного засобу" FontSize="12" FontWeight="Bold"  HorizontalAlignment="Center" />
-                                    <TextBox  Text="{Binding CurrentRecord.SomeVehicle.TypeName, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14"  TextAlignment="Center"  HorizontalAlignment="Center" FontWeight="Bold"/>
+                                    <TextBlock Text="Тип транспортного засобу" FontSize="12" FontWeight="Bold"  HorizontalAlignment="Center" />                                    
+                                    <ComboBox   MinWidth="50"  
+                                      IsEditable="False" IsSynchronizedWithCurrentItem="True"                                     
+                                     SelectedItem="{Binding FreeparkPlace,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"                        
+                                     ItemsSource="{Binding  VehicleTypeList}" 
+                                     HorizontalContentAlignment="Center"
+                                     Background="White" 
+                                     FontSize="14" ToolTip="{Binding MessageForChangeParkPlace, UpdateSourceTrigger=PropertyChanged}">
+                                    </ComboBox>
                                 </StackPanel>
                             </Border>
                         </StackPanel>
@@ -123,10 +130,7 @@
                     <!--<Image Source="{Binding Path = CurrentRecord.Photo, Converter={StaticResource imagePathConverter}, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />-->
                 </Grid>
                 <Grid Grid.Row="1" Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        
-                        
-                    </Grid.RowDefinitions>
+                   
                     <Border Background="LightYellow"    BorderBrush="Gray" BorderThickness="1">
                         <StackPanel  >
                             <TextBlock Text="Реєстраційний номер " TextWrapping="Wrap" FontSize="16" FontWeight="Bold"  HorizontalAlignment="Center" Foreground="Red"/>
@@ -144,11 +148,12 @@
                                                 HorizontalContentAlignment="Center"/>
                                     <StackPanel  >
                                         <TextBlock Text="Подовжити дату оренди до" FontWeight="Bold" HorizontalAlignment="Center"/>
-
                                         <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
-                                                    HorizontalAlignment="Center"
-                                                    SelectedDate="{Binding ProlongDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  
-                                                    HorizontalContentAlignment="Center"/>   
+                                                HorizontalAlignment="Center"
+                                                SelectedDate="{Binding ProlongDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                HorizontalContentAlignment="Center"/>
+
+                                        
                                         <TextBlock Text="{Binding ProlonDaysCount, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" HorizontalAlignment="Center" Foreground="Red" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

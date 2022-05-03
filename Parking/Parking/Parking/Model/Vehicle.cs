@@ -11,14 +11,18 @@ namespace Parking.Model
 {
     public class Vehicle: Helpes.ObservableObject
     {
+        public Vehicle()
+        {
+           
+        }
        
 
         public int VehicleId { get; set; }
 
-        
 
 
-       [Column("RegNumber", TypeName = "nvarchar")]
+
+        [Column("RegNumber", TypeName = "nvarchar")]
         [MaxLength(8)]
         private string regNumber;
         public string RegNumber
@@ -51,21 +55,7 @@ namespace Parking.Model
             }
         }
 
-        [Column("TypeName", TypeName = "nvarchar")]
-        [MaxLength(8)]
-        private string typeName;
-        public string TypeName
-        {
-            get { return typeName; }
-            set
-            {
-                if (value != typeName)
-                {
-                    typeName = value;
-                    OnPropertyChanged(nameof(TypeName));
-                }
-            }
-        }
+       
 
         [Column("DateOfmanufacture", TypeName = "datetime2")]
 
@@ -101,7 +91,8 @@ namespace Parking.Model
 
 
         public virtual Client ClientOwner { get; set; }
-    
 
-    }
+        public virtual VehicleType  SomeVehicleType {get;set;}
+
+}
 }

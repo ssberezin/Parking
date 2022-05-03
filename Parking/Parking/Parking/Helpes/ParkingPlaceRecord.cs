@@ -127,7 +127,20 @@ namespace Parking.Helpes
             }
         }
 
-       
+        private VehicleType someVehicleType;
+        public VehicleType SomeVehicleType
+        {
+            get { return someVehicleType; }
+            set
+            {
+                if (someVehicleType != value)
+                {
+                    someVehicleType = value;
+                    OnPropertyChanged(nameof(SomeVehicleType));
+                }
+            }
+        }
+
 
 
 

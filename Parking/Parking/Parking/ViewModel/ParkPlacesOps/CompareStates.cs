@@ -13,8 +13,8 @@ namespace Parking.ViewModel.ParkPlacesOps
         public string OwnerSecondName { get; set; }
         public string OwnerFirstName { get; set; }
         public string OwnerPatronimic { get; set; }
-        public bool OwnerPersMale { get; set; }
-        public bool OwnerPersFemale { get; set; }
+        public bool OwnerSex { get; set; }
+        
         public string OwnerPhone { get; set; }
         public string Adress { get; set; }
         public byte[] VPhoto { get; set; }
@@ -24,8 +24,8 @@ namespace Parking.ViewModel.ParkPlacesOps
         public string TrustSecondName { get; set; }
         public string TrustFirstName { get; set; }
         public string TrustPatronimic { get; set; }
-        public bool TrustPersMale { get; set; }
-        public bool TrustPersFemale { get; set; }
+        public bool TrustPersSex { get; set; }
+        
         public string TrustPhone { get; set; }
 
 
@@ -44,15 +44,15 @@ namespace Parking.ViewModel.ParkPlacesOps
             bool OwnerSecondNameCompare = obj1.OwnerSecondName == obj2.OwnerSecondName;
             bool OwnerFirstNameCompare = obj1.OwnerFirstName == obj2.OwnerFirstName;
             bool PatronimicCompare = obj1.OwnerPatronimic == obj2.OwnerPatronimic;
-            bool OwnerPersmaleCompare = obj1.OwnerPersMale == obj2.OwnerPersMale;
-            bool OwnerFemaleCompare = obj1.OwnerPersFemale == obj2.OwnerPersFemale;
+            bool OwnerPersSexCompare = obj1.OwnerSex == obj2.OwnerSex;
+            
             bool OwnerPhoneCompare = obj1.OwnerPhone == obj2.OwnerPhone;    
             bool VPhotoCompare = obj1.VPhoto.Length==obj2.VPhoto.Length;
             bool TrustSecondnameCompare = obj1.TrustSecondName == obj2.TrustSecondName;
             bool TrustFirstNameCompare = obj1.TrustFirstName == obj2.TrustFirstName;
             bool TrustPatronimicCompare = obj1.TrustPatronimic == obj2.TrustPatronimic;
-            bool TrustMaleCompare = obj1.TrustPersMale == obj2.TrustPersMale;   
-            bool TrustFemaleCompare = obj1.TrustPersFemale==obj2.TrustPersFemale;
+            bool TrustSexCompare = obj1.TrustPersSex == obj2.TrustPersSex;   
+            
             bool TrustPhone = obj1.TrustPhone == obj2.TrustPhone;
             bool RegNamberCompare = obj1.RegNumber == obj2.RegNumber;
             bool ColorCompare = obj1.Color == obj2.Color;
@@ -64,9 +64,9 @@ namespace Parking.ViewModel.ParkPlacesOps
             bool AdressCompare = obj1.Adress == obj2.Adress;
 
             return OwnerCompare == OwnerSecondNameCompare == OwnerFirstNameCompare==
-                    PatronimicCompare ==OwnerPersmaleCompare == OwnerFemaleCompare == 
+                    PatronimicCompare ==OwnerPersSexCompare == 
                     OwnerPhoneCompare ==TrustSecondnameCompare ==TrustFirstNameCompare ==
-                    TrustPatronimicCompare ==TrustMaleCompare ==TrustFemaleCompare ==
+                    TrustPatronimicCompare ==TrustSexCompare ==
                     TrustPhone ==RegNamberCompare ==ColorCompare ==
                     VTypeCompare ==ProlongDateCompare==DeadLinecompare ==CoastCompare ==
                     GreeparkPalceCompare==AdressCompare;

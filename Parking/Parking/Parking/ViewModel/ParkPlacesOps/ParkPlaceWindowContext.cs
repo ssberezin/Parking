@@ -21,6 +21,7 @@ namespace Parking.ViewModel.ParkPlacesOps
         IShowWindowService showWindow;
 
        public ObservableCollection<int> FreeParkingPlacesList { get; set; }
+       public ObservableCollection<VehicleType> VehicleTypeList { get; set; }
 
         private ParkingPlaceRecord currentRecord;
         public ParkingPlaceRecord CurrentRecord
@@ -36,6 +37,19 @@ namespace Parking.ViewModel.ParkPlacesOps
             }
         }
 
+        private VehicleType vType;
+        public VehicleType VType
+        {
+            get { return vType; }
+            set
+            {
+                if (vType != value)
+                {
+                    vType = value;
+                    OnPropertyChanged(nameof(VType));
+                }
+            }
+        }
         private int freeparkPlace;
         public int FreeparkPlace
         {
@@ -206,8 +220,11 @@ namespace Parking.ViewModel.ParkPlacesOps
             OwnerPhone1 = CurrentRecord.SomeContacts.Phone;
             TrustPhone = CurrentRecord.TrContacts.Phone;
             RegNumber = CurrentRecord.SomeVehicle.RegNumber;
+            VType = CurrentRecord.SomeVehicleType;
             FreeParkingPlacesList = new ObservableCollection<int>();
-            FillFreeParkPlacesList();
+            VehicleTypeList = new ObservableCollection<VehicleType>();
+            FillLists();
+
             ProlongDate = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value;
             DefaultPhoto = "default_vehicle_picture.png";
             PreviousState = SetState();//remember current data state for compare in future befor save
@@ -260,9 +277,10 @@ namespace Parking.ViewModel.ParkPlacesOps
 
         }
 
-        private void FillFreeParkPlacesList()
+        private void FillLists()
         {
             FreeParkingPlacesList.Clear();
+            VehicleTypeList.Clear();
             using (DBConteiner  db = new DBConteiner())
             {
                 try
@@ -276,6 +294,16 @@ namespace Parking.ViewModel.ParkPlacesOps
                     }
                     else 
                         MessageForChangeParkPlace = "Немає вільних місць";
+                    var VTlist = db.VehicleTypes.ToList();
+                    if (!(VTlist is null))
+                    {
+                        foreach (var item in VTlist)
+                            VehicleTypeList.Add(
+                                new VehicleType
+                            { VehicleTypeId=item.VehicleTypeId,
+                              TypeName=item.TypeName
+                            });
+                    }
 
                 }
                 catch (ArgumentNullException ex)
@@ -335,21 +363,19 @@ namespace Parking.ViewModel.ParkPlacesOps
             tmp.OwnerSecondName = CurrentRecord.SomePerson.SecondName;
             tmp.OwnerFirstName = CurrentRecord.SomePerson.FirstName;
             tmp.OwnerPatronimic = CurrentRecord.SomePerson.Patronimic;
-            tmp.OwnerPersMale = CurrentRecord.SomePerson.Male;
-            tmp.OwnerPersFemale = CurrentRecord.SomePerson.Female;
+            tmp.OwnerSex = CurrentRecord.SomePerson.Sex;            
             tmp.OwnerPhone = CurrentRecord.SomeContacts.Phone;
             tmp.VPhoto = CurrentRecord.SomeVehicle.VPhoto is null?null:lib.CopyPhoto(CurrentRecord.SomeVehicle.VPhoto);
             tmp.DeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value;
             tmp.TrustSecondName = CurrentRecord.TrustedPerson.SecondName;
             tmp.TrustFirstName = CurrentRecord.TrustedPerson.FirstName;
             tmp.TrustPatronimic = CurrentRecord.TrustedPerson.Patronimic;
-            tmp.TrustPersMale = CurrentRecord.TrustedPerson.Male;
-            tmp.TrustPersFemale = CurrentRecord.TrustedPerson.Female;
+            tmp.TrustPersSex = CurrentRecord.TrustedPerson.Sex;            
             tmp.TrustPhone = CurrentRecord.TrContacts.Phone;
             tmp.Adress = CurrentRecord.SomeContacts.Adress;
             tmp.RegNumber = CurrentRecord.SomeVehicle.RegNumber;
             tmp.Color = CurrentRecord.SomeVehicle.Color;
-            tmp.VType = CurrentRecord.SomeVehicle.TypeName;
+            tmp.VType = CurrentRecord.SomeVehicleType.TypeName;
             tmp.ProlongDate = ProlongDate;
             tmp.Coast = Coast;
             tmp.FreeparkPlace = FreeparkPlace;

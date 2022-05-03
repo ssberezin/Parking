@@ -247,26 +247,30 @@ namespace Parking.ViewModel
                                 {
                                     ContactsId = (int)result.GetValue(10),
                                     Phone = (string)result.GetValue(11),
-                                    Adress = result.GetValue(19) is System.DBNull ? null : (string)result.GetValue(19)
+                                    Adress = result.GetValue(18) is System.DBNull ? null : (string)result.GetValue(18)
                                 };
                                 CurrentRecord.SomeVehicle = new Vehicle
                                 {
                                     VehicleId = (int)result.GetValue(12),
                                     RegNumber = (string)result.GetValue(13),
-                                    Color = (string)result.GetValue(14),
-                                    TypeName = (string)result.GetValue(15)
+                                    Color = (string)result.GetValue(14)                                    
                                 };
                                 CurrentRecord.SomeParkingPlaceLog = new ParkingPlaceLog
                                 {
-                                    ParkingPlaceLogId = (int)result.GetValue(16),
-                                    DeadLine = (DateTime)result.GetValue(17)
+                                    ParkingPlaceLogId = (int)result.GetValue(15),
+                                    DeadLine = (DateTime)result.GetValue(16)
+                                };
+                                CurrentRecord.SomeVehicleType = new VehicleType 
+                                {
+                                    VehicleTypeId = (int)result.GetValue(19),
+                                    TypeName = (string)result.GetValue(20)
                                 };
 
                                 if (CurrentRecord.SomeClient.OrgName == null || CurrentRecord.SomeClient.OrgName == "не вказано")
                                     CurrentRecord.SomeClient.OrgName = CurrentRecord.SomePerson.SecondName + " " + CurrentRecord.SomePerson.FirstName + " " + CurrentRecord.SomePerson.Patronimic;
 
                                 if (!(result.GetValue(18) is System.DBNull))
-                                    CurrentRecord.SomePerson.TrustedPerson_Id = (int?)result.GetValue(18);
+                                    CurrentRecord.SomePerson.TrustedPerson_Id = (int?)result.GetValue(17);
 
                                 if (CurrentRecord.SomePerson.TrustedPerson_Id != null)
                                 {
@@ -277,7 +281,7 @@ namespace Parking.ViewModel
                                     
                                 }
                                 VisaBility = "Visible";                               
-                                DateTime dt = (DateTime)result.GetValue(17);
+                                DateTime dt = (DateTime)result.GetValue(16);
                                 DeadLine = new DateTime(dt.Year, dt.Month, dt.Day).ToString("dd/MM/yyyy");                                
                                 OutOfDeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine > DateTime.Now ? "не просрочено" : "просрочено";
 
@@ -354,7 +358,9 @@ namespace Parking.ViewModel
                             nPerson.SecondName = (string)result.GetValue(0);
                             nPerson.FirstName = (string)result.GetValue(1);
                             nPerson.Patronimic = (string)result.GetValue(2);
-                            
+                            nPerson.Sex = (bool)result.GetValue(5);
+
+
                             nContacts = new Contacts { ContactsId = (int)result.GetValue(3), Phone = (string)result.GetValue(4) };
                         };
                         

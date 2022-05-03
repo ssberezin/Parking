@@ -115,16 +115,15 @@ namespace Parking.ViewModel.PersonOperations
                             record.FirstName = (string)result.GetValue(7);
                             record.Patronimic = (string)result.GetValue(8);
                             record.PYB = record.SecondName + " " + record.FirstName + " " + record.Patronimic;
-                            record.Male = (bool)result.GetValue(9);
-                            record.Female = (bool)result.GetValue(10);
-                            record.DayBirthday = (DateTime)result.GetValue(11);
-                            if (!(result.GetValue(12) is System.DBNull))
-                                record.Photo = (byte[])result.GetValue(12);
-                            record.ContactsId =(int) result.GetValue(13);
-                            record.PhoneNumber = (string)result.GetValue(14);
-                            record.Adress = (string)result.GetValue(15);
-                            record.Status = (string)result.GetValue(16);
-                            record.Position = (string)result.GetValue(17);
+                            record.Sex = (bool)result.GetValue(9);                            
+                            record.DayBirthday = (DateTime)result.GetValue(10);
+                            if (!(result.GetValue(11) is System.DBNull))
+                                record.Photo = (byte[])result.GetValue(11);
+                            record.ContactsId =(int) result.GetValue(12);
+                            record.PhoneNumber = (string)result.GetValue(13);
+                            record.Adress = (string)result.GetValue(14);
+                            record.Status = (string)result.GetValue(15);
+                            record.Position = (string)result.GetValue(16);
 
                             EmployeeRecords.Add(record);
                         };
