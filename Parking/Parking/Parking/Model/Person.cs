@@ -90,19 +90,6 @@ namespace Parking.Model
             }
         }
 
-        //private bool female;
-        //public bool Female
-        //{
-        //    get { return female; }
-        //    set
-        //    {
-        //        if (value != female)
-        //        {
-        //            female = value;
-        //            OnPropertyChanged(nameof(Female));
-        //        }
-        //    }
-        //}
 
         [Column(TypeName = "datetime2")]        
         private DateTime? dayBirthday;

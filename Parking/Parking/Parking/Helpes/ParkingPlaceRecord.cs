@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Parking.Helpes
 {
-    public class ParkingPlaceRecord: Helpes.ObservableObject
+    public class ParkingPlaceRecord : Helpes.ObservableObject
     {
         public ParkingPlaceRecord()
         {
-            
+
         }
 
 
@@ -127,6 +127,7 @@ namespace Parking.Helpes
             }
         }
 
+        //SomeVehicleType
         private VehicleType someVehicleType;
         public VehicleType SomeVehicleType
         {
@@ -141,8 +142,35 @@ namespace Parking.Helpes
             }
         }
 
+       
 
+        private bool femaleOwnPers;
+        public bool FemaleOwnPers
+        {
+            get { return femaleOwnPers; }
+            set
+            {
+                if (value != femaleOwnPers)
+                {
+                    femaleOwnPers = value;
+                    OnPropertyChanged(nameof(FemaleOwnPers));
+                }
+            }
+        }
 
+        private bool femaleTrustPers;
+        public bool FemaleTrustPers
+        {
+            get { return femaleTrustPers; }
+            set
+            {
+                if (value != femaleTrustPers)
+                {
+                    femaleTrustPers = value;
+                    OnPropertyChanged(nameof(FemaleTrustPers));
+                }
+            }
+        }
 
     }
 }

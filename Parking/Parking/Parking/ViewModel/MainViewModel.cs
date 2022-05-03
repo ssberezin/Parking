@@ -225,6 +225,7 @@ namespace Parking.ViewModel
                                     Released = (bool)result.GetValue(3)
                                 }
                             };
+                            
 
                             if (!SelectedRecord.SomeParkingPlace.FreeStatus.Value)
                             {                               
@@ -240,9 +241,11 @@ namespace Parking.ViewModel
                                     PersonId = (int)result.GetValue(6),
                                     SecondName = (string)result.GetValue(7),
                                     FirstName = (string)result.GetValue(8),
-                                    Patronimic = (string)result.GetValue(9)
-
+                                    Patronimic = (string)result.GetValue(9),
+                                    Sex = (bool)result.GetValue(21)
                                 };
+                                CurrentRecord.FemaleOwnPers = !CurrentRecord.SomePerson.Sex;
+
                                 CurrentRecord.SomeContacts = new Contacts
                                 {
                                     ContactsId = (int)result.GetValue(10),
@@ -265,6 +268,7 @@ namespace Parking.ViewModel
                                     VehicleTypeId = (int)result.GetValue(19),
                                     TypeName = (string)result.GetValue(20)
                                 };
+                                
 
                                 if (CurrentRecord.SomeClient.OrgName == null || CurrentRecord.SomeClient.OrgName == "не вказано")
                                     CurrentRecord.SomeClient.OrgName = CurrentRecord.SomePerson.SecondName + " " + CurrentRecord.SomePerson.FirstName + " " + CurrentRecord.SomePerson.Patronimic;
@@ -277,6 +281,7 @@ namespace Parking.ViewModel
 
                                     GetTrustedPerson(CurrentRecord.SomePerson.TrustedPerson_Id.Value, out Person nPerson, out Contacts nContacts);
                                     CurrentRecord.TrustedPerson = nPerson;
+                                    CurrentRecord.FemaleTrustPers = !CurrentRecord.TrustedPerson.Sex;
                                     CurrentRecord.TrContacts = nContacts;                                    
                                     
                                 }

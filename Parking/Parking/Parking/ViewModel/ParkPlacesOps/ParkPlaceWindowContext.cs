@@ -37,6 +37,48 @@ namespace Parking.ViewModel.ParkPlacesOps
             }
         }
 
+        private bool parkingPlaceStatus;
+        public bool ParkingPlaceStatus
+        {
+            get { return parkingPlaceStatus; }
+            set
+            {
+                if (parkingPlaceStatus != value)
+                {
+                    parkingPlaceStatus = value;
+                    OnPropertyChanged(nameof(ParkingPlaceStatus));
+                }
+            }
+        }
+
+        private bool notInPlace;
+        public bool NotInPlace
+        {
+            get { return notInPlace; }
+            set
+            {
+                if (notInPlace != value)
+                {
+                    notInPlace = value;
+                    OnPropertyChanged(nameof(NotInPlace));
+                }
+            }
+        }
+
+        private bool notFree;
+        public bool NotFree
+        {
+            get { return notFree; }
+            set
+            {
+                if (notFree != value)
+                {
+                    notFree = value;
+                    OnPropertyChanged(nameof(NotFree));
+                }
+            }
+        }
+
         private VehicleType vType;
         public VehicleType VType
         {
@@ -203,6 +245,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             dialogService = new DefaultDialogService();
         }
 
+        //For editing
         public ParkPlaceWindowContext(int userId, ParkingPlaceRecord parkRecord)
         {
             showWindow = new DefaultShowWindowService();
@@ -215,12 +258,16 @@ namespace Parking.ViewModel.ParkPlacesOps
             lib = new Library();
             UserId = userId;
             CurrentRecord = parkRecord;
+            
             CurrentRecord.SomeClient.OrgName = CurrentRecord.SomeClient.OrgName == null ?"фізична особа": CurrentRecord.SomeClient.OrgName;            
             NextDeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value;
             OwnerPhone1 = CurrentRecord.SomeContacts.Phone;
             TrustPhone = CurrentRecord.TrContacts.Phone;
             RegNumber = CurrentRecord.SomeVehicle.RegNumber;
             VType = CurrentRecord.SomeVehicleType;
+            NotFree = !CurrentRecord.SomeParkingPlace.FreeStatus.Value;
+            NotInPlace = !CurrentRecord.SomeParkingPlace.Released;
+
             FreeParkingPlacesList = new ObservableCollection<int>();
             VehicleTypeList = new ObservableCollection<VehicleType>();
             FillLists();
@@ -389,7 +436,42 @@ namespace Parking.ViewModel.ParkPlacesOps
             if (!ValidationInputData())
                 return;
             //next we have to save data to DB
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {
+                    Person ownerPerson = db.Persons.Find(CurrentRecord.SomePerson.PersonId);
+                    Person trustedPerson = db.Persons.Find(CurrentRecord.TrustedPerson.PersonId);
+                    Contacts ownerCTN = db.Contacts.Find(CurrentRecord.SomeContacts.ContactsId);
+                    Contacts trustedCTN = db.Contacts.Find(CurrentRecord.TrContacts.ContactsId);
+                    Client editableClient = db.Clients.Find(CurrentRecord.SomeClient.ClientId);
+                    Vehicle editableVehicle = db.Vehicles.Find(CurrentRecord.SomeVehicle.VehicleId);
+                    ParkingPlaceLog parkingPlaceLog = db.ParkingPlaceLogs.Find(CurrentRecord.SomeParkingPlaceLog.ParkingPlaceLogId);
+                    ParkingPlace parkingPlace = db.ParkingPlaces.Find(CurrentRecord.SomeParkingPlace.ParkingPlaceId);
 
+
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
 
 
         }

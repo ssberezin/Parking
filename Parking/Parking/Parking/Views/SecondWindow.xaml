@@ -155,7 +155,7 @@
             <Border BorderBrush="Gray"  BorderThickness="2">
                 <StackPanel HorizontalAlignment="Center" >
                     <TextBlock Text="ТИП ТЗ " FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="{Binding CurrentRecord.SomeVehicle.TypeName, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding  CurrentRecord.SomeVehicleType.TypeName, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Border>
 

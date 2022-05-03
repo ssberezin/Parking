@@ -115,7 +115,8 @@ namespace Parking.ViewModel.PersonOperations
                             record.FirstName = (string)result.GetValue(7);
                             record.Patronimic = (string)result.GetValue(8);
                             record.PYB = record.SecondName + " " + record.FirstName + " " + record.Patronimic;
-                            record.Sex = (bool)result.GetValue(9);                            
+                            record.Male = (bool)result.GetValue(9);
+                            record.Female = !record.Male;
                             record.DayBirthday = (DateTime)result.GetValue(10);
                             if (!(result.GetValue(11) is System.DBNull))
                                 record.Photo = (byte[])result.GetValue(11);
