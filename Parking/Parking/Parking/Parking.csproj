@@ -97,7 +97,7 @@
     <Compile Include="Model\VehicleType.cs" />
     <Compile Include="ViewModel\Authorezation.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\ParkPlacesOps\CompareStates.cs" />
+    <Compile Include="ViewModel\ParkPlacesOps\CompareStatesForParkingPlace.cs" />
     <Compile Include="ViewModel\ParkPlacesOps\ParkPlaceWindowContext.cs" />
     <Compile Include="ViewModel\PersonOperations\EmployeeRecord.cs" />
     <Compile Include="ViewModel\PersonOperations\EmployeeWindowContext.cs" />

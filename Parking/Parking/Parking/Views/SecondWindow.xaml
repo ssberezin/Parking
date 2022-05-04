@@ -29,8 +29,8 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" >
-            <Menu  FontSize="14" Padding="1"  VerticalAlignment="Top" Margin="0,0,0,1" >
-                <MenuItem Header="Звіти" Height="17"  VerticalAlignment="Top">
+            <Menu  FontSize="14" Padding="1"  VerticalAlignment="Top" Height="30" Margin="0,0,0,1" >
+                <MenuItem Header="Звіти"   VerticalAlignment="Top" >
                     <MenuItem Header="Боржники" 
                                   Command="{Binding CopyDBCommand}"/>
                     <MenuItem Header="Відвідування парковки ТЗ" Command="{Binding CloseMainWindow}"/>
@@ -45,7 +45,7 @@
 
                 
 
-                <MenuItem Header="Сервіс"  Height="17"  VerticalAlignment="Top" >
+                <MenuItem Header="Сервіс"    VerticalAlignment="Top" >
                     <!--<MenuItem Header="Заполнить БД тестовыми данными" Command="{Binding AddTestCommand}"
                                   VerticalAlignment="Top"/>-->
                     <MenuItem Header="Персонал"  VerticalAlignment="Top">
@@ -71,7 +71,7 @@
                 </MenuItem>
                
                 
-                <MenuItem Header="Основні дії"  Height="17"  VerticalAlignment="Top" >
+                <MenuItem Header="Основні дії"  VerticalAlignment="Top" >
                     <MenuItem Header="Паркувальні місця">
                         <MenuItem Header="Додати" Command="{Binding UsrOps.AddNewUserCommand}"
                                   VerticalAlignment="Top"  >

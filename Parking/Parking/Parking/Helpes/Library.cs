@@ -29,7 +29,7 @@ namespace Parking.Helpes
                 else
                     return null;
 
-                for (int i = 0; i < ph.Length; i++)
+                for (int i = 1; i < ph.Length; i++)
                     if ((int)ph[i] >= 48 && (int)ph[i] <= 57)
                         tmp += ph[i];
                     else

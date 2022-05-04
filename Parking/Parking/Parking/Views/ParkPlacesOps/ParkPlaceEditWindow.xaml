@@ -4,12 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Parking.Views.ParkPlacesOps" 
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:helpes="clr-namespace:Parking.Helpes" 
         xmlns:parkplacesops="clr-namespace:Parking.ViewModel.ParkPlacesOps"
         d:DataContext="{d:DesignInstance Type=parkplacesops:ParkPlaceWindowContext}"
         
         mc:Ignorable="d"
-        Title="ParkPlaceEditWindow" Height="570" Width="730">
+        Title="ParkPlaceEditWindow" Height="590" Width="730">
     <Window.Resources>
         <helpes:ImagePathConverter x:Key="imagePathConverter"/>
     </Window.Resources>
@@ -31,9 +32,9 @@
                 <StackPanel HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock  Text="Паркувальне місце № " FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Foreground="Red" TextWrapping="Wrap"/>
-                        <TextBlock  Text="{Binding CurrentRecord.SomeParkingPlace.ParkPlaceNumber, UpdateSourceTrigger=PropertyChanged}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Foreground="Blue" />
+                        <TextBlock  Text="{Binding CurrentRecord.SomeParkingPlace.ParkPlaceNumber, UpdateSourceTrigger=PropertyChanged}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Foreground="Blue" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
                         <TextBlock  Text="Статус: " FontSize="12" FontWeight="Bold" VerticalAlignment="Center" />
                         <RadioButton GroupName="D" Content="Вільне " VerticalAlignment="Center" IsChecked="{Binding  CurrentRecord.SomeParkingPlace.FreeStatus, UpdateSourceTrigger=PropertyChanged}"/>
                         <RadioButton GroupName="D" Content="Зайняте" VerticalAlignment="Center" IsChecked="{Binding NotFree, UpdateSourceTrigger=PropertyChanged}"/>
@@ -115,21 +116,8 @@
                                 <RadioButton GroupName="A" Content=" Чоловіча" VerticalAlignment="Center"  IsChecked="{Binding CurrentRecord.TrustedPerson.Sex, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                             <TextBlock  Text="№ телефона: " FontSize="12" FontWeight="Bold" Grid.Row="4" VerticalAlignment="Center"/>
-                            <TextBox  Text="{Binding TrustPhone , UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"/>
-                            <Border Background="LightYellow"    Margin="3" BorderBrush="Gray" BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="Тип транспортного засобу" FontSize="12" FontWeight="Bold"  HorizontalAlignment="Center" />                                    
-                                    <ComboBox   MinWidth="50"  
-                                      IsEditable="False" IsSynchronizedWithCurrentItem="True"                                     
-                                     SelectedItem="{Binding VType, UpdateSourceTrigger=PropertyChanged}"                        
-                                     ItemsSource="{Binding  VehicleTypeList}" 
-                                     HorizontalContentAlignment="Center"
-                                     DisplayMemberPath="TypeName"
-                                     Background="White" 
-                                     FontSize="14" >
-                                    </ComboBox>
-                                </StackPanel>
-                            </Border>
+                            <TextBox  Text="{Binding TrustPhone , UpdateSourceTrigger=PropertyChanged}" MinWidth="165" FontSize="14" MaxLength="13" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"/>
+                            
                         </StackPanel>
                     </Border>
                 </Border>
@@ -147,68 +135,99 @@
                     <Image Source="{Binding Path = CurrentRecord.Photo, Converter={StaticResource imagePathConverter}, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
                 </Grid>
                 <Grid Grid.Row="1" Grid.Column="1">
-                   
-                    <Border Background="LightYellow"    BorderBrush="Gray" BorderThickness="1">
-                        <StackPanel  >
-                            <TextBlock Text="Реєстраційний номер " TextWrapping="Wrap" FontSize="16" FontWeight="Bold"  HorizontalAlignment="Center" Foreground="Red"/>
-                            <TextBox  Text="{Binding RegNumber, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" 
+
+                    <StackPanel Margin="3">
+                        <Border Background="#FFD3E082">
+                            <StackPanel>
+                                <TextBlock Text="Реєстраційний номер " TextWrapping="Wrap" FontSize="16" FontWeight="Bold"  HorizontalAlignment="Center" Foreground="Red"/>
+                                <TextBox  Text="{Binding RegNumber, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" 
                                       FontSize="24"  TextAlignment="Center"  HorizontalAlignment="Center" FontWeight="Bold"
                                       ToolTip="Лише латиниця та цифри"/>
-                            <TextBlock Text="Колір " FontSize="14" FontWeight="Bold"  HorizontalAlignment="Center" />
-                            <TextBox  Text="{Binding CurrentRecord.SomeVehicle.Color, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="20"  TextAlignment="Center"  HorizontalAlignment="Center" FontWeight="Bold" Margin="2"/>
-                            <Border BorderBrush="Gray" BorderThickness="1" Background="#FFBFDFE6">
-                                <StackPanel>
-                                    <TextBlock Text="Дата закінчення строку оренди" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red" FontWeight="Bold"  HorizontalAlignment="Center" />
+                                <TextBlock Text="Колір " FontSize="14" FontWeight="Bold"  HorizontalAlignment="Center" Foreground="Red" />
+                                <TextBox  Text="{Binding CurrentRecord.SomeVehicle.Color, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="20"  TextAlignment="Center" TextWrapping="Wrap"  HorizontalAlignment="Center" FontWeight="Bold" Margin="2"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                                    <TextBlock Text="Тип ТЗ " TextWrapping="Wrap" FontSize="12" FontWeight="Bold"  
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <ComboBox   MinWidth="130"  
+                                      IsEditable="False" IsSynchronizedWithCurrentItem="True"                                     
+                                     SelectedItem="{Binding VType, UpdateSourceTrigger=PropertyChanged}"                        
+                                     ItemsSource="{Binding  VehicleTypeList}" 
+                                     HorizontalContentAlignment="Center"
+                                     DisplayMemberPath="TypeName"
+                                     Background="White" 
+                                     FontSize="14" >
+                                    </ComboBox>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border BorderBrush="Gray" BorderThickness="1" Background="#FFBFDFE6">
+                            <StackPanel>
+                                <TextBlock Text="Дата закінчення строку оренди" FontSize="12" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red" FontWeight="Bold"  HorizontalAlignment="Center" />
+                                <TextBlock Text="{Binding DeadLine, UpdateSourceTrigger=PropertyChanged}" FontSize="14"  TextAlignment="Center" Foreground="Blue" FontWeight="Bold"  HorizontalAlignment="Center" />
+
+                                <StackPanel  >
+                                    <TextBlock Text="Подовжити дату оренди до" FontWeight="Bold" HorizontalAlignment="Center"/>
                                     <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
-                                                HorizontalAlignment="Center"
-                                                SelectedDate="{Binding CurrentRecord.SomeParkingPlaceLog.DeadLine,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  
-                                                HorizontalContentAlignment="Center"/>
-                                    <StackPanel  >
-                                        <TextBlock Text="Подовжити дату оренди до" FontWeight="Bold" HorizontalAlignment="Center"/>
-                                        <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
-                                                HorizontalAlignment="Center"
+                                                HorizontalAlignment="Center" 
+                                               DisplayDateStart="{Binding Mode=OneWay, Source={x:Static System:DateTime.Today}}"
                                                 SelectedDate="{Binding ProlongDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                 HorizontalContentAlignment="Center"/>
 
-                                        
-                                        <TextBlock Text="{Binding ProlonDaysCount, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" HorizontalAlignment="Center" Foreground="Red" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <TextBlock  Text="Вартість " FontSize="14" FontWeight="Bold" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <TextBox  Text="{Binding Coast, UpdateSourceTrigger=PropertyChanged}" MinWidth="100" FontSize="16" MaxLength="26" HorizontalAlignment="Center"  Margin="3" HorizontalContentAlignment="Center" />
-                                    </StackPanel>
+
+                                    <TextBlock Text="{Binding ProlonDaysCount, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" HorizontalAlignment="Center" Foreground="Blue" />
                                 </StackPanel>
-                            </Border>
-                        </StackPanel>                        
-                    </Border>
-                    
-                    
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Text="Внести оплату " FontSize="14" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red" FontWeight="Bold"  
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBox  Text="{Binding Coast, UpdateSourceTrigger=PropertyChanged}" MinWidth="50" FontSize="16" MaxLength="5" HorizontalAlignment="Center"  Margin="3" HorizontalContentAlignment="Center" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
                 </Grid>
-               
-                <Border Grid.Row="1" Grid.Column="2" BorderBrush="Gray" BorderThickness="1" Background="#FFCCE6BF">
-                    <StackPanel HorizontalAlignment="Center">
-                        
-                        
-                        <StackPanel  >
-                            <TextBlock Text="Підібрати інше паркувальне місце" TextWrapping="Wrap" TextAlignment="Center" Foreground="DarkGreen"  FontWeight="Bold" HorizontalAlignment="Center" FontSize="14"/>
-                            
-                            <ComboBox   MinWidth="50"  
-                                      IsEditable="False" IsSynchronizedWithCurrentItem="True"                                     
+                <StackPanel Grid.Row="1" Grid.Column="2">
+                    <Border  BorderBrush="Gray" BorderThickness="1" Background="#FFCCE6BF">
+                        <StackPanel HorizontalAlignment="Center">
+
+
+                            <StackPanel  >
+                                <TextBlock Text="Підібрати інше паркувальне місце" TextWrapping="Wrap" TextAlignment="Center" Foreground="DarkGreen"  FontWeight="Bold" HorizontalAlignment="Center" FontSize="12"/>
+
+                                <StackPanel Orientation="Horizontal" >
+                                    <CheckBox x:Name="ReplaceEnable" VerticalAlignment="Center" Content="  "/>
+                                    <ComboBox   MinWidth="80"  
+                                     IsEnabled="{Binding ElementName=ReplaceEnable,  Path=IsChecked}"
+                                     IsEditable="False" IsSynchronizedWithCurrentItem="True"                                     
                                      SelectedItem="{Binding FreeparkPlace,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"                        
                                      ItemsSource="{Binding  FreeParkingPlacesList}" 
                                      HorizontalContentAlignment="Center"
                                      Background="White" 
                                      FontSize="14" ToolTip="{Binding MessageForChangeParkPlace, UpdateSourceTrigger=PropertyChanged}">
-                            </ComboBox>
-                            
-                            
-                            <Button  Content="Друк квитанції" Background="Brown" Height="25" />
-                            <Button  Content="Відмінити"  Height="25" Command="{Binding CencelWindowCommand}"
-                                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                            <Button  Content="Зберегти" Background="Blue" Height="25" />
+                                    </ComboBox>
+                                </StackPanel>
+                                <Button IsEnabled="{Binding ElementName=ReplaceEnable,  Path=IsChecked}"
+                                        Content="Застосувати" Background="Green" Height="25" />
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </Border>
+                    </Border>
+                    <Border  BorderBrush="Gray" BorderThickness="1" Background="AliceBlue">
+                        <StackPanel HorizontalAlignment="Center">
+
+
+                            <StackPanel  >
+                                
+
+
+                                <Button  Content=" Друк квитанції " Background="Brown" Height="25" />
+                                <Button  Content="Відмінити"  Height="25" Command="{Binding CencelWindowCommand}"
+                                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                <Button  Content="Зберегти" Background="Blue" Height="25" Command="{Binding SavedataCommand}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+                
             </Grid>
 
             
