@@ -274,8 +274,8 @@ namespace Parking.ViewModel.ParkPlacesOps
             lib = new Library();
             UserId = userId;
             CurrentRecord = parkRecord;
-            
-            CurrentRecord.SomeClient.OrgName = CurrentRecord.SomeClient.OrgName == null ?"фізична особа": CurrentRecord.SomeClient.OrgName;            
+
+            CurrentRecord.SomeClient.OrgName = CurrentRecord.SomeClient.OrgName == null ? "фізична особа" : CurrentRecord.SomeClient.OrgName;
             NextDeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value;
             OwnerPhone1 = CurrentRecord.SomeContacts.Phone;
             TrustPhone = CurrentRecord.TrContacts.Phone;
@@ -283,15 +283,15 @@ namespace Parking.ViewModel.ParkPlacesOps
             VType = CurrentRecord.SomeVehicleType;
             NotFree = !CurrentRecord.SomeParkingPlace.FreeStatus.Value;
             NotInPlace = !CurrentRecord.SomeParkingPlace.Released;
+            ProlongDate = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value;
+
             Coast = "0";
             FreeParkingPlacesList = new ObservableCollection<int>();
             VehicleTypeList = new ObservableCollection<VehicleType>();
             FillLists();
-
-            ProlongDate = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value;
+            
             DefaultPhoto = "default_vehicle_picture.png";
             PreviousState = SetState();//remember current data state for compare in future befor save
-
 
             PropertyChanged2 += ChangeProlongData;
             PropertyChanged3 += NumberValidationPhone1;
@@ -351,7 +351,7 @@ namespace Parking.ViewModel.ParkPlacesOps
         }
 
 
-
+        //uses in previous data loading
         private void FillLists()
         {
             FreeParkingPlacesList.Clear();
@@ -570,6 +570,98 @@ namespace Parking.ViewModel.ParkPlacesOps
                         ParkingPlaceLog parkingPlaceLog = db.ParkingPlaceLogs.Find(CurrentRecord.SomeParkingPlaceLog.ParkingPlaceLogId);
                         db.Entry(parkingPlaceLog).State = EntityState.Modified;
                         parkingPlaceLog.DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month,ProlongDate.Day );
+                        parkingPlaceLog.Money = CurrentRecord.SomeParkingPlaceLog.Money;
+
+                        user.ParkingPlaceLogs.Add(parkingPlaceLog);
+                    }
+
+                    db.SaveChanges();
+
+                    PreviousState = SetState();
+                    dialogService.ShowMessage("Ok");
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+        }
+
+        private void AddnewData()
+        {
+
+            CompareStatesForParkingPlace compare = new CompareStatesForParkingPlace();
+            if (!ValidationInputData())
+                return;
+            CurrentState = SetState();
+            //next we have to save data to DB
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {
+
+
+
+                    ParkingPlace parkingPlace = db.ParkingPlaces.Find(CurrentRecord.SomeParkingPlace.ParkingPlaceId);
+                    db.Entry(parkingPlace).State = EntityState.Modified;
+                    parkingPlace.FreeStatus = false;
+                    parkingPlace.Released = false;
+
+                    //CurrentRecord.SomePerson - готоая личность нового клиента
+                    //CurrentRecord.SomeContacts - готовіе контакты личности клиента
+
+                    // CurrentRecord.TrustedPerson - готоая личность доверенного лица
+                    //CurrentRecord.TrContacts  - готовые контакты доверенного лица
+
+                    //CurrentRecord.SomeClient - данные для "клиента"
+
+
+
+
+                    Vehicle newVehicle = new Vehicle
+                    {
+                        Color = CurrentRecord.SomeVehicle.Color,
+                        RegNumber = CurrentRecord.SomeVehicle.RegNumber,
+                        SomeVehicleType = db.VehicleTypes.Find(VType.VehicleTypeId)
+                    };
+                    db.Vehicles.Add(newVehicle);
+
+
+
+
+
+                    if (VType.TypeName != CurrentRecord.SomeVehicleType.TypeName)
+                    {
+                        Vehicle editableVehicle = db.Vehicles.Find(CurrentRecord.SomeVehicle.VehicleId);
+                        db.Entry(editableVehicle).State = EntityState.Modified;
+                        editableVehicle.SomeVehicleType = db.VehicleTypes.Find(VType.VehicleTypeId);
+
+                    }
+
+                    if (!compare.ParkingPlaceLogDataCompare(PreviousState, CurrentState))
+                    {
+                        User user = db.Users.Find(UserId);
+                        db.Entry(user).State = EntityState.Modified;
+
+                        ParkingPlaceLog parkingPlaceLog = db.ParkingPlaceLogs.Find(CurrentRecord.SomeParkingPlaceLog.ParkingPlaceLogId);
+                        db.Entry(parkingPlaceLog).State = EntityState.Modified;
+                        parkingPlaceLog.DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month, ProlongDate.Day);
                         parkingPlaceLog.Money = CurrentRecord.SomeParkingPlaceLog.Money;
 
                         user.ParkingPlaceLogs.Add(parkingPlaceLog);

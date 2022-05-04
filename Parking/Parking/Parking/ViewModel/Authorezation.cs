@@ -256,7 +256,7 @@ namespace Parking.ViewModel
                             left join Vehicles as Veh on Cl.ClientId=Veh.ClientOwner_ClientId
                             left join Contacts as Ctn on Ctn.SomePerson_PersonId=Pers.PersonId
                             left join ParkingPlaceLogs as PPL on PPL.SomeParkingPlace_ParkingPlaceId=PP.ParkingPlaceId
-                            join Vehicletypes as VT on VT.VehicleTypeId=Veh.SomeVehicleType_VehicleTypeId
+                            left join Vehicletypes as VT on VT.VehicleTypeId=Veh.SomeVehicleType_VehicleTypeId
 
                             Where PP.ParkingPlaceId = @ppId          
 

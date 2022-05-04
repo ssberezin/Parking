@@ -97,7 +97,17 @@ namespace Parking.ViewModel.ParkPlacesOps
 
         public bool VehicleDataCompare(CompareStatesForParkingPlace obj1, CompareStatesForParkingPlace obj2)
         {
-            bool VPhotoCompare = obj1.VPhoto.Length == obj2.VPhoto.Length;
+            bool VPhotoCompare;
+            if (obj1.VPhoto is null && obj2.VPhoto is null)
+                VPhotoCompare = true;
+            else
+            {
+                if ((obj1.VPhoto is null && !(obj2.VPhoto is null)) || (!(obj1.VPhoto is null) && obj2.VPhoto is null))
+                    VPhotoCompare = false;
+                else                 
+                    VPhotoCompare= obj1.VPhoto.Length == obj2.VPhoto.Length; 
+            }            
+                
             bool RegNamberCompare = obj1.RegNumber == obj2.RegNumber;
             bool ColorCompare = obj1.Color == obj2.Color;
             

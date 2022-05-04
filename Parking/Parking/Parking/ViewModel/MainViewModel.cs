@@ -188,7 +188,12 @@ namespace Parking.ViewModel
         private void ChangeSelectedRecord(object sender, PropertyChangedEventArgs e)
         {
 
-           
+            UpdateRecord();
+        }
+
+        private void UpdateRecord()
+        {
+
             string sqlExpression = "sp_GetparkingPlacesRecord";
 
             var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
@@ -211,7 +216,7 @@ namespace Parking.ViewModel
                     SqlDataReader result = command.ExecuteReader();
 
                     if (result.HasRows)
-                    {                       
+                    {
 
                         while (result.Read())
                         {
@@ -225,10 +230,10 @@ namespace Parking.ViewModel
                                     Released = (bool)result.GetValue(3)
                                 }
                             };
-                            
+
 
                             if (!SelectedRecord.SomeParkingPlace.FreeStatus.Value)
-                            {                               
+                            {
 
                                 CurrentRecord.SomeClient = new Client
                                 {
@@ -256,19 +261,19 @@ namespace Parking.ViewModel
                                 {
                                     VehicleId = (int)result.GetValue(12),
                                     RegNumber = (string)result.GetValue(13),
-                                    Color = (string)result.GetValue(14)                                    
+                                    Color = (string)result.GetValue(14)
                                 };
                                 CurrentRecord.SomeParkingPlaceLog = new ParkingPlaceLog
                                 {
                                     ParkingPlaceLogId = (int)result.GetValue(15),
                                     DeadLine = (DateTime)result.GetValue(16)
                                 };
-                                CurrentRecord.SomeVehicleType = new VehicleType 
+                                CurrentRecord.SomeVehicleType = new VehicleType
                                 {
                                     VehicleTypeId = (int)result.GetValue(19),
                                     TypeName = (string)result.GetValue(20)
                                 };
-                                
+
 
                                 if (CurrentRecord.SomeClient.OrgName == null || CurrentRecord.SomeClient.OrgName == "не вказано")
                                     CurrentRecord.SomeClient.OrgName = CurrentRecord.SomePerson.SecondName + " " + CurrentRecord.SomePerson.FirstName + " " + CurrentRecord.SomePerson.Patronimic;
@@ -282,23 +287,54 @@ namespace Parking.ViewModel
                                     GetTrustedPerson(CurrentRecord.SomePerson.TrustedPerson_Id.Value, out Person nPerson, out Contacts nContacts);
                                     CurrentRecord.TrustedPerson = nPerson;
                                     CurrentRecord.FemaleTrustPers = !CurrentRecord.TrustedPerson.Sex;
-                                    CurrentRecord.TrContacts = nContacts;                                    
-                                    
+                                    CurrentRecord.TrContacts = nContacts;
+
                                 }
-                                VisaBility = "Visible";                               
+                                VisaBility = "Visible";
                                 DateTime dt = (DateTime)result.GetValue(16);
-                                DeadLine = new DateTime(dt.Year, dt.Month, dt.Day).ToString("dd/MM/yyyy");                                
+                                DeadLine = new DateTime(dt.Year, dt.Month, dt.Day).ToString("dd/MM/yyyy");
                                 OutOfDeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine > DateTime.Now ? "не просрочено" : "просрочено";
 
                             }
                             else
+                            {
+                                //in case if parking place is free
                                 VisaBility = "Hidden";
+                                CurrentRecord.SomeClient = new Client
+                                {
+                                    OrgDetals = "не задано",
+                                    OrgName = "не задано",
                                     
+                                };
+                                CurrentRecord.SomePerson = new Person();                                
+                                CurrentRecord.FemaleOwnPers = !CurrentRecord.SomePerson.Sex;
+                                CurrentRecord.SomeContacts = new Contacts();
+                                CurrentRecord.SomeVehicle = new Vehicle();
+
+                                CurrentRecord.SomeParkingPlaceLog = new ParkingPlaceLog { DeadLine=new DateTime(DateTime.Now.Year, DateTime.Now.Month,DateTime.Now.Day )};
+                                
+                                CurrentRecord.SomeVehicleType = new VehicleType
+                                {
+                                    VehicleTypeId = 1,
+                                    TypeName = "легкове авто"
+                                };
+                                CurrentRecord.TrustedPerson = new Person();
+                                CurrentRecord.FemaleTrustPers = !CurrentRecord.TrustedPerson.Sex;
+                                CurrentRecord.TrContacts = new Contacts();
+                                DateTime dt = DateTime.Now; ;
+                                DeadLine = new DateTime(dt.Year, dt.Month, dt.Day).ToString("dd/MM/yyyy");
+                                OutOfDeadLine = "не просрочено";
+                            }
+
                         };
-                        
+                        connection.Close();
+
                     }
                     else
+                    {
+                        connection.Close();
                         dialogService.ShowMessage("Щось пішло не так при зчитуванні данних про паркувальні місця");
+                    }
                 }
 
                 catch (ArgumentNullException ex)
@@ -412,6 +448,7 @@ namespace Parking.ViewModel
                     {
                         ParkPlaceEditWindow parkWindow = new ParkPlaceEditWindow(IncomUserId, CurrentRecord);
                         showWindow.ShowDialog(parkWindow);
+                        UpdateRecord();
                     }
                     ));
 
