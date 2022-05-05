@@ -128,7 +128,7 @@
                 </Border>
 
                 <Grid Grid.ColumnSpan="3" Margin="4">
-                    <!--<Image Source="{Binding Path = CurrentRecord.SomeVehicle.VPhoto, Converter={StaticResource imagePathConverter}, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />-->                    
+                    <Image Source="{Binding Path = CurrentRecord.SomeVehicle.VPhoto, Converter={StaticResource imagePathConverter}, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />                    
                     <Grid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Видалити фото?" Command="{Binding DeleteVehiclePhotoCommand}" />
@@ -200,32 +200,34 @@
                             <StackPanel  >
                                 <TextBlock Text="Підібрати інше паркувальне місце" TextWrapping="Wrap" TextAlignment="Center" Foreground="DarkGreen"  FontWeight="Bold" HorizontalAlignment="Center" FontSize="12"/>
 
-                                <StackPanel Orientation="Horizontal" >
-                                    <CheckBox x:Name="ReplaceEnable" VerticalAlignment="Center" Content="  "/>
+                                <StackPanel Orientation="Horizontal" >                                    
+                                    <CheckBox x:Name="ReplaceEnable" VerticalAlignment="Center" Content="  " 
+                                              IsEnabled="{Binding NewDataAddedSaved, UpdateSourceTrigger=PropertyChanged}"/>
                                     <ComboBox   MinWidth="80"  
                                      IsEnabled="{Binding ElementName=ReplaceEnable,  Path=IsChecked}"
                                      IsEditable="False" IsSynchronizedWithCurrentItem="True"                                     
                                      SelectedItem="{Binding FreeparkPlace,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"                        
-                                     ItemsSource="{Binding  FreeParkingPlacesList}" 
+                                     ItemsSource="{Binding  FreeParkingPlacesList, UpdateSourceTrigger=PropertyChanged}" 
                                      HorizontalContentAlignment="Center"
                                      Background="White" 
                                      FontSize="14" ToolTip="{Binding MessageForChangeParkPlace, UpdateSourceTrigger=PropertyChanged}">
                                     </ComboBox>
                                 </StackPanel>
                                 <Button IsEnabled="{Binding ElementName=ReplaceEnable,  Path=IsChecked}"
+                                        Command="{Binding ChangeParkinPlaceCommand}"
                                         Content="Застосувати" Background="Green" Height="25" />
                             </StackPanel>
                         </StackPanel>
                     </Border>
                     <Border  BorderBrush="Gray" BorderThickness="1" Background="AliceBlue">
-                        <StackPanel HorizontalAlignment="Center">
+                        <StackPanel HorizontalAlignment="Center" >
 
 
                             <StackPanel  >
-                                
 
 
-                                <Button  Content=" Друк квитанції " Background="Brown" Height="25" />
+
+                                <Button  Content=" Друк квитанції " Background="Brown" Height="25" IsEnabled="{Binding  NewDataAddedSaved, UpdateSourceTrigger=PropertyChanged}" />
                                 <Button  Content="Відмінити"  Height="25" Command="{Binding CencelWindowCommand}"
                                      CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
                                 <Button  Content="Зберегти" Background="Blue" Height="25" Command="{Binding SavedataCommand}" />

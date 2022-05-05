@@ -261,7 +261,9 @@ namespace Parking.ViewModel
                                 {
                                     VehicleId = (int)result.GetValue(12),
                                     RegNumber = (string)result.GetValue(13),
-                                    Color = (string)result.GetValue(14)
+                                    Color = (string)result.GetValue(14),
+                                    VPhoto = result.GetValue(22) is System.DBNull ? null: (byte[])result.GetValue(22)
+
                                 };
                                 CurrentRecord.SomeParkingPlaceLog = new ParkingPlaceLog
                                 {
@@ -328,7 +330,7 @@ namespace Parking.ViewModel
 
                         };
                         connection.Close();
-
+                       
                     }
                     else
                     {
@@ -446,10 +448,18 @@ namespace Parking.ViewModel
         public RelayCommand EditparkPlaceCommand => editparkPlaceCommand ?? (editparkPlaceCommand = new RelayCommand(
                     (obj) =>
                     {
-                        AddtestData();
+                       // AddtestData();
                         ParkPlaceEditWindow parkWindow = new ParkPlaceEditWindow(IncomUserId, CurrentRecord);
                         showWindow.ShowDialog(parkWindow);
                         UpdateRecord();
+                        foreach (ParkingPlaceRecord item in Records)
+                            if (item.SomeParkingPlace.ParkPlaceNumber == CurrentRecord.SomeParkingPlace.ParkPlaceNumber)
+                            {
+                                item.SomeParkingPlace.Released = CurrentRecord.SomeParkingPlace.Released;
+                                item.SomeParkingPlace.FreeStatus = CurrentRecord.SomeParkingPlace.FreeStatus;
+                                break;
+                            }
+                        
                     }
                     ));
 

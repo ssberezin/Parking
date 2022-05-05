@@ -244,21 +244,20 @@ namespace Parking.ViewModel
                          Create proc sp_GetparkingPlacesRecord
                             @ppId int
                             as
-                            Select PP.ParkingPlaceId '0_ParkingPlaceId', PP.ParkPlaceNumber '1_PlaceNumber', PP.FreeStatus '2_FreeStatus', PP.Released '3_WentInOrWentOut',
+                            Select PP.ParkingPlaceId '0_ParkingPlaceId', PP.ParkPlaceNumber '1_PlaceNumber', PP.FreeStatus '2_FreeStatus', PP.Released '3_Released',
 	                             Cl.ClientId '4_ClientId', Cl.OrgName '5_OrgName',
 	                             Pers.PersonId '6_PersonId',   Pers.SecondName '7_SecondName', Pers.FirstName '8_FirstName', Pers.Patronimic '9_Patronimic',
 	                             Ctn.ContactsId '10_ContactsId', Ctn.Phone '11_Phone', Veh.VehicleId '12_VehicleId', Veh.RegNumber '13_VehicleRegNumber', Veh.Color '14_VehicleColor',
 	                             PPL.ParkingPlaceLogId  '15_PPLId', PPL.DeadLine '16_DeadLine', Pers.TrustedPerson_Id '17_TrustedPerson_Id', Ctn.Adress '18_DriversAdress',
-	                             VT.VehicleTypeId '19_VehicleTypeId', VT.TypeName  '20_VTypeName', Pers.Sex 'Pers_Sex'
+	                             VT.VehicleTypeId '19_VehicleTypeId', VT.TypeName  '20_VTypeName', Pers.Sex '21_Pers_Sex', Veh.VPhoto '22_VPhoto'
                             From ParkingPlaces as PP 
                             left join Clients as Cl on PP.SomeClient_ClientId=Cl.ClientId
                             left Join People as Pers on Cl.PersonCustomer_PersonId = pers.PersonId
                             left join Vehicles as Veh on Cl.ClientId=Veh.ClientOwner_ClientId
                             left join Contacts as Ctn on Ctn.SomePerson_PersonId=Pers.PersonId
                             left join ParkingPlaceLogs as PPL on PPL.SomeParkingPlace_ParkingPlaceId=PP.ParkingPlaceId
-                            left join Vehicletypes as VT on VT.VehicleTypeId=Veh.SomeVehicleType_VehicleTypeId
-
-                            Where PP.ParkingPlaceId = @ppId          
+                            left join Vehicletypes as VT on VT.VehicleTypeId=Veh.SomeVehicleType_VehicleTypeId     
+                            Where PP.ParkingPlaceId = @ppId
 
                         ");
 
