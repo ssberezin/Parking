@@ -446,12 +446,31 @@ namespace Parking.ViewModel
         public RelayCommand EditparkPlaceCommand => editparkPlaceCommand ?? (editparkPlaceCommand = new RelayCommand(
                     (obj) =>
                     {
+                        AddtestData();
                         ParkPlaceEditWindow parkWindow = new ParkPlaceEditWindow(IncomUserId, CurrentRecord);
                         showWindow.ShowDialog(parkWindow);
                         UpdateRecord();
                     }
                     ));
 
+        private void AddtestData()
+        {
+            CurrentRecord.SomePerson.SecondName = "Петров";
+            CurrentRecord.SomePerson.FirstName = "Іван";
+            CurrentRecord.SomePerson.Patronimic = "Дмитрович";
+            CurrentRecord.SomePerson.Sex = true;
+            CurrentRecord.SomeContacts.Phone = "+380509632514";
+            CurrentRecord.SomeContacts.Adress = "м.Київ, вул. Героїв АТО, б.37";
+            CurrentRecord.TrustedPerson.SecondName = "Кірієнко";
+            CurrentRecord.TrustedPerson.FirstName = "Ірина";
+            CurrentRecord.TrustedPerson.Patronimic = "Вікторівна";
+            CurrentRecord.TrContacts.Phone = "+380975214652";
+            CurrentRecord.TrustedPerson.Sex = false;
+            CurrentRecord.SomeVehicle.Color = "Синій";
+            CurrentRecord.SomeVehicleType.TypeName = "легковий";
+            CurrentRecord.SomeVehicle.RegNumber = "AE2965KO";
+
+        }
 
 
     }

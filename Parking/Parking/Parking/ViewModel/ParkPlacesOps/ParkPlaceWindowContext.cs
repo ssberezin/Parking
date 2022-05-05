@@ -38,6 +38,8 @@ namespace Parking.ViewModel.ParkPlacesOps
             }
         }
 
+        
+
         private bool parkingPlaceStatus;
         public bool ParkingPlaceStatus
         {
@@ -214,7 +216,7 @@ namespace Parking.ViewModel.ParkPlacesOps
                 if (deadLine != value)
                 {
                     deadLine = value;
-                    OnPropertyChanged5(nameof(DeadLine));
+                    OnPropertyChanged(nameof(DeadLine));
                 }
             }
         }
@@ -289,7 +291,9 @@ namespace Parking.ViewModel.ParkPlacesOps
             FreeParkingPlacesList = new ObservableCollection<int>();
             VehicleTypeList = new ObservableCollection<VehicleType>();
             FillLists();
-            
+
+
+          
             DefaultPhoto = "default_vehicle_picture.png";
             PreviousState = SetState();//remember current data state for compare in future befor save
 
@@ -307,46 +311,38 @@ namespace Parking.ViewModel.ParkPlacesOps
                 ProlonDaysCount = res.ToString()+" дн.";
         }
 
-        private static readonly Regex regex = new Regex("[^0-9+]+"); //regex that matches disallowed text
+        
         private void NumberValidationPhone1(object sender, PropertyChangedEventArgs e)
-        {
-            if (regex.IsMatch(OwnerPhone1))
-            {
-                OwnerPhone1 = CurrentRecord.SomeContacts.Phone;
-                dialogService.ShowMessage("Ви намагаєтеся ввести в поле номеру телефона некорректні данні.");
-            }
-           
+        {           
+            OwnerPhone1 = lib.PhoneNumberValidation(OwnerPhone1);          
         }
 
         private void NumberValidationPhone2(object sender, PropertyChangedEventArgs e)
-        {
-            if (regex.IsMatch(TrustPhone))
-            {
-                TrustPhone = CurrentRecord.TrContacts.Phone;
-                dialogService.ShowMessage("Ви намагаєтеся ввести в поле номеру телефона некорректні данні.");
-            }
-
+        {            
+            TrustPhone = lib.PhoneNumberValidation(TrustPhone);
         }
 
-        private static readonly Regex regexRegNumer = new Regex("[^0-9][^A-Z]+"); //regex that matches disallowed text
+        
+
+        private static readonly Regex regexRegNumer = new Regex("[^0-9A-Z]+"); //regex that matches disallowed text
         private void RegNumberValidation(object sender, PropertyChangedEventArgs e)
         {
-            CurrentRecord.SomeVehicle.RegNumber = CurrentRecord.SomeVehicle.RegNumber.ToUpper();
-            if (regexRegNumer.IsMatch(CurrentRecord.SomeVehicle.RegNumber))
+            if (!(RegNumber is null))
+                RegNumber = RegNumber.ToUpper();
+
+            if (regexRegNumer.IsMatch(RegNumber))
             {
-                RegNumber = CurrentRecord.SomeVehicle.RegNumber;
-                dialogService.ShowMessage("Ви намагаєтеся ввести в поле номеру \n держ реэстрації не корректні данні.");
+                RegNumber = RegNumber.Remove(RegNumber.Length-1,1);                
             }
         }
 
         private static readonly Regex regexCoast = new Regex("[^0-9,.]+"); //regex that matches disallowed text
         private void CoastValidation(object sender, PropertyChangedEventArgs e)
         {
-            if (regex.IsMatch(Coast))
-            {
-                Coast = "0";
-                dialogService.ShowMessage("Ви намагаєтеся ввести в поле оплати \n не корректні данні.");
-            }
+            if (regexCoast.IsMatch(Coast))
+            {                
+                Coast = Coast.Remove(Coast.Length - 1, 1);
+            }            
 
         }
 
@@ -479,8 +475,10 @@ namespace Parking.ViewModel.ParkPlacesOps
         public RelayCommand SavedataCommand => savedataCommand ?? (savedataCommand = new RelayCommand(
                     (obj) =>
                     {
-
-                        EditData();
+                        if (CurrentRecord.SomeClient.ClientId == 0)
+                            AddnewData();
+                        else
+                            EditData();
                     }
                     ));
 
@@ -490,6 +488,11 @@ namespace Parking.ViewModel.ParkPlacesOps
             CompareStatesForParkingPlace compare = new CompareStatesForParkingPlace();
             if (!ValidationInputData())
                 return;
+
+            CurrentRecord.SomeVehicle.RegNumber = RegNumber;
+            CurrentRecord.SomeContacts.Phone = OwnerPhone1;
+            CurrentRecord.TrContacts.Phone = TrustPhone;
+          
             CurrentState = SetState();
             //next we have to save data to DB
             using (DBConteiner db = new DBConteiner())
@@ -603,6 +606,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             }
         }
 
+        
         private void AddnewData()
         {
 
@@ -610,65 +614,118 @@ namespace Parking.ViewModel.ParkPlacesOps
             if (!ValidationInputData())
                 return;
             CurrentState = SetState();
+
+            CurrentRecord.SomeVehicle.RegNumber = RegNumber;
+            CurrentRecord.SomeContacts.Phone = OwnerPhone1;
+            CurrentRecord.TrContacts.Phone = TrustPhone;
+          
+
             //next we have to save data to DB
             using (DBConteiner db = new DBConteiner())
             {
                 try
                 {
+                    lib.GetPersonAndContactsIds(CurrentRecord.SomeContacts.Phone, CurrentRecord.SomePerson, out int? ctnId, out int? persId);
+
+                    Client Cl;
+                    Person OwnerPerson;
+                    Contacts OwnerContacts;// = db.Contacts.Where(ctn => ctn.Phone == CurrentRecord.SomeContacts.Phone).FirstOrDefault();
+
+                    if (ctnId is null || ctnId==0 && persId==0)
+                    {
+                        OwnerPerson = CurrentRecord.SomePerson;
+                        db.Persons.Add(OwnerPerson);
+
+                        OwnerContacts = CurrentRecord.SomeContacts;
+                        db.Contacts.Add(OwnerContacts);
+
+                        OwnerPerson.ContactsData.Add(OwnerContacts);
+                        Cl = new Client { OrgName = CurrentRecord.SomeClient.OrgName};
+                        db.Clients.Add(Cl);
+                    }
+                    else
+                    {
+                        OwnerContacts = db.Contacts.Find(ctnId);
+                        OwnerPerson = db.Persons.Find(persId);
+                        Cl = db.Clients.Where(cl=>cl.PersonCustomer.PersonId==OwnerPerson.PersonId ).FirstOrDefault();
+                    }
+
+                    lib.GetPersonAndContactsIds(CurrentRecord.TrContacts.Phone, CurrentRecord.TrustedPerson, out int? trCtnId, out int? trPersId);
+
+                    Person TrustPerson;
+                    Contacts TrustContacts;// = db.Contacts.Where(ctn => ctn.Phone == CurrentRecord.TrContacts.Phone).FirstOrDefault();
+
+                    if (trCtnId is null || trCtnId == 0 && trPersId == 0)
+                    {
+                        TrustPerson = CurrentRecord.TrustedPerson;
+                        db.Persons.Add(TrustPerson);
+
+                        TrustContacts = CurrentRecord.TrContacts;
+                        db.Contacts.Add(TrustContacts);
+
+                        TrustPerson.ContactsData.Add(TrustContacts);
+
+                        OwnerPerson.TrustedPerson = TrustPerson;
+                    }
+                    else
+                    {
+                        TrustContacts = db.Contacts.Find(trCtnId);
+                        TrustPerson = db.Persons.Find(trPersId);
+
+                        // db.Entry(editableVehicle).State = EntityState.Modified;
+
+                        if (OwnerPerson.TrustedPerson != null && OwnerPerson.TrustedPerson.PersonId != 0)
+                        {
+                            db.Entry(OwnerPerson).State = EntityState.Modified;
+                            OwnerPerson.TrustedPerson = TrustPerson;
+                        }
+                        else
+                            OwnerPerson.TrustedPerson = TrustPerson;
+
+                    }
 
 
+                    Vehicle newVehicle =  db.Vehicles.Where(veh=>veh.RegNumber==CurrentRecord.SomeVehicle.RegNumber).FirstOrDefault();
+                    if (newVehicle is null)
+                    {
+                        newVehicle = new Vehicle
+                        {
+                            Color = CurrentRecord.SomeVehicle.Color,
+                            RegNumber = CurrentRecord.SomeVehicle.RegNumber,
+                            SomeVehicleType = db.VehicleTypes.Find(VType.VehicleTypeId)
+                        };
+                        db.Vehicles.Add(newVehicle);
+                        newVehicle.ClientOwner = Cl;
+                    }
+                    else
+                    {
+                        db.Entry(newVehicle).State = EntityState.Modified;
+                        newVehicle.ClientOwner = Cl;
+                    }
+
+                    User user = db.Users.Find(UserId);
+                    db.Entry(user).State = EntityState.Modified;
+
+                    ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog();
+                    parkingPlaceLog.DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month, ProlongDate.Day);
+                    parkingPlaceLog.Money = CurrentRecord.SomeParkingPlaceLog.Money;
+                    db.ParkingPlaceLogs.Add(parkingPlaceLog);
+
+                    user.ParkingPlaceLogs.Add(parkingPlaceLog);
+                    
 
                     ParkingPlace parkingPlace = db.ParkingPlaces.Find(CurrentRecord.SomeParkingPlace.ParkingPlaceId);
+
+                    parkingPlaceLog.SomeParkingPlace = parkingPlace;
+
                     db.Entry(parkingPlace).State = EntityState.Modified;
                     parkingPlace.FreeStatus = false;
                     parkingPlace.Released = false;
-
-                    //CurrentRecord.SomePerson - готоая личность нового клиента
-                    //CurrentRecord.SomeContacts - готовіе контакты личности клиента
-
-                    // CurrentRecord.TrustedPerson - готоая личность доверенного лица
-                    //CurrentRecord.TrContacts  - готовые контакты доверенного лица
-
-                    //CurrentRecord.SomeClient - данные для "клиента"
-
-
-
-
-                    Vehicle newVehicle = new Vehicle
-                    {
-                        Color = CurrentRecord.SomeVehicle.Color,
-                        RegNumber = CurrentRecord.SomeVehicle.RegNumber,
-                        SomeVehicleType = db.VehicleTypes.Find(VType.VehicleTypeId)
-                    };
-                    db.Vehicles.Add(newVehicle);
-
-
-
-
-
-                    if (VType.TypeName != CurrentRecord.SomeVehicleType.TypeName)
-                    {
-                        Vehicle editableVehicle = db.Vehicles.Find(CurrentRecord.SomeVehicle.VehicleId);
-                        db.Entry(editableVehicle).State = EntityState.Modified;
-                        editableVehicle.SomeVehicleType = db.VehicleTypes.Find(VType.VehicleTypeId);
-
-                    }
-
-                    if (!compare.ParkingPlaceLogDataCompare(PreviousState, CurrentState))
-                    {
-                        User user = db.Users.Find(UserId);
-                        db.Entry(user).State = EntityState.Modified;
-
-                        ParkingPlaceLog parkingPlaceLog = db.ParkingPlaceLogs.Find(CurrentRecord.SomeParkingPlaceLog.ParkingPlaceLogId);
-                        db.Entry(parkingPlaceLog).State = EntityState.Modified;
-                        parkingPlaceLog.DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month, ProlongDate.Day);
-                        parkingPlaceLog.Money = CurrentRecord.SomeParkingPlaceLog.Money;
-
-                        user.ParkingPlaceLogs.Add(parkingPlaceLog);
-                    }
+                    
+                    parkingPlace.SomeClient = Cl;
 
                     db.SaveChanges();
-
+                    DeadLine = ProlongDate.ToString("dd/MM/yyyy");
                     PreviousState = SetState();
                     dialogService.ShowMessage("Ok");
                 }
@@ -696,34 +753,7 @@ namespace Parking.ViewModel.ParkPlacesOps
         }
         private bool ValidationInputData()
         {
-
-            //Phone nubers validations
-            if (OwnerPhone1 != null && OwnerPhone1 != "")
-            {
-                string tmpPh = lib.PhoneNumberValidation(OwnerPhone1);
-                if (tmpPh is null)
-                {
-                    dialogService.ShowMessage("Поле телефона власника заповнене не корректно.\n або не заповнено. \n\t\tВідкорегуйте");
-                    return false;
-                }
-                else
-                    CurrentRecord.SomeContacts.Phone = OwnerPhone1;
-            }
-
-            if (TrustPhone != null && TrustPhone != "")
-            {
-                string tmpPh = lib.PhoneNumberValidation(TrustPhone);
-                if (tmpPh is null)
-                {
-                    dialogService.ShowMessage("Поле телефона довіреної особи заповнене не корректно\n або не заповнено.\n\t\tВідкорегуйте");
-                    return false;
-                }
-                else
-                    CurrentRecord.TrContacts.Phone = tmpPh;
-
-            }
-            
-           
+                     
             if (CurrentRecord.SomeClient.OrgName is null || CurrentRecord.SomePerson.SecondName is null ||
                 CurrentRecord.SomePerson.FirstName is null || CurrentRecord.SomePerson.Patronimic is null ||
                 CurrentRecord.TrustedPerson.SecondName is null || CurrentRecord.TrustedPerson.FirstName is null ||

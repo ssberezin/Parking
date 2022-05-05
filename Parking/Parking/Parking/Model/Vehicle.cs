@@ -83,7 +83,7 @@ namespace Parking.Model
                 if (value != vPhoto)
                 {
                     vPhoto = value;
-                    OnPropertyChanged(nameof(vPhoto));
+                    OnPropertyChanged(nameof(VPhoto));
                 }
             }
         }
