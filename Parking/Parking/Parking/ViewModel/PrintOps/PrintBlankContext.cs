@@ -38,7 +38,7 @@ namespace Parking.ViewModel.PrintOps
         }
 
         private RelayCommand callPrintPrewievCommand;
-        public RelayCommand CallPrintPrewievCommand => CallPrintPrewievCommand ??
+        public RelayCommand CallPrintPrewievCommand => callPrintPrewievCommand ??
             (callPrintPrewievCommand = new RelayCommand(
                     (obj) =>
                     {

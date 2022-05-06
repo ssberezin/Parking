@@ -655,6 +655,7 @@ namespace Parking.ViewModel.ParkPlacesOps
                     ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog();
                     parkingPlaceLog.DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month, ProlongDate.Day);
                     parkingPlaceLog.Money = CurrentRecord.SomeParkingPlaceLog.Money;
+                    parkingPlaceLog.PayingDate = DateTime.Now;
                     db.ParkingPlaceLogs.Add(parkingPlaceLog);
 
                     user.ParkingPlaceLogs.Add(parkingPlaceLog);
@@ -792,7 +793,7 @@ namespace Parking.ViewModel.ParkPlacesOps
                         db.Entry(parkingPlaceLog).State = EntityState.Modified;
                         parkingPlaceLog.DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month,ProlongDate.Day );
                         parkingPlaceLog.Money = CurrentRecord.SomeParkingPlaceLog.Money;
-
+                        parkingPlaceLog.PayingDate = DateTime.Now;
                         user.ParkingPlaceLogs.Add(parkingPlaceLog);
                     }
 
@@ -953,7 +954,12 @@ namespace Parking.ViewModel.ParkPlacesOps
         private RelayCommand printQuitanceCommand;
         public RelayCommand PrintQuitanceCommand => printQuitanceCommand ?? (printQuitanceCommand = new RelayCommand(
                     (obj) =>
-                    {                                                
+                    {
+                        if (CurrentRecord.SomeParkingPlaceLog.Money == 0)
+                        {
+                            dialogService.ShowMessage("Не можна надрукувати квитанцію з нульовою сумою.");
+                            return;
+                        };
                         PrintBlank printWindow = new PrintBlank(CurrentRecord, lib.GetUserData(UserId), lib.GetCompanyData());//for edit order                  
                         showWindow.ShowDialog(printWindow);
                     }

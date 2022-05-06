@@ -54,7 +54,7 @@
                     <TextBox  Text="{Binding CurrentRecord.SomeContacts.Adress, UpdateSourceTrigger=PropertyChanged}" Margin="3" 
                                           FontSize="20"  TextAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Stretch" FontWeight="Bold"
                                           Grid.Row="1"/>
-                    <Border Background="#FFCCF6CC" BorderThickness="1" BorderBrush="Gray" >
+                    <Border Background="#FFE9F7E9" BorderThickness="1" BorderBrush="Gray" >
                         <StackPanel >
                             <Border BorderThickness="1" BorderBrush="Gray">
                                 <StackPanel HorizontalAlignment="Center">
@@ -105,8 +105,8 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1"  >
-                    <Border  Background="LightGray" BorderBrush="Gray" BorderThickness="1">
+                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Background="#FFF2F4E3" >
+                   
                         <StackPanel HorizontalAlignment="Center">
                             <TextBlock  Text="Довірена особа " FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FFBD0000"/>
                             <TextBlock  Text="Прізвище: " FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
@@ -124,7 +124,7 @@
                             <TextBox  Text="{Binding TrustPhone , UpdateSourceTrigger=PropertyChanged}" MinWidth="165" FontSize="14" MaxLength="13" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"/>
                             
                         </StackPanel>
-                    </Border>
+                    
                 </Border>
 
                 <Grid Grid.ColumnSpan="3" Margin="4">
@@ -141,20 +141,24 @@
                     
                 </Grid>
                 <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="0.95*"/>
+                    </Grid.RowDefinitions>
 
-                    <StackPanel Margin="3">
-                        <Border Background="#FFD3E082" BorderBrush="Gray" BorderThickness="1">
-                            <StackPanel>
-                                <TextBlock Text="Реєстраційний номер " TextWrapping="Wrap" FontSize="16" FontWeight="Bold"  HorizontalAlignment="Center" Foreground="Red"/>
-                                <TextBox  Text="{Binding RegNumber, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" 
+                    <Border Margin="3">
+                        <Border Background="#FFDEE8A1" BorderBrush="Gray" BorderThickness="1">                          
+                                <StackPanel Margin="0,0,0,2">
+                                    <TextBlock Text="Реєстраційний номер " TextWrapping="Wrap" FontSize="16" FontWeight="Bold"  HorizontalAlignment="Center" Foreground="Red"/>
+                                    <TextBox  Text="{Binding RegNumber, UpdateSourceTrigger=PropertyChanged}" MinWidth="185"  Margin="3"
                                       FontSize="24"  TextAlignment="Center"  HorizontalAlignment="Center" FontWeight="Bold"
                                       ToolTip="Лише латиниця та цифри"/>
-                                <TextBlock Text="Колір " FontSize="14" FontWeight="Bold"  HorizontalAlignment="Center" Foreground="Red" />
-                                <TextBox  Text="{Binding CurrentRecord.SomeVehicle.Color, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="20"  TextAlignment="Center" TextWrapping="Wrap"  HorizontalAlignment="Center" FontWeight="Bold" Margin="2"/>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
-                                    <TextBlock Text="Тип ТЗ " TextWrapping="Wrap" FontSize="12" FontWeight="Bold"  
+                                    <TextBlock Text="Колір " FontSize="14" FontWeight="Bold"  HorizontalAlignment="Center" Foreground="Red" />
+                                    <TextBox  Text="{Binding CurrentRecord.SomeVehicle.Color, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="20"  TextAlignment="Center" TextWrapping="Wrap"  HorizontalAlignment="Center" FontWeight="Bold" Margin="3"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                                        <TextBlock Text="Тип ТЗ " TextWrapping="Wrap" FontSize="12" FontWeight="Bold"  
                                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <ComboBox   MinWidth="130"  
+                                        <ComboBox   MinWidth="130"  
                                       IsEditable="False" IsSynchronizedWithCurrentItem="True"                                     
                                      SelectedItem="{Binding VType, UpdateSourceTrigger=PropertyChanged}"                        
                                      ItemsSource="{Binding  VehicleTypeList}" 
@@ -162,38 +166,41 @@
                                      DisplayMemberPath="TypeName"
                                      Background="White" 
                                      FontSize="14" >
-                                    </ComboBox>
+                                        </ComboBox>
+                                    </StackPanel>
                                 </StackPanel>
-                            </StackPanel>
+                           
                         </Border>
-                        <Border BorderBrush="Gray" BorderThickness="1" Background="#FFBFDFE6" Margin="-1">
-                            <StackPanel>
-                                <TextBlock Text="Дата закінчення строку оренди" FontSize="12" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red" FontWeight="Bold"  HorizontalAlignment="Center" />
-                                <TextBlock Text="{Binding DeadLine, UpdateSourceTrigger=PropertyChanged}" FontSize="14"  TextAlignment="Center" Foreground="Blue" FontWeight="Bold"  HorizontalAlignment="Center" />
+                    
+                    </Border>
+                    <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Background="#FFBFDFE6" Margin="-1">
+                        <StackPanel Background="#FFDAEDED" Margin="3">
 
-                                <StackPanel  >
-                                    <TextBlock Text="Подовжити дату оренди до" FontWeight="Bold" HorizontalAlignment="Center"/>
-                                    <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
-                                                HorizontalAlignment="Center" 
+                            <TextBlock Text="Дата закінчення строку оренди" FontSize="12" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red" FontWeight="Bold"  HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding DeadLine, UpdateSourceTrigger=PropertyChanged}" FontSize="14"  TextAlignment="Center" Foreground="Blue" FontWeight="Bold"  HorizontalAlignment="Center" />
+
+                            <StackPanel  >
+                                <TextBlock Text="Подовжити дату оренди до" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,3"/>
+                                <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
+                                                HorizontalAlignment="Center"  
                                                DisplayDateStart="{Binding Mode=OneWay, Source={x:Static System:DateTime.Today}}"
                                                 SelectedDate="{Binding ProlongDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                 HorizontalContentAlignment="Center"/>
 
 
-                                    <TextBlock Text="{Binding ProlonDaysCount, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" HorizontalAlignment="Center" Foreground="Blue" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock Text="Внести оплату " FontSize="14" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red" FontWeight="Bold"  
-                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    <TextBox  Text="{Binding Coast, UpdateSourceTrigger=PropertyChanged}" MinWidth="60" FontSize="14" MaxLength="5" HorizontalAlignment="Center"  Margin="3" HorizontalContentAlignment="Center" />
-                                </StackPanel>
+                                <TextBlock Text="{Binding ProlonDaysCount, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" HorizontalAlignment="Center" Foreground="Blue" />
                             </StackPanel>
-                        </Border>
-                    </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Text="Внести оплату " FontSize="14" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red" FontWeight="Bold"  
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <TextBox  Text="{Binding Coast, UpdateSourceTrigger=PropertyChanged}" MinWidth="60" FontSize="14" MaxLength="5" HorizontalAlignment="Center"  Margin="3" HorizontalContentAlignment="Center" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
 
                 </Grid>
                 <StackPanel Grid.Row="1" Grid.Column="2">
-                    <Border  BorderBrush="Gray" BorderThickness="1" Background="#FFCCE6BF">
+                    <Border   BorderThickness="1" Background="#FFCCE6BF" BorderBrush="Gray">
                         <StackPanel HorizontalAlignment="Center">
 
 
@@ -219,7 +226,7 @@
                             </StackPanel>
                         </StackPanel>
                     </Border>
-                    <Border  BorderBrush="Gray" BorderThickness="1" Background="AliceBlue">
+                    <Border  BorderThickness="1" Background="AliceBlue">
                         <StackPanel HorizontalAlignment="Center" >
 
 
