@@ -30,25 +30,7 @@ namespace Parking.Helpes
         private static readonly Regex regex = new Regex("[^0-9+]+"); //regex that matches disallowed text
         public string PhoneNumberValidation(string ph)
         {
-
-            //if (ph == null ||  ph.Length < 13) return null;
-            //int len = ph.Length;
-            //string tmp = null,
-            //       plus = null;            
-
-            //    if ((int)ph[0] == 43)//if first symbol is "+"
-            //        tmp += ph[0];
-            //    else
-            //        return null;
-
-            //    for (int i = 1; i < ph.Length; i++)
-            //        if ((int)ph[i] >= 48 && (int)ph[i] <= 57)
-            //            tmp += ph[i];
-            //        else
-            //        {
-            //            if (ph[i] == '+')
-            //                return null;
-            //        }
+      
             if (regex.IsMatch(ph))
             {
                 ph= ph.Remove(ph.Length - 1, 1);
@@ -127,6 +109,73 @@ namespace Parking.Helpes
                     dialogService.ShowMessage(ex.Message);
                 }
             }            
+        }
+
+        public string GetUserData(int userId)
+        {
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {
+                    User usver = db.Users.Where(us => us.UserId == userId).FirstOrDefault();
+                    return usver.SomeEmployee.SomePerson.SecondName + " " + usver.SomeEmployee.SomePerson.FirstName + " " + usver.SomeEmployee.SomePerson.Patronimic;             
+
+
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+            return null;
+        }
+
+        public Company GetCompanyData()
+        {
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {   
+                    return db.OwnerCompany.Where(co => co.CompanyId == 1).FirstOrDefault();
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+            return null;
         }
 
     }

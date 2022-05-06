@@ -1,5 +1,6 @@
 ﻿using Parking.Helpes;
 using Parking.Model;
+using Parking.Views.PrintOps;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -534,7 +535,10 @@ namespace Parking.ViewModel.ParkPlacesOps
                     (obj) =>
                     {
                         if (CurrentRecord.SomeClient.ClientId == 0)
+                        {
                             AddnewData();
+                            FillFreeParkingPlacesList();
+                        }
                         else
                             EditData();
                     }
@@ -826,8 +830,8 @@ namespace Parking.ViewModel.ParkPlacesOps
                     (obj) =>
                     {
 
-                        EditDataParkPlaceNamber();                      
-
+                        EditDataParkPlaceNamber();
+                        FillFreeParkingPlacesList();
                     }
                     ));
 
@@ -843,16 +847,18 @@ namespace Parking.ViewModel.ParkPlacesOps
                      ParkingPlace parkingPlace = db.ParkingPlaces.Find(CurrentRecord.SomeParkingPlace.ParkingPlaceId);
                      db.Entry(parkingPlace).State = EntityState.Modified;
                     parkingPlace.FreeStatus = true;
-                    parkingPlace.Released = true;
+                    parkingPlace.Released = false;
+                    parkingPlace.SomeClient = null;
 
                     ParkingPlace newParkingPlace = db.ParkingPlaces.Where(par => par.ParkPlaceNumber == FreeparkPlace).FirstOrDefault();
                     db.Entry(newParkingPlace).State = EntityState.Modified;
                     newParkingPlace.FreeStatus = false;
-                    newParkingPlace.FreeStatus = false;
+                    newParkingPlace.Released = false;
 
                     Client curClient = db.Clients.Find(CurrentRecord.SomeClient.ClientId);
                     db.Entry(curClient).State = EntityState.Modified;
-                    curClient.ParkingPlaces.Add(parkingPlace);
+                    curClient.ParkingPlaces.Remove(parkingPlace);
+                    curClient.ParkingPlaces.Add(newParkingPlace);
 
                     ParkingPlaceLog curParkPlaceLog = db.ParkingPlaceLogs.Find(CurrentRecord.SomeParkingPlaceLog.ParkingPlaceLogId);
                     db.Entry(curParkPlaceLog).State = EntityState.Modified;
@@ -861,7 +867,7 @@ namespace Parking.ViewModel.ParkPlacesOps
                     db.SaveChanges();
                     CurrentRecord.SomeParkingPlace = newParkingPlace;
                     CurrentRecord.SomeParkingPlaceLog = curParkPlaceLog;
-                    FillFreeParkingPlacesList();
+                  
 
                     dialogService.ShowMessage("\t\tOk");
                 }
@@ -936,7 +942,6 @@ namespace Parking.ViewModel.ParkPlacesOps
         }
 
         private RelayCommand cencelWindowCommand;
-
         public RelayCommand CencelWindowCommand => cencelWindowCommand ?? (cencelWindowCommand = new RelayCommand(
                     (obj) =>
                     {
@@ -944,6 +949,17 @@ namespace Parking.ViewModel.ParkPlacesOps
                         showWindow.CloseWindow(obj as Window);
                     }
                     ));
+
+        private RelayCommand printQuitanceCommand;
+        public RelayCommand PrintQuitanceCommand => printQuitanceCommand ?? (printQuitanceCommand = new RelayCommand(
+                    (obj) =>
+                    {                                                
+                        PrintBlank printWindow = new PrintBlank(CurrentRecord, lib.GetUserData(UserId), lib.GetCompanyData());//for edit order                  
+                        showWindow.ShowDialog(printWindow);
+                    }
+                    ));
+
+        
 
     }
 

@@ -227,8 +227,9 @@
 
 
 
-                                <Button  Content=" Друк квитанції " Background="Brown" Height="25" IsEnabled="{Binding  NewDataAddedSaved, UpdateSourceTrigger=PropertyChanged}" />
-                                <Button  Content="Відмінити"  Height="25" Command="{Binding CencelWindowCommand}"
+                                <Button  Content=" Друк квитанції " Background="Brown" Height="25" IsEnabled="{Binding  NewDataAddedSaved, UpdateSourceTrigger=PropertyChanged}"
+                                         Command="{Binding PrintQuitanceCommand}"/>
+                                <Button  Content="Зачинити"  Height="25" Command="{Binding CencelWindowCommand}"
                                      CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
                                 <Button  Content="Зберегти" Background="Blue" Height="25" Command="{Binding SavedataCommand}" />
                             </StackPanel>

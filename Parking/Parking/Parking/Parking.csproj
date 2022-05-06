@@ -94,18 +94,27 @@
     <Compile Include="Helpes\ImagePathConverter.cs" />
     <Compile Include="Helpes\ParkingPlaceRecord.cs" />
     <Compile Include="Model\Contacts.cs" />
+    <Compile Include="Model\Company.cs" />
     <Compile Include="Model\VehicleType.cs" />
     <Compile Include="ViewModel\Authorezation.cs" />
+    <Compile Include="ViewModel\CompanyOps\CompanyInfoContext.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ParkPlacesOps\CompareStatesForParkingPlace.cs" />
     <Compile Include="ViewModel\ParkPlacesOps\ParkPlaceWindowContext.cs" />
     <Compile Include="ViewModel\PersonOperations\EmployeeRecord.cs" />
     <Compile Include="ViewModel\PersonOperations\EmployeeWindowContext.cs" />
+    <Compile Include="ViewModel\PrintOps\PrintBlankContext.cs" />
+    <Compile Include="Views\CompanyOps\CompanyInfo.xaml.cs">
+      <DependentUpon>CompanyInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ParkPlacesOps\ParkPlaceEditWindow.xaml.cs">
       <DependentUpon>ParkPlaceEditWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PersonOperations\EmployeeWindow.xaml.cs">
       <DependentUpon>EmployeeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PrintOps\PrintBlank.xaml.cs">
+      <DependentUpon>PrintBlank.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SecondWindow.xaml.cs">
       <DependentUpon>SecondWindow.xaml</DependentUpon>
@@ -133,11 +142,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CompanyOps\CompanyInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ParkPlacesOps\ParkPlaceEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PersonOperations\EmployeeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PrintOps\PrintBlank.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

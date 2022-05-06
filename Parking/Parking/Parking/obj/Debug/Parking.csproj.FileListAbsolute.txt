@@ -123,3 +123,7 @@ e:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.GenerateResource.cac
 e:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.CoreCompileInputs.cache
 e:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.CopyComplete
 E:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.AssemblyReference.cache
+E:\Parking\Parking\Parking\Parking\obj\Debug\Views\CompanyOps\CompanyInfo.g.cs
+E:\Parking\Parking\Parking\Parking\obj\Debug\Views\CompanyOps\CompanyInfo.baml
+E:\Parking\Parking\Parking\Parking\obj\Debug\Views\PrintOps\PrintBlank.g.cs
+E:\Parking\Parking\Parking\Parking\obj\Debug\Views\PrintOps\PrintBlank.baml

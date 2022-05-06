@@ -172,9 +172,11 @@ namespace Parking.ViewModel
                     db.Entry(pers1).State = EntityState.Modified;
                     pers1.TrustedPerson = pers2;
 
-                    
+                    Company OwnerCompany = new Company { OrgName = "ФОП Макаренко В.О.", RegNumber=659845, TaxCode="3258741226",OrgAdress = "м. Одесса, пр.Вернадського, б.36" };
+                    db.OwnerCompany.Add(OwnerCompany);
 
                     Employee emp1 = new Employee { Salary = 20000, HireDate = new DateTime (2018, 10,15), Position = "адміністратор", Description = "добрий працівник"};
+                    OwnerCompany.Employes.Add(emp1);
 
                     User user1 = new User { AccessName = "мастер-адмін", Pass = SHA.ComputeSHA256Hash("admin"), Login = "admin" };
 

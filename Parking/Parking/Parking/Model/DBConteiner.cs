@@ -24,7 +24,7 @@ namespace Parking.Model
         }
 
 
-       
+        public virtual DbSet<Company> OwnerCompany { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<ParkingPlace> ParkingPlaces { get; set; }

@@ -48,6 +48,7 @@
                 <MenuItem Header="Сервіс"    VerticalAlignment="Top" >
                     <!--<MenuItem Header="Заполнить БД тестовыми данными" Command="{Binding AddTestCommand}"
                                   VerticalAlignment="Top"/>-->
+                    <MenuItem Header="Данні про підприємство" Command="{Binding CallCompanyInfoWindowCommand}"/>
                     <MenuItem Header="Персонал"  VerticalAlignment="Top">
                         <MenuItem Header="Додати новго працівника" Command="{Binding AddAuthorCommand}"
                                    VerticalAlignment="Top"/>

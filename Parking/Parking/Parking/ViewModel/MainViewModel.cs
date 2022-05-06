@@ -1,5 +1,6 @@
 ﻿using Parking.Helpes;
 using Parking.Model;
+using Parking.Views.CompanyOps;
 using Parking.Views.ParkPlacesOps;
 using Parking.Views.PersonOperations;
 using System;
@@ -187,8 +188,8 @@ namespace Parking.ViewModel
         
         private void ChangeSelectedRecord(object sender, PropertyChangedEventArgs e)
         {
-
-            UpdateRecord();
+            if(Records.Count()!=0)
+                UpdateRecord();
         }
 
         private void UpdateRecord()
@@ -232,7 +233,7 @@ namespace Parking.ViewModel
                             };
 
 
-                            if (!SelectedRecord.SomeParkingPlace.FreeStatus.Value)
+                            if (!CurrentRecord.SomeParkingPlace.FreeStatus.Value)
                             {
 
                                 CurrentRecord.SomeClient = new Client
@@ -329,12 +330,12 @@ namespace Parking.ViewModel
                             }
 
                         };
-                        connection.Close();
+                       
                        
                     }
                     else
                     {
-                        connection.Close();
+                       
                         dialogService.ShowMessage("Щось пішло не так при зчитуванні данних про паркувальні місця");
                     }
                 }
@@ -451,18 +452,20 @@ namespace Parking.ViewModel
                        // AddtestData();
                         ParkPlaceEditWindow parkWindow = new ParkPlaceEditWindow(IncomUserId, CurrentRecord);
                         showWindow.ShowDialog(parkWindow);
-                        UpdateRecord();
-                        foreach (ParkingPlaceRecord item in Records)
-                            if (item.SomeParkingPlace.ParkPlaceNumber == CurrentRecord.SomeParkingPlace.ParkPlaceNumber)
-                            {
-                                item.SomeParkingPlace.Released = CurrentRecord.SomeParkingPlace.Released;
-                                item.SomeParkingPlace.FreeStatus = CurrentRecord.SomeParkingPlace.FreeStatus;
-                                break;
-                            }
-                        
+                        DefaultDataLoad();//update all data in the window
                     }
                     ));
 
+        //private void UpdateRecords()
+        //{
+        //    foreach (ParkingPlaceRecord item in Records)
+        //        if (item.SomeParkingPlace.ParkPlaceNumber == CurrentRecord.SomeParkingPlace.ParkPlaceNumber)
+        //        {
+        //            item.SomeParkingPlace.Released = CurrentRecord.SomeParkingPlace.Released;
+        //            item.SomeParkingPlace.FreeStatus = CurrentRecord.SomeParkingPlace.FreeStatus;
+        //            break;
+        //        }
+        //}
         private void AddtestData()
         {
             CurrentRecord.SomePerson.SecondName = "Петров";
@@ -482,6 +485,63 @@ namespace Parking.ViewModel
 
         }
 
+        private RelayCommand callCompanyInfoWindowCommand;
+        public RelayCommand CallCompanyInfoWindowCommand => callCompanyInfoWindowCommand ?? (callCompanyInfoWindowCommand = new RelayCommand(
+                    (obj) =>
+                    {
+                        if (CheckAccessRights())
+                        {
+                            CompanyInfo compWindow = new CompanyInfo();
+                            showWindow.ShowDialog(compWindow);
+                        }
+                        else
+                            dialogService.ShowMessage("Не достатньо прав доступу");
+                        
+                    }
+                    ));
+        private bool CheckAccessRights()
+        {
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {
+                    User usver = db.Users.Find(IncomUserId);
+                    if (usver != null)
+                    {
+                        return usver.AccessName == "мастер-адмін" ? true : false;
+                    }
+                    else
+                    {
+                        dialogService.ShowMessage("Проблеми зі считуванням данних \nпри спробі перевірки прав доступу");
+                        return false;
+                    }
+                   
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+            return false;
+        }
+
+        
 
     }
 }
