@@ -8,12 +8,16 @@
         xmlns:helpes="clr-namespace:Parking.Helpes" 
         xmlns:parkplacesops="clr-namespace:Parking.ViewModel.ParkPlacesOps"
         d:DataContext="{d:DesignInstance Type=parkplacesops:ParkPlaceWindowContext}"
-        
+         WindowStyle="None"
         mc:Ignorable="d"
         Title="ParkPlaceEditWindow" Height="590" Width="730">
     <Window.Resources>
         <helpes:ImagePathConverter x:Key="imagePathConverter"/>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Gesture="Alt+F4" Command="{Binding CencelWindowCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
+    </Window.InputBindings>
     <Border BorderBrush="YellowGreen" BorderThickness="4" >
         <Grid Margin="4">
             <Grid.ColumnDefinitions>

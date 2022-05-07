@@ -27,21 +27,16 @@ namespace Parking.Helpes
             return result;
         }
 
-        private static readonly Regex regex = new Regex("[^0-9+]+"); //regex that matches disallowed text
+        private static readonly Regex reg = new Regex(@"\D"); //regex that matches disallowed text
         public string PhoneNumberValidation(string ph)
         {
-      
-            if (regex.IsMatch(ph))
-            {
-                ph= ph.Remove(ph.Length - 1, 1);
-            }
-            if (ph.Length > 1 && ph[ph.Length - 1] == '+')
-            {
-                 ph=ph.Remove(ph.Length - 1, 1);
-            }
 
-            return ph;
-        }
+            ph = reg.Replace(ph, "");
+            if (ph.Length > 13)
+                ph = ph.Remove(ph.Length - 1, 1);
+            return ph == "" ? "" : "+" + ph;
+        }        
+
 
         //this is for AddnewData methode in ParkPlaceWindowContext.cs 
         public  void GetPersonAndContactsIds (string phoneNumber, Person tmpPerson, out int? ctnId, out int? persId)

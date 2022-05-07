@@ -534,15 +534,26 @@ namespace Parking.ViewModel.ParkPlacesOps
         public RelayCommand SavedataCommand => savedataCommand ?? (savedataCommand = new RelayCommand(
                     (obj) =>
                     {
-                        if (CurrentRecord.SomeClient.ClientId == 0)
-                        {
-                            AddnewData();
-                            FillFreeParkingPlacesList();
-                        }
-                        else
-                            EditData();
+                        CurrentState = SetState();
+                        SaveData();
                     }
                     ));
+
+        private void SaveData()
+        {
+            if (CurrentRecord.SomeClient.ClientId == 0)
+            {
+                AddnewData();
+                FillFreeParkingPlacesList();
+                PreviousState = SetState();
+            }
+            else
+            {
+                EditData();
+                PreviousState = SetState();
+            }
+        }
+
 
         private void AddnewData()
         {
@@ -550,7 +561,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             CompareStatesForParkingPlace compare = new CompareStatesForParkingPlace();
             if (!ValidationInputData())
                 return;
-            CurrentState = SetState();
+           
 
             CurrentRecord.SomeVehicle.RegNumber = RegNumber;
             CurrentRecord.SomeContacts.Phone = OwnerPhone1;
@@ -673,7 +684,7 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                     db.SaveChanges();
                     DeadLine = ProlongDate.ToString("dd/MM/yyyy");
-                    PreviousState = SetState();
+                  
                     NewDataAddedSaved = true;//allow an opportunity of changing parking plase number
 
                     dialogService.ShowMessage("Ok");
@@ -799,7 +810,7 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                     db.SaveChanges();
 
-                    PreviousState = SetState();
+                    
                     dialogService.ShowMessage("Ok");
                 }
                 catch (ArgumentNullException ex)
@@ -935,10 +946,6 @@ namespace Parking.ViewModel.ParkPlacesOps
                 return false;
             }
 
-            
-           
-
-
             return true;
         }
 
@@ -947,7 +954,20 @@ namespace Parking.ViewModel.ParkPlacesOps
                     (obj) =>
                     {
 
-                        showWindow.CloseWindow(obj as Window);
+                        CurrentState = SetState();
+                        if (CurrentState.TotalCompare(CurrentState, PreviousState))                        
+                            showWindow.CloseWindow(obj as Window);
+                        else
+                        {
+                            if (dialogService.YesNoDialog("Зміни не було збережено. Зберегти?"))
+                            {
+                                SaveData();
+                                showWindow.CloseWindow(obj as Window);
+                            }
+                            else
+                                showWindow.CloseWindow(obj as Window);
+
+                        };
                     }
                     ));
 

@@ -122,5 +122,12 @@ namespace Parking.ViewModel.ParkPlacesOps
 
             return ProlongDateCompare == CoastCompare;
         }
+
+        public bool TotalCompare(CompareStatesForParkingPlace ob1, CompareStatesForParkingPlace obj2)
+        {
+            return ParkingPlaceLogDataCompare(ob1, obj2) == VehicleDataCompare(ob1, obj2) == TrustContactsDataCompare(ob1, obj2)
+                    == TrustPersonDataCompare(ob1, obj2) == OwnerContactsDataCompare(ob1, obj2) == ClientDataCompare(ob1, obj2) ==
+                    OwnerPersonDataCompare(ob1, obj2) == ParkingPalceDataCompare(ob1, obj2);
+        }
     }
 }
