@@ -24,6 +24,7 @@ namespace Parking.ViewModel.PersonOperations
         EmployeeState PreviousState { get; set; }
         EmployeeState CurrentState { get; set; }
 
+        
         public DateTime MindateRestriction { get; set; }//for min employee age restriction
 
         public ObservableCollection<EmployeeRecord> EmployeeRecords { get; set; }
@@ -40,6 +41,20 @@ namespace Parking.ViewModel.PersonOperations
                 {
                     selectetRecord = value;
                     OnPropertyChanged(nameof(SelectetRecord));
+                }
+            }
+        }
+
+        private string taxCode;
+        public string TaxCode
+        {
+            get { return taxCode; }
+            set
+            {
+                if (value != taxCode)
+                {
+                    taxCode = value;
+                    OnPropertyChanged2(nameof(TaxCode));
                 }
             }
         }
@@ -67,7 +82,7 @@ namespace Parking.ViewModel.PersonOperations
                 if (value != currentPosition)
                 {
                     currentPosition = value;
-                    OnPropertyChanged(nameof(CurrentPosition));
+                    OnPropertyChanged2(nameof(CurrentPosition));
                 }
             }
         }
@@ -87,6 +102,7 @@ namespace Parking.ViewModel.PersonOperations
             get { return "/Parking;component/Images/" + defaultPhoto; }
         }
 
+        Library lib;
         public EmployeeWindowContext() { }
         public EmployeeWindowContext (int userId) 
         {
@@ -98,12 +114,14 @@ namespace Parking.ViewModel.PersonOperations
             FillEmployeePositions();//filling by data collection of employee positions
            
             PropertyChanged += GetRecordDetales;
+            PropertyChanged2 += TaxCodeChange;
         }
 
         
 
             private void DefaultDataLoad()
         {
+            lib = new Library();
             MindateRestriction = DateTime.Now.AddYears(-18);
 
             DefaultPhoto = "default_avatar.png";
@@ -231,9 +249,12 @@ namespace Parking.ViewModel.PersonOperations
                                     { EmployeePositionId = SelectetRecord.PositionId,
                                       PositionName = SelectetRecord.Position };
             PreviousState.EmpRec = PreviousState.SetState(SelectetRecord);
-            
 
+        }
 
+        private void TaxCodeChange(object sender, PropertyChangedEventArgs e)
+        {
+            TaxCode = lib.TaxCodeValidation(TaxCode);            
         }
 
         private RelayCommand openFileDialogCommand;
@@ -265,12 +286,20 @@ namespace Parking.ViewModel.PersonOperations
         public RelayCommand SavedataCommand => savedataCommand ?? (savedataCommand = new RelayCommand(
                     (obj) =>
                     {
+                        if (!CheckInputValidationData())
+                        {
+                            dialogService.ShowMessage("Значення ІНН співробітника вказано НЕ корректно\n" +
+                                "\t\t Потрібно відкорегувати.");
+                            return;
+                        }
+
                         CurrentRecord.PositionId = CurrentPosition.EmployeePositionId;
                         CurrentRecord.Position = CurrentPosition.PositionName;
                         CurrentState.EmpRec = CurrentState.SetState(CurrentRecord);
+                        if (long.TryParse(TaxCode, out long tmp))
+                            CurrentRecord.TaxCode = tmp;
 
-
-                        //here is needding to add if-else branch for selecting betwin seva new data and editing
+                       
                         Editdata();
                         PreviousState.EmpRec = CurrentState.SetState(CurrentRecord);
                     }
@@ -360,16 +389,25 @@ namespace Parking.ViewModel.PersonOperations
 
         }
 
+        
         private void SaveNewData()
         {
+            EmployeeRecord tmpEmpRec;
             using (DBConteiner db = new DBConteiner())
             {
                 try
                 {
-                    Contacts ctn = db.Contacts.Where(c => c.Phone == CurrentRecord.PhoneNumber).FirstOrDefault();
-                    Employee emp1;
-                    //if (ctn !=null)
-                    //    emp1 = db.Employees
+                    Employee emp1 = db.Employees.Where(emp => emp.SomePerson.TaxCode == CurrentRecord.TaxCode).FirstOrDefault();
+                    if (emp1 is null)
+                    {
+
+                    }
+                    else
+                    {
+                        dialogService.ShowMessage("Вже є співробітник з такми ІНН. \nПеревірте вірність введених данних");
+                        return;
+                    }
+
 
 
                     db.SaveChanges();
@@ -398,5 +436,97 @@ namespace Parking.ViewModel.PersonOperations
             }
 
         }
+        private bool CheckInputValidationData()
+        {
+            return TaxCode.Length == 10 ? true:false;
+        }
+
+       
+        ////check and return EmployeeRecord if there is some employe with such phone number
+        //private bool ChaeckExistingEmployeeByPhoneNumber(string phone, out EmployeeRecord  tmpRec)
+        //{
+        //    tmpRec = null;
+        //    string sqlExpression = "sp_GetEmployeeByPhoneNumber";
+
+        //    var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
+        //    var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
+
+        //    using (SqlConnection connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
+        //    {
+        //        try
+        //        {
+        //            connection.Open();
+        //            SqlCommand command = new SqlCommand(sqlExpression, connection);
+        //            command.CommandType = System.Data.CommandType.StoredProcedure;
+        //            SqlParameter firstParam = new SqlParameter
+        //            {
+        //                ParameterName = "@PhoneNumber",
+        //                Value = CurrentRecord.PhoneNumber
+        //            };
+        //            command.Parameters.Add(firstParam);
+
+        //            SqlDataReader result = command.ExecuteReader();
+
+        //            if (result.HasRows)
+        //            {
+                        
+        //                while (result.Read())
+        //                {
+        //                    tmpRec = new EmployeeRecord 
+        //                    { 
+        //                        ContactsId = (int)result.GetValue(0),
+        //                        PhoneNumber = (string)result.GetValue(1),
+        //                        Adress = (string)result.GetValue(2),
+                                
+        //                        PersonId = (int)result.GetValue(3),
+        //                        SecondName = (string)result.GetValue(4),
+        //                        FirstName = (string)result.GetValue(5),
+        //                        Patronimic = (string)result.GetValue(6),
+        //                        Male = (bool)result.GetValue(7),
+        //                        Female = !(bool)result.GetValue(7),
+        //                        Photo = result.GetValue(8) is System.DBNull ? null : (byte[])result.GetValue(8),
+                                
+        //                        EmployeeId = (int)result.GetValue(9),
+        //                        Description = (string)result.GetValue(10),
+        //                        Salary = (decimal)result.GetValue(11)
+        //                    };
+        //                    if (!(result.GetValue(12) is System.DBNull))
+        //                        tmpRec.FireDate = (DateTime)result.GetValue(12);
+        //                    if (!(result.GetValue(13) is System.DBNull))
+        //                        tmpRec.HireDate = (DateTime)result.GetValue(13);                            
+        //                }
+
+
+        //            }
+        //            else
+        //                return false;
+                    
+        //        }
+
+        //        catch (ArgumentNullException ex)
+        //        {
+        //            dialogService.ShowMessage(ex.Message);
+        //        }
+        //        catch (OverflowException ex)
+        //        {
+        //            dialogService.ShowMessage(ex.Message);
+        //        }
+        //        catch (System.Data.SqlClient.SqlException ex)
+        //        {
+        //            dialogService.ShowMessage(ex.Message);
+        //        }
+        //        catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+        //        {
+        //            dialogService.ShowMessage(ex.Message);
+        //        }
+        //        catch (System.Data.Entity.Core.EntityException ex)
+        //        {
+        //            dialogService.ShowMessage(ex.Message);
+        //        }
+
+        //    }
+
+        //    return false;
+        //}
     }
 }

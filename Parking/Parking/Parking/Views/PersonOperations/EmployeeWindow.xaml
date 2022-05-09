@@ -270,14 +270,18 @@
                     <Button Content="Зберегти" Background="Blue" Grid.Column="1"/>
                     <Button Content="Зачинити" Background="Red"/>
                 </Grid>
-
-                <StackPanel Grid.Row="5" Grid.Column="3">
-                    <TextBlock Text="Логін" FontWeight="Bold" HorizontalAlignment="Center" FontSize="14"/>
-                    <TextBox  Text="{Binding  CurrentRecord.SomeUser.Login, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"/>
+                <StackPanel Grid.Row="5" Grid.Column="3" HorizontalAlignment="Center">
+                    <TextBlock Text="Ідентифікаційний номер" FontWeight="Bold" HorizontalAlignment="Center" FontSize="14"/>
+                    <TextBox  Text="{Binding  TaxCode, UpdateSourceTrigger=PropertyChanged}"   MinWidth="185" FontSize="14" MaxLength="10" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
                 </StackPanel>
-                <StackPanel Grid.Row="6" Grid.Column="3">
+
+                <StackPanel Grid.Row="6" Grid.Column="3" HorizontalAlignment="Center">
+                    <TextBlock Text="Логін" FontWeight="Bold" HorizontalAlignment="Center" FontSize="14"/>
+                    <TextBox  Text="{Binding  CurrentRecord.SomeUser.Login, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Margin="3" VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Grid.Row="7" Grid.Column="3" HorizontalAlignment="Center">
                     <TextBlock Text="Пароль" FontWeight="Bold" HorizontalAlignment="Center" FontSize="14"/>
-                    <TextBox  Text="{Binding  CurrentRecord.SomeUser.Pass, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"/>
+                    <TextBox  Text="{Binding  CurrentRecord.SomeUser.Pass, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left"  Margin="3" VerticalContentAlignment="Center"/>
                 </StackPanel>
             </Grid>
         </Border>

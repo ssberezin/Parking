@@ -90,6 +90,7 @@ namespace Parking.Model
             }
         }
 
+        
 
         [Column(TypeName = "datetime2")]        
         private DateTime? dayBirthday;
@@ -118,6 +119,22 @@ namespace Parking.Model
                 {
                     photo = value;
                     OnPropertyChanged(nameof(Photo));
+                }
+            }
+        }
+
+        [Column("TaxCode", TypeName = "int8")]
+        [MaxLength(10)]
+        private long taxCode;
+        public long TaxCode
+        {
+            get { return taxCode; }
+            set
+            {
+                if (value != taxCode)
+                {
+                    taxCode = value;
+                    OnPropertyChanged(nameof(TaxCode));
                 }
             }
         }

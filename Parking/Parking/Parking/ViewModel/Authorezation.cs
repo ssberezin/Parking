@@ -154,7 +154,7 @@ namespace Parking.ViewModel
 
                     db.Contacts.Add(ct1);
 
-                    Person pers1 = new Person { FirstName = "Іван",SecondName="Петров", Patronimic="Ігоревич", Sex = true,  DayBirthday=new DateTime(1978,10,15) };
+                    Person pers1 = new Person { FirstName = "Іван",SecondName="Петров", Patronimic="Ігоревич", Sex = true,  DayBirthday=new DateTime(1978,10,15), TaxCode=3254123669 };
                     pers1.ContactsData.Add(ct1);
 
                      db.Persons.Add(pers1);
@@ -312,19 +312,21 @@ namespace Parking.ViewModel
                             join EmployeePositions as EmpPos on EmpPos.EmployeePositionId =Emp.EmployeeId
                         ");
 
-                    db.Database.ExecuteSqlCommand
-                       (@"
-                          create proc sp_GetEmployeeByPhoneNumber
-                                @PhoneNumber nvarchar (20)
-                                as
-                                Select CTN.ContactsId '1', CTN.Phone '2', ctn.Adress '3', Pers.PersonId '4', pers.SecondName '5', pers.FirstName '6', pers.Patronimic '7', pers.Sex '8',
-	                                   Emp.EmployeeId '9', emp.Description '10', emp.Salary '11', emp.FireDate '12', emp.HireDate '13'
-                                From People as pers
-                                join Contacts as ctn on ctn.SomePerson_PersonId=pers.PersonId
-                                join Employees as Emp on Pers.PersonId=emp.SomePerson_PersonId
-                                where ctn.Phone = @PhoneNumber and emp.FireDate is null
+                    //db.Database.ExecuteSqlCommand
+                    //   (@"
+                    //     create proc sp_GetEmployeeByPhoneNumber
+                    //        @PhoneNumber nvarchar (20)
+                    //        as
+                    //        Select CTN.ContactsId '1 ContactsId', CTN.Phone '2 Phone', ctn.Adress '3 Adress', Pers.PersonId '4 PersonId', pers.SecondName '5 SecondName',
+	                   //          pers.FirstName '6 FirstName', pers.Patronimic '7 Patronimic', pers.Sex '8 Sex', pers.Photo '9 Photo',
+	                   //            Emp.EmployeeId '10 EmployeeId', emp.Description '11 Description', emp.Salary '12 Salary', emp.FireDate '13 FireDate', emp.HireDate '14 HireDate' 
+                    //        From People as pers
+                    //        join Contacts as ctn on ctn.SomePerson_PersonId=pers.PersonId
+                    //        join Employees as Emp on Pers.PersonId=emp.SomePerson_PersonId
+                    //        where ctn.Phone = @PhoneNumber and emp.FireDate is null
 
-                        ");
+
+                    //    ");
 
 
                     db.SaveChanges();

@@ -35,7 +35,12 @@ namespace Parking.Helpes
             if (ph.Length > 13)
                 ph = ph.Remove(ph.Length - 1, 1);
             return ph == "" ? "" : "+" + ph;
-        }        
+        }
+        private static readonly Regex regTax = new Regex(@"\D"); //regex that matches disallowed text
+        public string TaxCodeValidation(string code)
+        {
+            return regTax.Replace(code, "");
+        }
 
 
         //this is for AddnewData methode in ParkPlaceWindowContext.cs 

@@ -108,6 +108,19 @@ namespace Parking.ViewModel.PersonOperations
             }
         }
 
+        private long taxCode;
+        public long TaxCode
+        {
+            get { return taxCode; }
+            set
+            {
+                if (value != taxCode)
+                {
+                    taxCode = value;
+                    OnPropertyChanged(nameof(TaxCode));
+                }
+            }
+        }
 
 
         private DateTime? dayBirthday;
