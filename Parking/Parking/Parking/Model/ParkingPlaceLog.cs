@@ -59,6 +59,23 @@ namespace Parking.Model
             }
         }
 
+
+        [Column(TypeName = "datetime2")]
+
+        private DateTime? dateOfChange;
+        public DateTime? DateOfChange
+        {
+            get { return dateOfChange; }
+            set
+            {
+                if (dateOfChange != value)
+                {
+                    dateOfChange = value;
+                    OnPropertyChanged(nameof(DateOfChange));
+                }
+            }
+        }
+
         private decimal money;
         public decimal Money
         {

@@ -95,6 +95,7 @@
     <Compile Include="Helpes\ParkingPlaceRecord.cs" />
     <Compile Include="Model\Contacts.cs" />
     <Compile Include="Model\Company.cs" />
+    <Compile Include="Model\EmployeePosition.cs" />
     <Compile Include="Model\VehicleType.cs" />
     <Compile Include="ViewModel\Authorezation.cs" />
     <Compile Include="ViewModel\CompanyOps\CompanyInfoContext.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="ViewModel\ParkPlacesOps\CompareStatesForParkingPlace.cs" />
     <Compile Include="ViewModel\ParkPlacesOps\ParkPlaceWindowContext.cs" />
     <Compile Include="ViewModel\PersonOperations\EmployeeRecord.cs" />
+    <Compile Include="ViewModel\PersonOperations\EmployeeState.cs" />
     <Compile Include="ViewModel\PersonOperations\EmployeeWindowContext.cs" />
     <Compile Include="ViewModel\PrintOps\PrintBlankContext.cs" />
     <Compile Include="Views\CompanyOps\CompanyInfo.xaml.cs">

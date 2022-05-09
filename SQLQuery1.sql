@@ -65,13 +65,31 @@ as
 Select Emp.EmployeeId  '0_EmployeeId', Emp.Salary '1_Salary', Emp.HireDate '2_HireDate', Emp.FireDate '3_FireDate', Emp.Description '4_Description',
 	   pers.PersonId  '5_PersonId', pers.SecondName '6_SecondName', pers.FirstName '7_FirstName', pers.Patronimic '8_Patronimic', pers.Sex '9_Sex',
 	   pers.DayBirthday '10_DayBirthday', pers.Photo '11_Photo',
-	   ctn.ContactsId '12_ContactsId', ctn.Phone '13_Phone', ctn.Adress '14_Adress', users.AccessName '15_Status', emp.Position '16_Position'
+	   ctn.ContactsId '12_ContactsId', ctn.Phone '13_Phone', ctn.Adress '14_Adress', users.AccessName '15_Status', 
+	   EmpPos.PositionName '16_Position', EmpPos.EmployeePositionId '17_EmployeePositionId', users.Pass '18_Pass', users.Login '19_Login', Users.UserId  '20_UserId'
 From Employees as Emp
 join People as pers on Emp.SomePerson_PersonId=Pers.PersonId
 join Contacts as ctn on Pers.PersonId=Ctn.SomePerson_PersonId
 left join Users on Users.SomeEmployee_EmployeeId = Emp.EmployeeId
+join EmployeePositions as EmpPos on EmpPos.EmployeePositionId =Emp.EmployeeId
 
 execute sp_GetEmployeesRecords
+
+drop proc sp_GetEmployeeByPhoneNumber
+
+
+execute sp_GetEmployeeByPhoneNumber '+380505080625'
+
+create proc sp_GetEmployeeByPhoneNumber
+@PhoneNumber nvarchar (20)
+as
+Select CTN.ContactsId '1', CTN.Phone '2', ctn.Adress '3', Pers.PersonId '4', pers.SecondName '5', pers.FirstName '6', pers.Patronimic '7', pers.Sex '8',
+	   Emp.EmployeeId '9', emp.Description '10', emp.Salary '11', emp.FireDate '12', emp.HireDate '13'
+From People as pers
+join Contacts as ctn on ctn.SomePerson_PersonId=pers.PersonId
+join Employees as Emp on Pers.PersonId=emp.SomePerson_PersonId
+where ctn.Phone = @PhoneNumber and emp.FireDate is null
+
 
 
 --Create Proc sp_UserIdentification 

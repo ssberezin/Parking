@@ -534,6 +534,10 @@ namespace Parking.ViewModel.ParkPlacesOps
         public RelayCommand SavedataCommand => savedataCommand ?? (savedataCommand = new RelayCommand(
                     (obj) =>
                     {
+                        CurrentRecord.SomeVehicle.RegNumber = RegNumber;
+                        CurrentRecord.SomeContacts.Phone = OwnerPhone1;
+                        CurrentRecord.TrContacts.Phone = TrustPhone;
+
                         CurrentState = SetState();
                         SaveData();
                     }
@@ -718,11 +722,9 @@ namespace Parking.ViewModel.ParkPlacesOps
             if (!ValidationInputData())
                 return;
 
-            CurrentRecord.SomeVehicle.RegNumber = RegNumber;
-            CurrentRecord.SomeContacts.Phone = OwnerPhone1;
-            CurrentRecord.TrContacts.Phone = TrustPhone;
           
-            CurrentState = SetState();
+          
+            
             //next we have to save data to DB
             using (DBConteiner db = new DBConteiner())
             {
@@ -734,6 +736,15 @@ namespace Parking.ViewModel.ParkPlacesOps
                         db.Entry(parkingPlace).State = EntityState.Modified;
                         parkingPlace.FreeStatus = CurrentRecord.SomeParkingPlace.FreeStatus;
                         parkingPlace.Released = CurrentRecord.SomeParkingPlace.Released;
+
+                        User user = db.Users.Find(UserId);
+                        db.Entry(user).State = EntityState.Modified;
+
+                        ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog{ DateOfChange = DateTime.Now };
+                        db.ParkingPlaceLogs.Add(parkingPlaceLog);
+
+                        user.ParkingPlaceLogs.Add(parkingPlaceLog);
+
                     }                    
                     
                     if (!compare.OwnerPersonDataCompare(PreviousState, CurrentState))
@@ -800,11 +811,15 @@ namespace Parking.ViewModel.ParkPlacesOps
                         User user = db.Users.Find(UserId);
                         db.Entry(user).State = EntityState.Modified;
 
-                        ParkingPlaceLog parkingPlaceLog = db.ParkingPlaceLogs.Find(CurrentRecord.SomeParkingPlaceLog.ParkingPlaceLogId);
-                        db.Entry(parkingPlaceLog).State = EntityState.Modified;
-                        parkingPlaceLog.DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month,ProlongDate.Day );
-                        parkingPlaceLog.Money = CurrentRecord.SomeParkingPlaceLog.Money;
-                        parkingPlaceLog.PayingDate = DateTime.Now;
+                        ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog 
+                        {
+                            DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month, ProlongDate.Day),
+                            Money = CurrentRecord.SomeParkingPlaceLog.Money,
+                            PayingDate = DateTime.Now,
+                            DateOfChange = DateTime.Now
+                        };
+                        db.ParkingPlaceLogs.Add(parkingPlaceLog);
+                        
                         user.ParkingPlaceLogs.Add(parkingPlaceLog);
                     }
 

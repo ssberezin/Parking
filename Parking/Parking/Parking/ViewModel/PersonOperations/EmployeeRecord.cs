@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Parking.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,14 @@ namespace Parking.ViewModel.PersonOperations
 {
     public class EmployeeRecord:Helpes.ObservableObject
     {
-       
+
+        public EmployeeRecord()
+        {
+            SomeUser = new User();
+        }
+
         public int EmployeeId { get; set; }
+        public int PositionId { get; set; }
 
         public int PersonId { get; set; }
 
@@ -230,16 +237,30 @@ namespace Parking.ViewModel.PersonOperations
             }
         }
 
-        private string status;
-        public string Status
+        //private string status;
+        //public string Status
+        //{
+        //    get { return status; }
+        //    set
+        //    {
+        //        if (value != status)
+        //        {
+        //            status = value;
+        //            OnPropertyChanged2(nameof(Status));
+        //        }
+        //    }
+        //}
+
+        private User someUser;
+        public User SomeUser
         {
-            get { return status; }
+            get { return someUser; }
             set
             {
-                if (value != status)
+                if (value != someUser)
                 {
-                    status = value;
-                    OnPropertyChanged2(nameof(Status));
+                    someUser = value;
+                    OnPropertyChanged2(nameof(SomeUser));
                 }
             }
         }

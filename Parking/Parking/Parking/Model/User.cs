@@ -15,6 +15,7 @@ namespace Parking.Model
         public User()
         {
             ParkingPlaceLogs = new ObservableCollection<ParkingPlaceLog>();
+            AccessName = "без статусу";
         }
         public int UserId { get; set; }
 

@@ -15,7 +15,7 @@ namespace Parking.Model
         public Employee()
         {
             Users = new ObservableCollection<User>();
-           
+            EmployeePositions = new ObservableCollection<EmployeePosition>();
             
         }
         public int EmployeeId { get; set; }
@@ -34,21 +34,7 @@ namespace Parking.Model
             }
         }
 
-        [Column("Position", TypeName = "nvarchar")]
-        [MaxLength(100)]
-        private string position;
-        public string Position
-        {
-            get { return position; }
-            set
-            {
-                if (value != position)
-                {
-                    position = value;
-                    OnPropertyChanged(nameof(Position));
-                }
-            }
-        }
+        
 
         [Column(TypeName = "datetime2")]
 
@@ -101,6 +87,7 @@ namespace Parking.Model
         public virtual Person SomePerson { get; set; }
         public virtual Company OwnerCompany { get; set; }
         public virtual ObservableCollection<User> Users { get; set; }
-      
+        public virtual ObservableCollection<EmployeePosition> EmployeePositions { get; set; }
+
     }
 }

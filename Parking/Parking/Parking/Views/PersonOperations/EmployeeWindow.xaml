@@ -193,16 +193,24 @@
                 <TextBlock  Text="Адреса: " FontSize="14" FontWeight="Bold" Grid.Row="5" VerticalAlignment="Center"/>
                 <TextBox  Text="{Binding CurrentRecord.Adress, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="5" Grid.RowSpan="2" Margin="3" VerticalContentAlignment="Center"/>
                 <TextBlock  Text="Посада: " FontSize="14" FontWeight="Bold" Grid.Row="7" VerticalAlignment="Center"/>
-                <TextBox  Text="{Binding CurrentRecord.Position, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14"  HorizontalAlignment="Left" Grid.Column="1" Grid.Row="7" Margin="3" VerticalContentAlignment="Center"/>
+
+                <ComboBox  MinWidth="120"  Grid.Column="1" Grid.Row="7"  Margin="3" 
+                      IsEditable="False" IsSynchronizedWithCurrentItem="True"
+                     ItemsSource="{Binding Statuses}" 
+                     SelectedItem="{Binding CurrentPosition, UpdateSourceTrigger=PropertyChanged}"                        
+                      HorizontalContentAlignment="Center"
+                     Background="White" >
+                </ComboBox>
                 <TextBlock  Text="Заробітна плата: " TextWrapping="Wrap" FontSize="14" FontWeight="Bold" Grid.Row="8" VerticalAlignment="Center"/>
                 <TextBox  Text="{Binding CurrentRecord.Salary, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="8" Margin="3" VerticalAlignment="Center"/>
                 
-                <StackPanel  Grid.Row="0" Grid.Column="2">
+                <StackPanel  Grid.Row="6" Grid.Column="2">
                     <TextBlock Text="Статус в системі бази даних" FontWeight="Bold" HorizontalAlignment="Center" FontSize="14"/>
                     <ComboBox x:Name="StatusList"  MinWidth="120"  
                       IsEditable="False" IsSynchronizedWithCurrentItem="True"
-                     ItemsSource="{Binding Statuses}" 
-                     SelectedItem="{Binding CurrentRecord.Status, UpdateSourceTrigger=PropertyChanged}"                        
+                     ItemsSource="{Binding EmployeePositions}" 
+                     SelectedItem="{Binding CurrentRecord.SomeUser.AccessName, UpdateSourceTrigger=PropertyChanged}"                        
+                     DisplayMemberPath="PositionName"
                       HorizontalContentAlignment="Center"
                      Background="White" >
                     </ComboBox>
@@ -215,10 +223,11 @@
                     <TextBlock Text="Відгук про працівника" FontWeight="Bold" HorizontalAlignment="Center"/>
                     <TextBox  Text="{Binding CurrentRecord.Description, UpdateSourceTrigger=PropertyChanged}" MinWidth="210" FontSize="14"  HorizontalAlignment="Left" Grid.Row="1" Margin="3" VerticalContentAlignment="Center"/>
                 </Grid>
-                <StackPanel Grid.Column="2" Grid.Row="6" Margin="3">
+                <StackPanel Grid.Column="2"  Margin="3">
                     <TextBlock Text="Дата народження" FontWeight="Bold" HorizontalAlignment="Center"/>
                     <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
                         MaxWidth="150" TabIndex="10" HorizontalAlignment="Center"
+                        DisplayDateEnd="{Binding MindateRestriction}"
                         SelectedDate="{Binding CurrentRecord.DayBirthday,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  Width="111" Height="21" Margin="10,0,29.4,0"
                         HorizontalContentAlignment="Center"/>
                 </StackPanel>
@@ -252,8 +261,24 @@
                     </Grid.Background>
                     <Image Source="{Binding Path = CurrentRecord.Photo, Converter={StaticResource imagePathConverter}, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
                 </Grid>
-                
-                <Button Content="Зберегти" Background="Blue" Grid.Column="3" Grid.Row="8"/>
+
+                <Grid Grid.Column="3" Grid.Row="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Зберегти" Background="Blue" Grid.Column="1"/>
+                    <Button Content="Зачинити" Background="Red"/>
+                </Grid>
+
+                <StackPanel Grid.Row="5" Grid.Column="3">
+                    <TextBlock Text="Логін" FontWeight="Bold" HorizontalAlignment="Center" FontSize="14"/>
+                    <TextBox  Text="{Binding  CurrentRecord.SomeUser.Login, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Grid.Row="6" Grid.Column="3">
+                    <TextBlock Text="Пароль" FontWeight="Bold" HorizontalAlignment="Center" FontSize="14"/>
+                    <TextBox  Text="{Binding  CurrentRecord.SomeUser.Pass, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"/>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>

@@ -439,9 +439,17 @@ namespace Parking.ViewModel
         private RelayCommand callStuffListCommand;
         public RelayCommand CallStuffListCommand => callStuffListCommand ?? (callStuffListCommand = new RelayCommand(
                     (obj) =>
-                    {                        
-                        EmployeeWindow empWindow = new EmployeeWindow(IncomUserId);
-                        showWindow.ShowDialog(empWindow);
+                    {
+
+                        if (CheckAccessRights())
+                        {
+                            EmployeeWindow empWindow = new EmployeeWindow(IncomUserId);
+                            showWindow.ShowDialog(empWindow);
+                        }
+                        else
+                            dialogService.ShowMessage("Не достатньо прав доступу");
+
+                        
                     }
                     ));
 
