@@ -50,8 +50,8 @@
                                   VerticalAlignment="Top"/>-->
                     <MenuItem Header="Данні про підприємство" Command="{Binding CallCompanyInfoWindowCommand}"/>
                     <MenuItem Header="Персонал"  VerticalAlignment="Top">
-                        <MenuItem Header="Додати новго працівника" Command="{Binding AddAuthorCommand}"
-                                   VerticalAlignment="Top"/>
+                        <!--<MenuItem Header="Додати новго працівника" Command="{Binding AddAuthorCommand}"
+                                   VerticalAlignment="Top"/>-->
                         <MenuItem Header="Список працівників" 
                                   VerticalAlignment="Top"
                                   Command="{Binding CallStuffListCommand}"/>

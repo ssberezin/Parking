@@ -9,41 +9,46 @@ namespace Parking.ViewModel.PersonOperations
 {
     public  class EmployeeState: Helpes.ObservableObject
     {
-        public EmployeeRecord EmpRec { get; set; }
+        public EmployeeState()
+        {
+            
+        }
+
+        
 
         public bool PesoneCompare(EmployeeRecord obj1, EmployeeRecord obj2)
         {
             bool PhotoCompare;
-            if (obj1.Photo is null && obj2.Photo is null)
+            if (obj1.SomePerson.Photo is null && obj2.SomePerson.Photo is null)
                 PhotoCompare = true;
             else
             {
-                if ((obj1.Photo is null && !(obj2.Photo is null)) || (!(obj1.Photo is null) && obj2.Photo is null))
+                if ((obj1.SomePerson.Photo is null && !(obj2.SomePerson.Photo is null)) || (!(obj1.SomePerson.Photo is null) && obj2.SomePerson.Photo is null))
                     PhotoCompare = false;
                 else
-                    PhotoCompare = obj1.Photo.Length == obj2.Photo.Length;
+                    PhotoCompare = obj1.SomePerson.Photo.Length == obj2.SomePerson.Photo.Length;
             }
 
 
-            return obj1.Patronimic == obj2.Patronimic && obj1.SecondName == obj2.SecondName &&
-                   obj1.FirstName == obj2.FirstName && obj1.Male==obj2.Male && obj1.Female==obj2.Female &&
-                   obj1.DayBirthday == obj2.DayBirthday && PhotoCompare;
+            return obj1.SomePerson.Patronimic == obj2.SomePerson.Patronimic && obj1.SomePerson.SecondName == obj2.SomePerson.SecondName &&
+                   obj1.SomePerson.FirstName == obj2.SomePerson.FirstName && obj1.Male == obj2.Male && obj1.Female == obj2.Female &&
+                   obj1.SomePerson.DayBirthday == obj2.SomePerson.DayBirthday && PhotoCompare && obj1.SomePerson.TaxCode == obj2.SomePerson.TaxCode;
         }
 
         public bool ContactsCompare(EmployeeRecord obj1, EmployeeRecord obj2)
         {
-            return obj1.PhoneNumber == obj2.PhoneNumber && obj1.Adress == obj2.Adress;
+            return obj1.SomeContacts.Phone == obj2.SomeContacts.Phone && obj1.SomeContacts.Adress == obj2.SomeContacts.Adress;
         }
 
         public bool EmployeePositionCompare(EmployeeRecord obj1, EmployeeRecord obj2)
         {
-            return obj1.PositionId == obj2.PositionId;
+            return obj1.SomeEmpPosition.EmployeePositionId == obj2.SomeEmpPosition.EmployeePositionId;
         }
 
         public bool EmployeeCompare(EmployeeRecord obj1, EmployeeRecord obj2)
         {
-            return obj1.Salary == obj2.Salary  && obj1.Description==obj1.Description &&
-                    obj1.HireDate==obj2.HireDate && obj1.FireDate==obj2.FireDate;
+            return obj1.SomeEmployee.Salary == obj2.SomeEmployee.Salary  && obj1.SomeEmployee.Description ==obj1.SomeEmployee.Description &&
+                    obj1.SomeEmployee.HireDate ==obj2.SomeEmployee.HireDate && obj1.SomeEmployee.FireDate ==obj2.SomeEmployee.FireDate;
         }
 
         public bool StatusCompare(EmployeeRecord obj1, EmployeeRecord obj2)
@@ -57,27 +62,38 @@ namespace Parking.ViewModel.PersonOperations
         {
             return new EmployeeRecord
             {
-                EmployeeId = obj1.EmployeeId,
-                PersonId = obj1.PersonId,
-                PositionId = obj1.PositionId,
-                ContactsId = obj1.ContactsId,
+                SomeEmployee = new Employee
+                {
+                    EmployeeId = obj1.SomeEmployee.EmployeeId,
+                    Salary = obj1.SomeEmployee.Salary,
+                    HireDate = obj1.SomeEmployee.HireDate,
+                    FireDate = obj1.SomeEmployee.FireDate,
+                    Description = obj1.SomeEmployee.Description
 
-                Salary = obj1.Salary,
-                HireDate = obj1.HireDate,
-                FireDate = obj1.FireDate,
-                Description = obj1.Description,
+                },
 
-                SecondName = obj1.SecondName,
-                FirstName = obj1.FirstName,
-                Patronimic = obj1.Patronimic,
-                PYB = obj1.SecondName + " " + obj1.FirstName + " " + obj1.Patronimic,
-                Male = obj1.Male,
-                Female = !obj1.Male,
-                DayBirthday = obj1.DayBirthday,
-                Photo = obj1.Photo,
+                SomePerson = new Person 
+                {
+                    PersonId = obj1.SomePerson.PersonId,
+                    SecondName = obj1.SomePerson.SecondName,
+                    FirstName = obj1.SomePerson.FirstName,
+                    Patronimic = obj1.SomePerson.Patronimic,                    
+                    Sex = obj1.SomePerson.Sex,                    
+                    DayBirthday = obj1.SomePerson.DayBirthday,
+                    Photo = obj1.SomePerson.Photo,
+                    TaxCode = obj1.SomePerson.TaxCode,
+                },
 
-                PhoneNumber = obj1.PhoneNumber,
-                Adress = obj1.Adress,
+                PYB = obj1.SomePerson.SecondName + " " + obj1.SomePerson.FirstName + " " + obj1.SomePerson.Patronimic,
+                
+
+                SomeContacts = new Contacts 
+                {
+                    ContactsId = obj1.SomeContacts.ContactsId,
+                    Phone = obj1.SomeContacts.Phone,
+                    Adress = obj1.SomeContacts.Adress
+                },
+                
                 SomeUser = new User
                 {
                     UserId = obj1.SomeUser.UserId,
@@ -85,7 +101,11 @@ namespace Parking.ViewModel.PersonOperations
                     Login = obj1.SomeUser.Login,
                     Pass = obj1.SomeUser.Pass
                 },
-                Position = obj1.Position
+                SomeEmpPosition = new EmployeePosition 
+                {
+                    EmployeePositionId = obj1.SomeEmpPosition.EmployeePositionId,
+                    PositionName = obj1.SomeEmpPosition.PositionName
+                }
             };
 
 

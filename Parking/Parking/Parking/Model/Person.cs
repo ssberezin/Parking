@@ -125,8 +125,8 @@ namespace Parking.Model
 
         [Column("TaxCode", TypeName = "int8")]
         [MaxLength(10)]
-        private long taxCode;
-        public long TaxCode
+        private long? taxCode;
+        public long? TaxCode
         {
             get { return taxCode; }
             set

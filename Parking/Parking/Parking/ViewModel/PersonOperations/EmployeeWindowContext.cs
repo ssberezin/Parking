@@ -21,10 +21,10 @@ namespace Parking.ViewModel.PersonOperations
         int UserId { get; set; }
 
         //these both for compare EmployeeWindow data state before some actions
-        EmployeeState PreviousState { get; set; }
-        EmployeeState CurrentState { get; set; }
+        EmployeeRecord PreviousState { get; set; }
+        EmployeeRecord CurrentState { get; set; }
 
-        
+        EmployeeState EmpState;
         public DateTime MindateRestriction { get; set; }//for min employee age restriction
 
         public ObservableCollection<EmployeeRecord> EmployeeRecords { get; set; }
@@ -40,7 +40,22 @@ namespace Parking.ViewModel.PersonOperations
                 if (value != selectetRecord)
                 {
                     selectetRecord = value;
-                    OnPropertyChanged(nameof(SelectetRecord));
+                    OnPropertyChanged2(nameof(SelectetRecord));
+                }
+            }
+        }
+
+        //for have an opportunity of choice betwin save new data and edittinig current data
+        private bool toSave;
+        public bool ToSave
+        {
+            get { return toSave; }
+            set
+            {
+                if (value != toSave)
+                {
+                    toSave = value;
+                    OnPropertyChanged4(nameof(ToSave));
                 }
             }
         }
@@ -54,7 +69,7 @@ namespace Parking.ViewModel.PersonOperations
                 if (value != taxCode)
                 {
                     taxCode = value;
-                    OnPropertyChanged2(nameof(TaxCode));
+                    OnPropertyChanged(nameof(TaxCode));
                 }
             }
         }
@@ -82,7 +97,7 @@ namespace Parking.ViewModel.PersonOperations
                 if (value != currentPosition)
                 {
                     currentPosition = value;
-                    OnPropertyChanged2(nameof(CurrentPosition));
+                    OnPropertyChanged(nameof(CurrentPosition));
                 }
             }
         }
@@ -110,23 +125,28 @@ namespace Parking.ViewModel.PersonOperations
             dialogService = new DefaultDialogService();
             UserId = userId;
             EmployeeRecords = new ObservableCollection<EmployeeRecord>();
+            EmployeePositions = new ObservableCollection<EmployeePosition>();
+            EmpState = new EmployeeState();
+            
+
             DefaultDataLoad();
             FillEmployeePositions();//filling by data collection of employee positions
-           
-            PropertyChanged += GetRecordDetales;
-            PropertyChanged2 += TaxCodeChange;
+
+            PropertyChanged2 += GetRecordDetales;
+            PropertyChanged3 += TaxCodeChange;
+            PropertyChanged4 += AddNewdata;
         }
 
-        
 
-            private void DefaultDataLoad()
+
+        private void DefaultDataLoad()
         {
             lib = new Library();
             MindateRestriction = DateTime.Now.AddYears(-18);
 
             DefaultPhoto = "default_avatar.png";
 
-            Statuses = new ObservableCollection<string> { "адмінісмтратор","мастер-адмін","без статусу"};
+            Statuses = new ObservableCollection<string> { "адмінісмтратор", "мастер-адмін", "без статусу" };
 
             string sqlExpression = "sp_GetEmployeesRecords";
 
@@ -141,7 +161,7 @@ namespace Parking.ViewModel.PersonOperations
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
                     command.CommandType = System.Data.CommandType.StoredProcedure;
-                    
+
                     SqlDataReader result = command.ExecuteReader();
 
                     if (result.HasRows)
@@ -149,33 +169,39 @@ namespace Parking.ViewModel.PersonOperations
                         EmployeeRecord record = new EmployeeRecord();
                         while (result.Read())
                         {
-                            record.EmployeeId = (int)result.GetValue(0);
-                            record.Salary = (decimal)result.GetValue(1);
-                            record.HireDate = (DateTime)result.GetValue(2);
+                            record.SomeEmployee.EmployeeId = (int)result.GetValue(0);
+                            record.SomeEmployee.Salary = (decimal)result.GetValue(1);
+                            record.SomeEmployee.HireDate = (DateTime)result.GetValue(2);
                             if (!(result.GetValue(3) is System.DBNull))
-                                record.FireDate = (DateTime)result.GetValue(3);
-                            record.Description = (string)result.GetValue(4);
-                            record.PersonId = (int)result.GetValue(5);
-                            record.SecondName = (string)result.GetValue(6);
-                            record.FirstName = (string)result.GetValue(7);
-                            record.Patronimic = (string)result.GetValue(8);
-                            record.PYB = record.SecondName + " " + record.FirstName + " " + record.Patronimic;
+                                record.SomeEmployee.FireDate = (DateTime)result.GetValue(3);
+                            record.SomeEmployee.Description = (string)result.GetValue(4);
+
+                            record.SomePerson.PersonId = (int)result.GetValue(5);
+                            record.SomePerson.SecondName = (string)result.GetValue(6);
+                            record.SomePerson.FirstName = (string)result.GetValue(7);
+                            record.SomePerson.Patronimic = (string)result.GetValue(8);
+                            record.PYB = record.SomePerson.SecondName + " " + record.SomePerson.FirstName + " " + record.SomePerson.Patronimic;
                             record.Male = (bool)result.GetValue(9);
                             record.Female = !record.Male;
-                            record.DayBirthday = (DateTime)result.GetValue(10);
+                            record.SomePerson.DayBirthday = (DateTime)result.GetValue(10);
                             if (!(result.GetValue(11) is System.DBNull))
-                                record.Photo = (byte[])result.GetValue(11);
-                            record.ContactsId =(int) result.GetValue(12);
-                            record.PhoneNumber = (string)result.GetValue(13);
-                            record.Adress = (string)result.GetValue(14);
+                                record.SomePerson.Photo = (byte[])result.GetValue(11);
+                            if (!(result.GetValue(21) is System.DBNull))
+                                record.SomePerson.TaxCode = (long)result.GetValue(21);
+
+                            record.SomeContacts.ContactsId = (int)result.GetValue(12);
+                            record.SomeContacts.Phone = (string)result.GetValue(13);
+                            record.SomeContacts.Adress = (string)result.GetValue(14);
 
                             record.SomeUser.AccessName = (string)result.GetValue(15);
                             record.SomeUser.UserId = (int)result.GetValue(20);
                             record.SomeUser.Login = (string)result.GetValue(19);
                             record.SomeUser.Pass = (string)result.GetValue(18);
 
-                            record.Position = (string)result.GetValue(16);
-                            record.PositionId = (int)result.GetValue(17);
+                            record.SomeEmpPosition.PositionName = (string)result.GetValue(16);
+                            record.SomeEmpPosition.EmployeePositionId = (int)result.GetValue(17);
+
+
                             EmployeeRecords.Add(record);
                         };
                     }
@@ -206,6 +232,7 @@ namespace Parking.ViewModel.PersonOperations
 
             }
         }
+        
 
         private void FillEmployeePositions()
         {
@@ -245,16 +272,26 @@ namespace Parking.ViewModel.PersonOperations
         private void GetRecordDetales(object sender, PropertyChangedEventArgs e)
         {
             CurrentRecord = SelectetRecord;
-            CurrentPosition = new EmployeePosition 
-                                    { EmployeePositionId = SelectetRecord.PositionId,
-                                      PositionName = SelectetRecord.Position };
-            PreviousState.EmpRec = PreviousState.SetState(SelectetRecord);
+            CurrentRecord.Status = CurrentRecord.SomeUser.AccessName;
+            CurrentPosition = new EmployeePosition { EmployeePositionId = CurrentRecord.SomeEmpPosition.EmployeePositionId,
+                                                     PositionName = CurrentRecord.SomeEmpPosition.PositionName};
+
+            TaxCode = CurrentRecord.SomePerson.TaxCode.Value.ToString();
+
+            
+            PreviousState = EmpState.SetState(SelectetRecord);
 
         }
 
         private void TaxCodeChange(object sender, PropertyChangedEventArgs e)
         {
             TaxCode = lib.TaxCodeValidation(TaxCode);            
+        }
+
+        private void AddNewdata(object sender, PropertyChangedEventArgs e)
+        {
+            SelectetRecord = null;
+            CurrentRecord = new EmployeeRecord();
         }
 
         private RelayCommand openFileDialogCommand;
@@ -271,14 +308,14 @@ namespace Parking.ViewModel.PersonOperations
             path = dialogService.OpenFileDialog("C:\\");
             if (path == null)
                 return;
-           CurrentRecord.Photo = File.ReadAllBytes(path);
+           CurrentRecord.SomePerson.Photo = File.ReadAllBytes(path);
         }
 
         private RelayCommand deletePersonPhotoCommand;
         public RelayCommand DeletePersonPhotoCommand => deletePersonPhotoCommand ?? (deletePersonPhotoCommand = new RelayCommand(
                     (obj) =>
                     {
-                        CurrentRecord.Photo = null;
+                        CurrentRecord.SomePerson.Photo = null;
                     }
                     ));
 
@@ -293,15 +330,19 @@ namespace Parking.ViewModel.PersonOperations
                             return;
                         }
 
-                        CurrentRecord.PositionId = CurrentPosition.EmployeePositionId;
-                        CurrentRecord.Position = CurrentPosition.PositionName;
-                        CurrentState.EmpRec = CurrentState.SetState(CurrentRecord);
+                        CurrentRecord.SomeEmpPosition.EmployeePositionId = CurrentPosition.EmployeePositionId;
+                        CurrentRecord.SomeEmpPosition.PositionName = CurrentPosition.PositionName;
+                        
                         if (long.TryParse(TaxCode, out long tmp))
-                            CurrentRecord.TaxCode = tmp;
+                            CurrentRecord.SomePerson.TaxCode = tmp;
+                        CurrentState = EmpState.SetState(CurrentRecord);
 
-                       
-                        Editdata();
-                        PreviousState.EmpRec = CurrentState.SetState(CurrentRecord);
+                        if (!ToSave)
+                            SaveNewData();
+                        else
+                            Editdata();
+
+                        PreviousState = EmpState.SetState(CurrentRecord);
                     }
                     ));
         private void Editdata()
@@ -310,55 +351,79 @@ namespace Parking.ViewModel.PersonOperations
             {
                 try
                 {
-                    if (!PreviousState.PesoneCompare (PreviousState.EmpRec, CurrentState.EmpRec))
+                    if (!EmpState.PesoneCompare (PreviousState, CurrentState))
                     {
-                        Person ownerPerson = db.Persons.Find(CurrentRecord.PersonId);
+                        Person ownerPerson = db.Persons.Find(CurrentRecord.SomePerson.PersonId);
                         db.Entry(ownerPerson).State = EntityState.Modified;
-                        ownerPerson.FirstName = CurrentRecord.FirstName;
-                        ownerPerson.SecondName = CurrentRecord.SecondName;
-                        ownerPerson.Patronimic = CurrentRecord.Patronimic;
+
+                        if (!(db.Persons.Where(p => p.TaxCode == CurrentRecord.SomePerson.TaxCode && p.PersonId != CurrentRecord.SomePerson.PersonId).FirstOrDefault() is null))
+                            ownerPerson.TaxCode = CurrentRecord.SomePerson.TaxCode;
+                        else
+                        {
+                            dialogService.ShowMessage("Поточний ІНН вже є в базі данних. \n І він закріплений за іншою особою.\n Відкорегуйте данні");
+                            return;
+                        };
+                        ownerPerson.FirstName = CurrentRecord.SomePerson.FirstName;
+                        ownerPerson.SecondName = CurrentRecord.SomePerson.SecondName;
+                        ownerPerson.Patronimic = CurrentRecord.SomePerson.Patronimic;
                         ownerPerson.Sex = CurrentRecord.Male? CurrentRecord.Male: CurrentRecord.Female;
-                        ownerPerson.DayBirthday = CurrentRecord.DayBirthday;
-                        ownerPerson.Photo = CurrentRecord.Photo;
+                        ownerPerson.DayBirthday = CurrentRecord.SomePerson.DayBirthday;
+                        ownerPerson.Photo = CurrentRecord.SomePerson.Photo;
+                        
+
                     }
 
-                    if (!PreviousState.ContactsCompare(PreviousState.EmpRec, CurrentState.EmpRec))
+                    if (!EmpState.ContactsCompare(PreviousState, CurrentState))
                     {
-                        Contacts ownerCTN = db.Contacts.Find(CurrentRecord.ContactsId);
+                        Contacts ownerCTN = db.Contacts.Find(CurrentRecord.SomeContacts.ContactsId);
                         db.Entry(ownerCTN).State = EntityState.Modified;
-                        ownerCTN.Adress = CurrentRecord.Adress;
-                        ownerCTN.Phone = CurrentRecord.PhoneNumber;                        
+
+                        if (!(db.Contacts.Where(p => p.Phone == CurrentRecord.SomeContacts.Phone && p.SomePerson.PersonId != CurrentRecord.SomePerson.PersonId).FirstOrDefault() is null))
+                            ownerCTN.Phone = CurrentRecord.SomeContacts.Phone;
+                        else
+                        {
+                            dialogService.ShowMessage("Поточний Номер телефона вже є в базі данних. \n І він закріплений за іншою особою.\n Відкорегуйте данні");
+                            return;
+                        };
+                        ownerCTN.Adress = CurrentRecord.SomeContacts.Adress;                       
+                        
                     }
                     
-                    if (!PreviousState.EmployeePositionCompare(PreviousState.EmpRec, CurrentState.EmpRec) ||
-                        !PreviousState.EmployeeCompare(PreviousState.EmpRec, CurrentState.EmpRec))
+                    if (!EmpState.EmployeePositionCompare(PreviousState, CurrentState) ||
+                        !EmpState.EmployeeCompare(PreviousState, CurrentState))
                     {
-                        Employee emp1 = db.Employees.Find(CurrentRecord.EmployeeId);
+                        Employee emp1 = db.Employees.Find(CurrentRecord.SomeEmployee.EmployeeId);
                         db.Entry(emp1).State = EntityState.Modified;
-                        emp1.EmployeePositions.Remove(db.EmployeePositions.Find(PreviousState.EmpRec.PositionId));
-                        emp1.EmployeePositions.Add(db.EmployeePositions.Find(CurrentRecord.PositionId));
-                        emp1.Salary = CurrentRecord.Salary;
-                        emp1.FireDate = CurrentRecord.FireDate;
-                        emp1.HireDate = CurrentRecord.HireDate;
-                        emp1.Description = CurrentRecord.Description;                        
+                        emp1.EmployeePositions.Remove(db.EmployeePositions.Find(PreviousState.SomeEmpPosition.EmployeePositionId));
+                        emp1.EmployeePositions.Add(db.EmployeePositions.Find(CurrentRecord.SomeEmpPosition.EmployeePositionId));
+                        emp1.Salary = CurrentRecord.SomeEmployee.Salary;
+                        emp1.FireDate = CurrentRecord.SomeEmployee.FireDate;
+                        emp1.HireDate = CurrentRecord.SomeEmployee.HireDate;
+                        emp1.Description = CurrentRecord.SomeEmployee.Description;                        
                     }
 
-                    if (!(PreviousState.StatusCompare(PreviousState.EmpRec, CurrentState.EmpRec)))
+                    if (!(EmpState.StatusCompare(PreviousState, CurrentState)))
                     {
                         User usver = db.Users.Find(CurrentRecord.SomeUser.UserId);
                           db.Entry(usver).State = EntityState.Modified;
-                        if (CurrentState.EmpRec.SomeUser.AccessName != PreviousState.EmpRec.SomeUser.AccessName &&
-                            CurrentState.EmpRec.SomeUser.AccessName == "без статусу")
+                        if (CurrentState.SomeUser.AccessName != PreviousState.SomeUser.AccessName &&
+                            CurrentState.SomeUser.AccessName == "без статусу")
                         {
                             usver.Pass = null;
                             usver.Login = null;
-                            usver.AccessName = CurrentState.EmpRec.SomeUser.AccessName;
+                            usver.AccessName = CurrentState.SomeUser.AccessName;
                         }
                         else
                         {
-                            usver.Pass = CurrentState.EmpRec.SomeUser.Pass;
-                            usver.Login = CurrentState.EmpRec.SomeUser.Login;
-                            usver.AccessName = CurrentState.EmpRec.SomeUser.AccessName;
+                            if (!(db.Users.Where(p => p.Login == CurrentRecord.SomeUser.Login && p.SomeEmployee.SomePerson.PersonId != CurrentRecord.SomePerson.PersonId).FirstOrDefault() is null))
+                                usver.Login = CurrentState.SomeUser.Login;
+                            else
+                            {
+                                dialogService.ShowMessage("Поточний логін вже зайнятий. \n Відкорегуйте данні");
+                                return;
+                            };
+                            usver.Pass = CurrentState.SomeUser.Pass;                        
+                            usver.AccessName = CurrentState.SomeUser.AccessName;
                         }                       
                         
                     }
@@ -397,18 +462,95 @@ namespace Parking.ViewModel.PersonOperations
             {
                 try
                 {
-                    Employee emp1 = db.Employees.Where(emp => emp.SomePerson.TaxCode == CurrentRecord.TaxCode).FirstOrDefault();
-                    if (emp1 is null)
+                  Person  pers1 = db.Persons.Where
+                               (p => p.PersonId ==
+                               (db.Contacts.Where(c => c.ContactsId ==
+                                db.Contacts.Where(ct => ct.Phone == CurrentRecord.SomeContacts.Phone).FirstOrDefault().ContactsId).FirstOrDefault().SomePerson.PersonId)).FirstOrDefault();
+                  Client cl=null;
+
+
+                    if (pers1 != null)
                     {
+                        cl = db.Clients.Where(c=>c.PersonCustomer.PersonId==pers1.PersonId).FirstOrDefault();
+                        if (!EmpState.PesoneCompare(CurrentState, PreviousState))
+                        {
+                            if (dialogService.YesNoDialog("В базі данних цей телефон вже закріплений за \n" +
+                                pers1.SecondName + " " + pers1.FirstName + " " + pers1.Patronimic + "\n" +
+                                "Це та ж сама особа ?"))
+                            {
+                                Employee emp = db.Employees.Where(em => em.SomePerson.TaxCode == CurrentRecord.SomePerson.TaxCode).FirstOrDefault();
+                                if (emp != null)
+                                {
+                                    dialogService.ShowMessage("Ця особа вже э співробітником. Обіймання двох посад не припустиме.");
+                                    return;
+                                }
+
+
+
+                            }
+                            else
+                            {
+                                dialogService.ShowMessage(" В базі данних не може бути 2 однакових номера телефону. \n Відкорегуйте поточний номер телефона .");
+                                return;
+                            };
+                        }
+                        else
+                        if (dialogService.YesNoDialog("В базі данних цей телефон вже закріплений за \n" +
+                            pers1.SecondName + " " + pers1.FirstName + " " + pers1.Patronimic))
+                        {
+                        }
 
                     }
                     else
                     {
-                        dialogService.ShowMessage("Вже є співробітник з такми ІНН. \nПеревірте вірність введених данних");
-                        return;
+                        cl = new Client();
+                        db.Clients.Add(cl);
+
+                        pers1 = new Person
+                        {
+                            SecondName = CurrentRecord.SomePerson.SecondName,
+                            FirstName = CurrentRecord.SomePerson.FirstName,
+                            Patronimic = CurrentRecord.SomePerson.Patronimic,
+                            Sex = CurrentRecord.Male,
+                            DayBirthday = CurrentRecord.SomePerson.DayBirthday,
+                            Photo = CurrentRecord.SomePerson.Photo
+                        };
+                        pers1.Clients.Add(cl);
+
+                        Contacts ctn = new Contacts
+                        {
+                            Phone = CurrentRecord.SomeContacts.Phone,
+                            Adress = CurrentRecord.SomeContacts.Adress
+                        };
+                        db.Contacts.Add(ctn);
+                        pers1.ContactsData.Add(ctn);
+                        pers1.Clients.Add(cl);
+
+                        db.Persons.Add(pers1);
                     }
 
+                    Employee emp1 = new Employee
+                    {
+                        Salary = CurrentRecord.SomeEmployee.Salary,
+                        Description = CurrentRecord.SomeEmployee.Description,
+                        FireDate = CurrentRecord.SomeEmployee.FireDate,
+                        HireDate = CurrentRecord.SomeEmployee.HireDate
+                    };
 
+                    User usver = new User
+                    {
+                        Login = CurrentRecord.SomeUser.Login,
+                        Pass = CurrentRecord.SomeUser.Pass,
+                        AccessName = CurrentRecord.SomeUser.AccessName
+                    };
+                    db.Users.Add(usver);
+
+                   
+                    emp1.SomePerson = pers1;
+                    emp1.Users.Add(usver);
+                    emp1.OwnerCompany = db.OwnerCompany.Find(1);
+                    emp1.EmployeePositions.Add(db.EmployeePositions.Find(CurrentPosition.EmployeePositionId));
+                    db.Employees.Add(emp1);
 
                     db.SaveChanges();
                     dialogService.ShowMessage("Виконано");
@@ -442,91 +584,6 @@ namespace Parking.ViewModel.PersonOperations
         }
 
        
-        ////check and return EmployeeRecord if there is some employe with such phone number
-        //private bool ChaeckExistingEmployeeByPhoneNumber(string phone, out EmployeeRecord  tmpRec)
-        //{
-        //    tmpRec = null;
-        //    string sqlExpression = "sp_GetEmployeeByPhoneNumber";
-
-        //    var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
-        //    var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
-
-        //    using (SqlConnection connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
-        //    {
-        //        try
-        //        {
-        //            connection.Open();
-        //            SqlCommand command = new SqlCommand(sqlExpression, connection);
-        //            command.CommandType = System.Data.CommandType.StoredProcedure;
-        //            SqlParameter firstParam = new SqlParameter
-        //            {
-        //                ParameterName = "@PhoneNumber",
-        //                Value = CurrentRecord.PhoneNumber
-        //            };
-        //            command.Parameters.Add(firstParam);
-
-        //            SqlDataReader result = command.ExecuteReader();
-
-        //            if (result.HasRows)
-        //            {
-                        
-        //                while (result.Read())
-        //                {
-        //                    tmpRec = new EmployeeRecord 
-        //                    { 
-        //                        ContactsId = (int)result.GetValue(0),
-        //                        PhoneNumber = (string)result.GetValue(1),
-        //                        Adress = (string)result.GetValue(2),
-                                
-        //                        PersonId = (int)result.GetValue(3),
-        //                        SecondName = (string)result.GetValue(4),
-        //                        FirstName = (string)result.GetValue(5),
-        //                        Patronimic = (string)result.GetValue(6),
-        //                        Male = (bool)result.GetValue(7),
-        //                        Female = !(bool)result.GetValue(7),
-        //                        Photo = result.GetValue(8) is System.DBNull ? null : (byte[])result.GetValue(8),
-                                
-        //                        EmployeeId = (int)result.GetValue(9),
-        //                        Description = (string)result.GetValue(10),
-        //                        Salary = (decimal)result.GetValue(11)
-        //                    };
-        //                    if (!(result.GetValue(12) is System.DBNull))
-        //                        tmpRec.FireDate = (DateTime)result.GetValue(12);
-        //                    if (!(result.GetValue(13) is System.DBNull))
-        //                        tmpRec.HireDate = (DateTime)result.GetValue(13);                            
-        //                }
-
-
-        //            }
-        //            else
-        //                return false;
-                    
-        //        }
-
-        //        catch (ArgumentNullException ex)
-        //        {
-        //            dialogService.ShowMessage(ex.Message);
-        //        }
-        //        catch (OverflowException ex)
-        //        {
-        //            dialogService.ShowMessage(ex.Message);
-        //        }
-        //        catch (System.Data.SqlClient.SqlException ex)
-        //        {
-        //            dialogService.ShowMessage(ex.Message);
-        //        }
-        //        catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
-        //        {
-        //            dialogService.ShowMessage(ex.Message);
-        //        }
-        //        catch (System.Data.Entity.Core.EntityException ex)
-        //        {
-        //            dialogService.ShowMessage(ex.Message);
-        //        }
-
-        //    }
-
-        //    return false;
-        //}
+        
     }
 }

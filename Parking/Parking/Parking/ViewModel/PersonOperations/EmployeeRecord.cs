@@ -13,72 +13,78 @@ namespace Parking.ViewModel.PersonOperations
         public EmployeeRecord()
         {
             SomeUser = new User();
-        }
+            SomeContacts = new Contacts();
+            SomeEmployee = new Employee();
+            SomePerson = new Person();
+            SomeEmpPosition = new EmployeePosition();
+         }
 
-        public int EmployeeId { get; set; }
-        public int PositionId { get; set; }
 
-        public int PersonId { get; set; }
 
-        public int ContactsId { get; set; }
+        //public int EmployeeId { get; set; }
+        //public int PositionId { get; set; }
 
-        private string description;
-        public string Description
-        {
-            get { return description; }
-            set
-            {
-                if (value != description)
-                {
-                    description = value;
-                    OnPropertyChanged2(nameof(Description));
-                }
-            }
-        }
+        //public int PersonId { get; set; }
 
-        private string firstName;
-        public string FirstName
-        {
-            get { return firstName; }
-            set
-            {
-                if (value != firstName)
-                {
-                    firstName = value;
-                    OnPropertyChanged2(nameof(FirstName));
-                }
-            }
-        }
+        //public int ContactsId { get; set; }
 
-       
-        private string secondName;
-        public string SecondName
-        {
-            get { return secondName; }
-            set
-            {
-                if (value != SecondName)
-                {
-                    secondName = value;
-                    OnPropertyChanged2(nameof(SecondName));
-                }
-            }
-        }
+        //private string description;
+        //public string Description
+        //{
+        //    get { return description; }
+        //    set
+        //    {
+        //        if (value != description)
+        //        {
+        //            description = value;
+        //            OnPropertyChanged2(nameof(Description));
+        //        }
+        //    }
+        //}
 
-      
-        private string patronimic;
-        public string Patronimic
-        {
-            get { return patronimic; }
-            set
-            {
-                if (value != Patronimic)
-                {
-                    patronimic = value;
-                    OnPropertyChanged2(nameof(Patronimic));
-                }
-            }
-        }
+        //private string firstName;
+        //public string FirstName
+        //{
+        //    get { return firstName; }
+        //    set
+        //    {
+        //        if (value != firstName)
+        //        {
+        //            firstName = value;
+        //            OnPropertyChanged2(nameof(FirstName));
+        //        }
+        //    }
+        //}
+
+
+        //private string secondName;
+        //public string SecondName
+        //{
+        //    get { return secondName; }
+        //    set
+        //    {
+        //        if (value != SecondName)
+        //        {
+        //            secondName = value;
+        //            OnPropertyChanged2(nameof(SecondName));
+        //        }
+        //    }
+        //}
+
+
+        //private string patronimic;
+        //public string Patronimic
+        //{
+        //    get { return patronimic; }
+        //    set
+        //    {
+        //        if (value != Patronimic)
+        //        {
+        //            patronimic = value;
+        //            OnPropertyChanged2(nameof(Patronimic));
+        //        }
+        //    }
+        //}
 
         private bool male;
         public bool Male
@@ -108,77 +114,77 @@ namespace Parking.ViewModel.PersonOperations
             }
         }
 
-        private long taxCode;
-        public long TaxCode
-        {
-            get { return taxCode; }
-            set
-            {
-                if (value != taxCode)
-                {
-                    taxCode = value;
-                    OnPropertyChanged(nameof(TaxCode));
-                }
-            }
-        }
+        //private long? taxCode;
+        //public long? TaxCode
+        //{
+        //    get { return taxCode; }
+        //    set
+        //    {
+        //        if (value != taxCode)
+        //        {
+        //            taxCode = value;
+        //            OnPropertyChanged2(nameof(TaxCode));
+        //        }
+        //    }
+        //}
 
 
-        private DateTime? dayBirthday;
-        public DateTime? DayBirthday
-        {
-            get { return dayBirthday; }
-            set
-            {
-                if (dayBirthday != value)
-                {
-                    dayBirthday = value;
-                    OnPropertyChanged2(nameof(DayBirthday));
-                }
-            }
-        }
+        //private DateTime? dayBirthday;
+        //public DateTime? DayBirthday
+        //{
+        //    get { return dayBirthday; }
+        //    set
+        //    {
+        //        if (dayBirthday != value)
+        //        {
+        //            dayBirthday = value;
+        //            OnPropertyChanged2(nameof(DayBirthday));
+        //        }
+        //    }
+        //}
 
-        private DateTime? hireDate;
-        public DateTime? HireDate
-        {
-            get { return hireDate; }
-            set
-            {
-                if (hireDate != value)
-                {
-                    hireDate = value;
-                    OnPropertyChanged2(nameof(HireDate));
-                }
-            }
-        }
+        //private DateTime? hireDate;
+        //public DateTime? HireDate
+        //{
+        //    get { return hireDate; }
+        //    set
+        //    {
+        //        if (hireDate != value)
+        //        {
+        //            hireDate = value;
+        //            OnPropertyChanged2(nameof(HireDate));
+        //        }
+        //    }
+        //}
 
-        private DateTime? fireDate;
-        public DateTime? FireDate
-        {
-            get { return fireDate; }
-            set
-            {
-                if (fireDate != value)
-                {
-                    fireDate = value;
-                    OnPropertyChanged2(nameof(FireDate));
-                }
-            }
-        }
+        //private DateTime? fireDate;
+        //public DateTime? FireDate
+        //{
+        //    get { return fireDate; }
+        //    set
+        //    {
+        //        if (fireDate != value)
+        //        {
+        //            fireDate = value;
+        //            OnPropertyChanged2(nameof(FireDate));
+        //        }
+        //    }
+        //}
 
 
-        private byte[] photo;
-        public byte[] Photo
-        {
-            get { return photo; }
-            set
-            {
-                if (value != photo)
-                {
-                    photo = value;
-                    OnPropertyChanged2(nameof(Photo));
-                }
-            }
-        }
+        //private byte[] photo;
+        //public byte[] Photo
+        //{
+        //    get { return photo; }
+        //    set
+        //    {
+        //        if (value != photo)
+        //        {
+        //            photo = value;
+        //            OnPropertyChanged2(nameof(Photo));
+        //        }
+        //    }
+        //}
 
         private string pYB;
         public string PYB
@@ -189,80 +195,80 @@ namespace Parking.ViewModel.PersonOperations
                 if (value != pYB)
                 {
                     pYB = value;
-                    OnPropertyChanged2(nameof(PYB));
+                    OnPropertyChanged(nameof(PYB));
                 }
             }
         }
 
-        private string phoneNumber;
-        public string PhoneNumber
-        {
-            get { return phoneNumber; }
-            set
-            {
-                if (value != phoneNumber)
-                {
-                    phoneNumber = value;
-                    OnPropertyChanged2(nameof(PhoneNumber));
-                }
-            }
-        }
-
-        private string adress;
-        public string Adress
-        {
-            get { return adress; }
-            set
-            {
-                if (value != adress)
-                {
-                    adress = value;
-                    OnPropertyChanged2(nameof(Adress));
-                }
-            }
-        }
-
-        private string position;
-        public string Position
-        {
-            get { return position; }
-            set
-            {
-                if (value != position)
-                {
-                    position = value;
-                    OnPropertyChanged2(nameof(Position));
-                }
-            }
-        }
-
-        private decimal salary;
-        public decimal Salary
-        {
-            get { return salary; }
-            set
-            {
-                if (salary != value)
-                {
-                    salary = value;
-                    OnPropertyChanged2(nameof(Salary));
-                }
-            }
-        }
-
-        //private string status;
-        //public string Status
+        //private string phoneNumber;
+        //public string PhoneNumber
         //{
-        //    get { return status; }
+        //    get { return phoneNumber; }
         //    set
         //    {
-        //        if (value != status)
+        //        if (value != phoneNumber)
         //        {
-        //            status = value;
-        //            OnPropertyChanged2(nameof(Status));
+        //            phoneNumber = value;
+        //            OnPropertyChanged2(nameof(PhoneNumber));
         //        }
         //    }
         //}
+
+        //private string adress;
+        //public string Adress
+        //{
+        //    get { return adress; }
+        //    set
+        //    {
+        //        if (value != adress)
+        //        {
+        //            adress = value;
+        //            OnPropertyChanged2(nameof(Adress));
+        //        }
+        //    }
+        //}
+
+        //private string position;
+        //public string Position
+        //{
+        //    get { return position; }
+        //    set
+        //    {
+        //        if (value != position)
+        //        {
+        //            position = value;
+        //            OnPropertyChanged2(nameof(Position));
+        //        }
+        //    }
+        //}
+
+        //private decimal salary;
+        //public decimal Salary
+        //{
+        //    get { return salary; }
+        //    set
+        //    {
+        //        if (salary != value)
+        //        {
+        //            salary = value;
+        //            OnPropertyChanged2(nameof(Salary));
+        //        }
+        //    }
+        //}
+
+        private string status;
+        public string Status
+        {
+            get { return status; }
+            set
+            {
+                if (value != status)
+                {
+                    status = value;
+                    OnPropertyChanged(nameof(Status));
+                }
+            }
+        }
 
         private User someUser;
         public User SomeUser
@@ -273,7 +279,63 @@ namespace Parking.ViewModel.PersonOperations
                 if (value != someUser)
                 {
                     someUser = value;
-                    OnPropertyChanged2(nameof(SomeUser));
+                    OnPropertyChanged(nameof(SomeUser));
+                }
+            }
+        }
+
+        private Person somePerson;
+        public Person SomePerson
+        {
+            get { return somePerson; }
+            set
+            {
+                if (value != somePerson)
+                {
+                    somePerson = value;
+                    OnPropertyChanged(nameof(SomePerson));
+                }
+            }
+        }
+
+        private Contacts someContacts;
+        public Contacts SomeContacts
+        {
+            get { return someContacts; }
+            set
+            {
+                if (value != someContacts)
+                {
+                    someContacts = value;
+                    OnPropertyChanged(nameof(SomeContacts));
+                }
+            }
+        }
+
+        private Employee someEmployee;
+        public Employee SomeEmployee
+        {
+            get { return someEmployee; }
+            set
+            {
+                if (value != someEmployee)
+                {
+                    someEmployee = value;
+                    OnPropertyChanged(nameof(SomeEmployee));
+                }
+            }
+        }
+
+        private EmployeePosition someEmpPosition;
+        public EmployeePosition SomeEmpPosition
+        {
+            get { return someEmpPosition; }
+            set
+            {
+                if (value != someEmpPosition)
+                {
+                    someEmpPosition = value;
+                    OnPropertyChanged(nameof(SomeEmpPosition));
                 }
             }
         }
