@@ -31,7 +31,7 @@ namespace Parking.ViewModel.PersonOperations
 
 
             return obj1.SomePerson.Patronimic == obj2.SomePerson.Patronimic && obj1.SomePerson.SecondName == obj2.SomePerson.SecondName &&
-                   obj1.SomePerson.FirstName == obj2.SomePerson.FirstName && obj1.Male == obj2.Male && obj1.Female == obj2.Female &&
+                   obj1.SomePerson.FirstName == obj2.SomePerson.FirstName && obj1.SomePerson.Sex == obj2.SomePerson.Sex && 
                    obj1.SomePerson.DayBirthday == obj2.SomePerson.DayBirthday && PhotoCompare && obj1.SomePerson.TaxCode == obj2.SomePerson.TaxCode;
         }
 

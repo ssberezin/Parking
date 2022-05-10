@@ -87,6 +87,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpes\BoolInverterConverter.cs" />
     <Compile Include="Helpes\BoolToBrushConverterForInOut.cs" />
     <Compile Include="Helpes\BoolToBrushConverterForStatus.cs" />
     <Compile Include="Helpes\BoolToStringConverter2.cs" />

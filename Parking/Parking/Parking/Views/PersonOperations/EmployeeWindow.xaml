@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"            
         xmlns:helpes ="clr-namespace:Parking.Helpes"
         xmlns:wtk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
         xmlns:local="clr-namespace:Parking.Views.PersonOperations" 
@@ -16,6 +16,7 @@
    
         <ResourceDictionary>
             <helpes:ImagePathConverter x:Key="imagePathConverter"/>
+            <helpes:BoolInverterConverter x:Key="boolInverterConverter"/>
 
             <CollectionViewSource x:Key="SortedItems" Source="{Binding  EmployeePositions}"
                 xmlns:scm="clr-namespace:System.ComponentModel;assembly=Win‌​dowsBase">
@@ -194,8 +195,8 @@
                 <TextBox  Text="{Binding CurrentRecord.SomePerson.Patronimic, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="2" Margin="3" VerticalContentAlignment="Center"/>
                 <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="2">
                     <TextBlock  Text="Стать: " FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
-                    <RadioButton GroupName="A" Content="Жіноча " VerticalAlignment="Center" IsChecked="{Binding CurrentRecord.Female, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                    <RadioButton GroupName="A" Content=" Чоловіча" VerticalAlignment="Center" IsChecked="{Binding CurrentRecord.Male, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <RadioButton GroupName="A" Content="Жіноча " VerticalAlignment="Center" IsChecked="{Binding CurrentRecord.SomePerson.Sex,Converter={StaticResource boolInverterConverter}, UpdateSourceTrigger= PropertyChanged, Mode=TwoWay}"/>
+                    <RadioButton GroupName="A" Content=" Чоловіча" VerticalAlignment="Center" IsChecked="{Binding CurrentRecord.SomePerson.Sex, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 </StackPanel>
                 <TextBlock  Text="№ телефона: " FontSize="14" FontWeight="Bold" Grid.Row="4" VerticalAlignment="Center"/>
                 <TextBox  Text="{Binding CurrentRecord.SomeContacts.Phone, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"/>

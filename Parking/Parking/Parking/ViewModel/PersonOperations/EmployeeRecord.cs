@@ -86,33 +86,33 @@ namespace Parking.ViewModel.PersonOperations
         //    }
         //}
 
-        private bool male;
-        public bool Male
-        {
-            get { return male; }
-            set
-            {
-                if (value != male)
-                {
-                    male = value;
-                    OnPropertyChanged2(nameof(Male));
-                }
-            }
-        }
+        //private bool male;
+        //public bool Male
+        //{
+        //    get { return male; }
+        //    set
+        //    {
+        //        if (value != male)
+        //        {
+        //            male = value;
+        //            OnPropertyChanged2(nameof(Male));
+        //        }
+        //    }
+        //}
 
-        private bool female;
-        public bool Female
-        {
-            get { return female; }
-            set
-            {
-                if (value != female)
-                {
-                    female = value;
-                    OnPropertyChanged2(nameof(Female));
-                }
-            }
-        }
+        //private bool female;
+        //public bool Female
+        //{
+        //    get { return female; }
+        //    set
+        //    {
+        //        if (value != female)
+        //        {
+        //            female = value;
+        //            OnPropertyChanged2(nameof(Female));
+        //        }
+        //    }
+        //}
 
         //private long? taxCode;
         //public long? TaxCode

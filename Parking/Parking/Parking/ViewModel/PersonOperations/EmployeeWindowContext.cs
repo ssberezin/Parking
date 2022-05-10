@@ -181,8 +181,8 @@ namespace Parking.ViewModel.PersonOperations
                             record.SomePerson.FirstName = (string)result.GetValue(7);
                             record.SomePerson.Patronimic = (string)result.GetValue(8);
                             record.PYB = record.SomePerson.SecondName + " " + record.SomePerson.FirstName + " " + record.SomePerson.Patronimic;
-                            record.Male = (bool)result.GetValue(9);
-                            record.Female = !record.Male;
+                            record.SomePerson.Sex = (bool)result.GetValue(9);
+                            
                             record.SomePerson.DayBirthday = (DateTime)result.GetValue(10);
                             if (!(result.GetValue(11) is System.DBNull))
                                 record.SomePerson.Photo = (byte[])result.GetValue(11);
@@ -272,10 +272,11 @@ namespace Parking.ViewModel.PersonOperations
         private void GetRecordDetales(object sender, PropertyChangedEventArgs e)
         {
             CurrentRecord = SelectetRecord;
+            
             CurrentRecord.Status = CurrentRecord.SomeUser.AccessName;
             CurrentPosition = new EmployeePosition { EmployeePositionId = CurrentRecord.SomeEmpPosition.EmployeePositionId,
                                                      PositionName = CurrentRecord.SomeEmpPosition.PositionName};
-
+            //тут меняем TaxCode
             TaxCode = CurrentRecord.SomePerson.TaxCode.Value.ToString();
 
             
@@ -366,7 +367,7 @@ namespace Parking.ViewModel.PersonOperations
                         ownerPerson.FirstName = CurrentRecord.SomePerson.FirstName;
                         ownerPerson.SecondName = CurrentRecord.SomePerson.SecondName;
                         ownerPerson.Patronimic = CurrentRecord.SomePerson.Patronimic;
-                        ownerPerson.Sex = CurrentRecord.Male? CurrentRecord.Male: CurrentRecord.Female;
+                        ownerPerson.Sex = CurrentRecord.SomePerson.Sex;
                         ownerPerson.DayBirthday = CurrentRecord.SomePerson.DayBirthday;
                         ownerPerson.Photo = CurrentRecord.SomePerson.Photo;
                         
@@ -485,8 +486,6 @@ namespace Parking.ViewModel.PersonOperations
                                     return;
                                 }
 
-
-
                             }
                             else
                             {
@@ -511,7 +510,7 @@ namespace Parking.ViewModel.PersonOperations
                             SecondName = CurrentRecord.SomePerson.SecondName,
                             FirstName = CurrentRecord.SomePerson.FirstName,
                             Patronimic = CurrentRecord.SomePerson.Patronimic,
-                            Sex = CurrentRecord.Male,
+                            Sex = CurrentRecord.SomePerson.Sex,
                             DayBirthday = CurrentRecord.SomePerson.DayBirthday,
                             Photo = CurrentRecord.SomePerson.Photo
                         };
