@@ -12,7 +12,10 @@ namespace Parking.Model
 {
     public class EmployeePosition : Helpes.ObservableObject
     {
-
+       public EmployeePosition()
+        {
+            Employees = new ObservableCollection<Employee>();
+        }
 
 
         public int  EmployeePositionId { get; set; }
@@ -32,7 +35,9 @@ namespace Parking.Model
                 }
             }
         }
+     
 
-        public virtual Employee SomeEmployee { get; set; }
+        public virtual ObservableCollection<Employee> Employees { get; set; }
+        
     }
 }

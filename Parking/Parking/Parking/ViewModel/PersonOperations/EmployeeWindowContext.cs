@@ -1,4 +1,5 @@
-﻿using Parking.Helpes;
+﻿using EasyEncryption;
+using Parking.Helpes;
 using Parking.Model;
 using System;
 using System.Collections.Generic;
@@ -60,6 +61,21 @@ namespace Parking.ViewModel.PersonOperations
             }
         }
 
+        //don't give user an opportunity to press the 'save' button
+        private bool toSaveForBtn;
+        public bool ToSaveForBtn
+        {
+            get { return toSaveForBtn; }
+            set
+            {
+                if (value != toSaveForBtn)
+                {
+                    toSaveForBtn = value;
+                    OnPropertyChanged(nameof(ToSaveForBtn));
+                }
+            }
+        }
+
         private string taxCode;
         public string TaxCode
         {
@@ -70,6 +86,20 @@ namespace Parking.ViewModel.PersonOperations
                 {
                     taxCode = value;
                     OnPropertyChanged(nameof(TaxCode));
+                }
+            }
+        }
+
+        private string tmpPhone;
+        public string TmpPhone
+        {
+            get { return tmpPhone; }
+            set
+            {
+                if (value != tmpPhone)
+                {
+                    tmpPhone = value;
+                    OnPropertyChanged(nameof(TmpPhone));
                 }
             }
         }
@@ -133,8 +163,10 @@ namespace Parking.ViewModel.PersonOperations
             FillEmployeePositions();//filling by data collection of employee positions
 
             PropertyChanged2 += GetRecordDetales;
-            PropertyChanged3 += TaxCodeChange;
+            PropertyChanged += TaxCodeChange;
+            PropertyChanged += ChangePhone;
             PropertyChanged4 += AddNewdata;
+             
         }
 
 
@@ -174,7 +206,7 @@ namespace Parking.ViewModel.PersonOperations
                             record.SomeEmployee.HireDate = (DateTime)result.GetValue(2);
                             if (!(result.GetValue(3) is System.DBNull))
                                 record.SomeEmployee.FireDate = (DateTime)result.GetValue(3);
-                            record.SomeEmployee.Description = (string)result.GetValue(4);
+                            record.SomeEmployee.Description = result.GetValue(4) is DBNull? "":(string)result.GetValue(4);
 
                             record.SomePerson.PersonId = (int)result.GetValue(5);
                             record.SomePerson.SecondName = (string)result.GetValue(6);
@@ -204,6 +236,7 @@ namespace Parking.ViewModel.PersonOperations
 
                             EmployeeRecords.Add(record);
                         };
+                       
                     }
                     else
                         dialogService.ShowMessage("Щось пішло не так при зчитуванні данних про співробітників");
@@ -270,14 +303,28 @@ namespace Parking.ViewModel.PersonOperations
         }
 
         private void GetRecordDetales(object sender, PropertyChangedEventArgs e)
+
         {
-            CurrentRecord = SelectetRecord;
-            
-            CurrentRecord.Status = CurrentRecord.SomeUser.AccessName;
-            CurrentPosition = new EmployeePosition { EmployeePositionId = CurrentRecord.SomeEmpPosition.EmployeePositionId,
-                                                     PositionName = CurrentRecord.SomeEmpPosition.PositionName};
-            //тут меняем TaxCode
-            TaxCode = CurrentRecord.SomePerson.TaxCode.Value.ToString();
+            ToSaveForBtn = true;//activating 'save' button 
+
+            CurrentRecord = SelectetRecord is null ? new EmployeeRecord() : SelectetRecord;
+
+            CurrentRecord.SomeEmployee.HireDate = SelectetRecord is null ? DateTime.Now :SelectetRecord.SomeEmployee.HireDate;
+
+            CurrentRecord.Status = SelectetRecord is null ?"без статусу" :CurrentRecord.SomeUser.AccessName;
+
+            TmpPhone = CurrentRecord.SomeContacts.Phone;
+
+            CurrentPosition = SelectetRecord is null ?
+                new EmployeePosition
+                { EmployeePositionId = 1, PositionName = "адміністратор" } :
+                new EmployeePosition
+                {
+                    EmployeePositionId = CurrentRecord.SomeEmpPosition.EmployeePositionId,
+                    PositionName = CurrentRecord.SomeEmpPosition.PositionName
+                };
+
+            TaxCode = SelectetRecord is null?"": CurrentRecord.SomePerson.TaxCode.Value.ToString();
 
             
             PreviousState = EmpState.SetState(SelectetRecord);
@@ -291,9 +338,21 @@ namespace Parking.ViewModel.PersonOperations
 
         private void AddNewdata(object sender, PropertyChangedEventArgs e)
         {
-            SelectetRecord = null;
-            CurrentRecord = new EmployeeRecord();
+            if (ToSave)
+            {
+               // SelectetRecord = null;
+               // CurrentRecord = new EmployeeRecord();
+                SelectetRecord = SetTestdata();
+                TmpPhone = SelectetRecord.SomeContacts.Phone;
+            }
         }
+
+        
+
+            private void ChangePhone(object sender, PropertyChangedEventArgs e)
+                {
+                    TmpPhone = lib.PhoneNumberValidation(TmpPhone);
+                }
 
         private RelayCommand openFileDialogCommand;
         public RelayCommand OpenFileDialogCommand => openFileDialogCommand ?? (openFileDialogCommand = new RelayCommand(
@@ -324,24 +383,28 @@ namespace Parking.ViewModel.PersonOperations
         public RelayCommand SavedataCommand => savedataCommand ?? (savedataCommand = new RelayCommand(
                     (obj) =>
                     {
+                        TaxCode = CurrentRecord.SomePerson.TaxCode.ToString(); //заплатна на тестирование
                         if (!CheckInputValidationData())
-                        {
-                            dialogService.ShowMessage("Значення ІНН співробітника вказано НЕ корректно\n" +
-                                "\t\t Потрібно відкорегувати.");
                             return;
-                        }
 
+                        CurrentRecord.SomeContacts.Phone = TmpPhone;
                         CurrentRecord.SomeEmpPosition.EmployeePositionId = CurrentPosition.EmployeePositionId;
                         CurrentRecord.SomeEmpPosition.PositionName = CurrentPosition.PositionName;
                         
                         if (long.TryParse(TaxCode, out long tmp))
                             CurrentRecord.SomePerson.TaxCode = tmp;
                         CurrentState = EmpState.SetState(CurrentRecord);
+                                                
 
-                        if (!ToSave)
+                        if (ToSave)
+                        {
                             SaveNewData();
+                            DefaultDataLoad();//update EployeeRecords
+                            ToSave = !ToSave;//diable adding new data mode
+                            SelectetRecord = null;
+                        }
                         else
-                            Editdata();
+                            Editdata();//editing of current data
 
                         PreviousState = EmpState.SetState(CurrentRecord);
                     }
@@ -357,7 +420,9 @@ namespace Parking.ViewModel.PersonOperations
                         Person ownerPerson = db.Persons.Find(CurrentRecord.SomePerson.PersonId);
                         db.Entry(ownerPerson).State = EntityState.Modified;
 
-                        if (!(db.Persons.Where(p => p.TaxCode == CurrentRecord.SomePerson.TaxCode && p.PersonId != CurrentRecord.SomePerson.PersonId).FirstOrDefault() is null))
+
+                      
+                        if (db.Persons.Where(p => p.TaxCode == CurrentRecord.SomePerson.TaxCode && p.PersonId != CurrentRecord.SomePerson.PersonId).FirstOrDefault() is null)
                             ownerPerson.TaxCode = CurrentRecord.SomePerson.TaxCode;
                         else
                         {
@@ -370,8 +435,8 @@ namespace Parking.ViewModel.PersonOperations
                         ownerPerson.Sex = CurrentRecord.SomePerson.Sex;
                         ownerPerson.DayBirthday = CurrentRecord.SomePerson.DayBirthday;
                         ownerPerson.Photo = CurrentRecord.SomePerson.Photo;
-                        
 
+                        CurrentRecord.PYB = ownerPerson.SecondName + " " + ownerPerson.FirstName + " " + ownerPerson.Patronimic;
                     }
 
                     if (!EmpState.ContactsCompare(PreviousState, CurrentState))
@@ -423,7 +488,8 @@ namespace Parking.ViewModel.PersonOperations
                                 dialogService.ShowMessage("Поточний логін вже зайнятий. \n Відкорегуйте данні");
                                 return;
                             };
-                            usver.Pass = CurrentState.SomeUser.Pass;                        
+                            
+                            usver.Pass = SHA.ComputeSHA256Hash(CurrentState.SomeUser.Pass); 
                             usver.AccessName = CurrentState.SomeUser.AccessName;
                         }                       
                         
@@ -512,7 +578,8 @@ namespace Parking.ViewModel.PersonOperations
                             Patronimic = CurrentRecord.SomePerson.Patronimic,
                             Sex = CurrentRecord.SomePerson.Sex,
                             DayBirthday = CurrentRecord.SomePerson.DayBirthday,
-                            Photo = CurrentRecord.SomePerson.Photo
+                            Photo = CurrentRecord.SomePerson.Photo,
+                            TaxCode = CurrentRecord.SomePerson.TaxCode
                         };
                         pers1.Clients.Add(cl);
 
@@ -548,6 +615,9 @@ namespace Parking.ViewModel.PersonOperations
                     emp1.SomePerson = pers1;
                     emp1.Users.Add(usver);
                     emp1.OwnerCompany = db.OwnerCompany.Find(1);
+
+                    
+
                     emp1.EmployeePositions.Add(db.EmployeePositions.Find(CurrentPosition.EmployeePositionId));
                     db.Employees.Add(emp1);
 
@@ -579,10 +649,148 @@ namespace Parking.ViewModel.PersonOperations
         }
         private bool CheckInputValidationData()
         {
-            return TaxCode.Length == 10 ? true:false;
+
+            if (!PersdataValidation(CurrentRecord.SomePerson))
+            {
+                dialogService.ShowMessage("Поля особистих данних не мають бути пустими");
+                return false;
+            }
+            if (CurrentRecord.SomePerson.DayBirthday is null)
+            {
+                dialogService.ShowMessage("Не задана дата народження");
+                return false;
+            }
+            if (TaxCode.Length != 10)
+            {
+                dialogService.ShowMessage("ІНН заданий не корректно");
+                return false;
+            }
+
+            if (TmpPhone is null || TmpPhone.Length != 13)
+            {
+                dialogService.ShowMessage("Номер телефона НЕ заданий або заданий не корректно");
+                return false;
+            }
+            if (!ContactsValidation(CurrentRecord.SomeContacts))
+            {
+                dialogService.ShowMessage("Поля контактних данних не мають бути пустими");
+                return false;
+            }
+            if (!EmployeeDataValidation(CurrentRecord.SomeEmployee))
+            {
+                dialogService.ShowMessage("Не задана дата найму або вказана не корректна сумма зарплатні");
+                return false;
+
+            }
+
+            if (!UserdataValidationCheck(CurrentRecord.SomeUser))
+            {
+                dialogService.ShowMessage("Якщо користувач маэ статус , то поля\n пароля і логіна мають бути заповненими");
+                return false;
+
+            }
+            
+            return true;
+            
         }
 
-       
-        
+        private bool PersdataValidation(Person pers)
+        {
+            return !(pers.SecondName is null || pers.SecondName == "" || pers.FirstName is null || pers.FirstName == "" ||
+                pers.Patronimic is null || pers.Patronimic == "" || pers.DayBirthday is null );                   
+
+        }
+
+        private bool ContactsValidation(Contacts ctn)
+        {
+            return !(ctn.Phone is null || ctn.Phone == "" || ctn.Adress is null || ctn.Adress == "");
+
+        }
+
+        private bool EmployeeDataValidation(Employee emp)
+        {
+            return !(emp.HireDate is null || emp.Salary<=0  );
+        }
+
+        private bool UserdataValidationCheck( User usver)
+        {
+            if (usver.AccessName != "без статусу")
+                return !(usver.Login is null || usver.Login =="" || usver.Pass is null || usver.Pass=="");
+            return true;
+        }
+
+
+        private EmployeeRecord SetTestdata()
+        {
+
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {
+                    return new EmployeeRecord
+                    {
+                        SomePerson = new Person
+                        {
+                            SecondName = "Федор",
+                            FirstName = "Павлов",
+                            Patronimic = "Груздэв",
+                            Sex = true,
+                            TaxCode = 3087360225,
+                            DayBirthday = new DateTime(1985, 12, 11)
+                        },
+                        SomeContacts = new Contacts
+                        {
+                            Phone = "+380505064658",
+                            Adress = "м.Київ, вул. м.Коцюбинського б.36, кв.21"
+                        },
+                        SomeEmployee = new Employee
+                        {
+                            Salary = 20000,
+                            HireDate = DateTime.Now,
+                           
+                        },
+                        SomeUser = new User
+                        {
+                            Login = "pavlusha",
+                            Pass = "123456",
+                            AccessName = "адміністратор"
+                            
+                        },
+                        SomeEmpPosition = new EmployeePosition 
+                        {
+                            EmployeePositionId = 1,
+                            PositionName = "адміністратор"
+                        }
+                       
+                    };
+
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+
+            return null;
+
+           
+        }
+
     }
 }

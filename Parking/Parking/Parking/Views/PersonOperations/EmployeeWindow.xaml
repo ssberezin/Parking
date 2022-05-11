@@ -6,14 +6,15 @@
         xmlns:helpes ="clr-namespace:Parking.Helpes"
         xmlns:wtk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
         xmlns:local="clr-namespace:Parking.Views.PersonOperations" 
-        xmlns:personoperations="clr-namespace:Parking.ViewModel.PersonOperations" xmlns:scm1="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        xmlns:personoperations="clr-namespace:Parking.ViewModel.PersonOperations"
+        xmlns:scm1="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         d:DataContext="{d:DesignInstance Type=personoperations:EmployeeWindowContext}"
         mc:Ignorable="d"
         Title="EmployeeWindow" Height="450" Width="1200">
-    
+
     <Window.Resources>
 
-   
+
         <ResourceDictionary>
             <helpes:ImagePathConverter x:Key="imagePathConverter"/>
             <helpes:BoolInverterConverter x:Key="boolInverterConverter"/>
@@ -39,7 +40,7 @@
 
         </ResourceDictionary>
 
-       
+
 
     </Window.Resources>
     <Grid>
@@ -47,19 +48,20 @@
             <ColumnDefinition Width="1.85*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-       
+
         <Border BorderBrush="AliceBlue" BorderThickness="4" Grid.Column="1" >
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="0.075*"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <DataGrid x:Name="GridClients" Grid.Row="1" 
+                <DataGrid x:Name="GridClients" Grid.Row="1"
+                          IsEnabled="{Binding ElementName=EnableNewDataSave, Path=IsChecked, Converter={StaticResource boolInverterConverter}}"
                       ItemsSource="{Binding EmployeeRecords}" 
                       SelectedItem="{Binding  SelectetRecord}"                                          
                       AutoGenerateColumns="False" SelectionMode="Single"
                       IsReadOnly="True" Grid.RowSpan="2" Grid.ColumnSpan="2">
-                   
+
                     <DataGrid.InputBindings>
                         <MouseBinding MouseAction="LeftDoubleClick"
                                          CommandParameter="{Binding ElementName=GridAuthors, Path=SelectedItem}"
@@ -72,7 +74,7 @@
                         <DataGridTextColumn Width="0.25*" Binding="{Binding SomeUser.AccessName, UpdateSourceTrigger=PropertyChanged}" Header="Статус в системі бази данних"/>
 
                     </DataGrid.Columns>
-                    
+
 
                 </DataGrid>
                 <StackPanel Orientation="Horizontal">
@@ -87,30 +89,30 @@
                        AllowsTransparency="True">
                         <Border BorderBrush="Black" BorderThickness="1">
                             <StackPanel >
-                                  <StackPanel>
-                                        <StackPanel   Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
-                                            <CheckBox x:Name="FIO" TabIndex="2" Content=" ПІБ співробітника " VerticalAlignment="Center"
+                                <StackPanel>
+                                    <StackPanel   Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
+                                        <CheckBox x:Name="FIO" TabIndex="2" Content=" ПІБ співробітника " VerticalAlignment="Center"
                                               FontWeight="Bold"                              
                                               IsChecked="{Binding _Filters.Check2, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                            <TextBox  Text="{Binding _Filters.Param2, Mode=TwoWay}" TabIndex="3" Margin="5,5"
+                                        <TextBox  Text="{Binding _Filters.Param2, Mode=TwoWay}" TabIndex="3" Margin="5,5"
                                              MinWidth="250" ToolTip="Можна щось одне з ПІБ"/>
-                                        </StackPanel>
-                                        <StackPanel    Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
-                                            <CheckBox x:Name="ClientPhone"  Content="№ телефона  " VerticalAlignment="Center"                               
+                                    </StackPanel>
+                                    <StackPanel    Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
+                                        <CheckBox x:Name="ClientPhone"  Content="№ телефона  " VerticalAlignment="Center"                               
                                               FontWeight="Bold"
                                               IsChecked="{Binding _Filters.Check13,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                                            <TextBox  Text="{Binding _Filters.Param11, UpdateSourceTrigger=PropertyChanged}"  Margin="5,5"
+                                        <TextBox  Text="{Binding _Filters.Param11, UpdateSourceTrigger=PropertyChanged}"  Margin="5,5"
                                     MinWidth="190"/>
-                                        </StackPanel>
-                                        <StackPanel    Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
-                                            <CheckBox   Content="Адреса " VerticalAlignment="Center"                               
+                                    </StackPanel>
+                                    <StackPanel    Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
+                                        <CheckBox   Content="Адреса " VerticalAlignment="Center"                               
                                               FontWeight="Bold"
                                               IsChecked="{Binding _Filters.Check23,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                                            <TextBox  Text="{Binding _Filters.Param21, UpdateSourceTrigger=PropertyChanged}"  Margin="5,5"
+                                        <TextBox  Text="{Binding _Filters.Param21, UpdateSourceTrigger=PropertyChanged}"  Margin="5,5"
                                     MinWidth="215" MaxLength="30"/>
-                                        </StackPanel>
                                     </StackPanel>
+                                </StackPanel>
                                 <StackPanel   Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
                                     <CheckBox  Content=" Посада " VerticalAlignment="Center"
                                           
@@ -127,9 +129,9 @@
                                 </StackPanel>
 
 
-                             
 
-                                
+
+
                                 <StackPanel >
 
                                     <TextBlock Text="Заробітна плата" FontWeight="Bold"
@@ -146,7 +148,7 @@
                                     </StackPanel>
                                 </StackPanel>
 
-                                
+
                                 <Button Content="Шукати"  HorizontalAlignment="Stretch"
                                     Command="{Binding ApplyRightFiltersCommand}"
                                     Background="#FF7E4A00"   Margin="3" MinHeight="25" MaxWidth="270"/>
@@ -159,7 +161,7 @@
                             </StackPanel>
                         </Border>
                     </Popup>
-                    <CheckBox Content=" Додати співробітника " IsChecked="{Binding ToSave , UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox x:Name="EnableNewDataSave" Content=" Додати співробітника " IsChecked="{Binding ToSave , UpdateSourceTrigger=PropertyChanged}"
                               Margin="10,0,0,0" Foreground="Green" FontWeight="Bold" FontSize="14" ToolTip="Зліва треба заповнити пусті поля" VerticalAlignment="Center"/>
 
 
@@ -199,7 +201,7 @@
                     <RadioButton GroupName="A" Content=" Чоловіча" VerticalAlignment="Center" IsChecked="{Binding CurrentRecord.SomePerson.Sex, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 </StackPanel>
                 <TextBlock  Text="№ телефона: " FontSize="14" FontWeight="Bold" Grid.Row="4" VerticalAlignment="Center"/>
-                <TextBox  Text="{Binding CurrentRecord.SomeContacts.Phone, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"/>
+                <TextBox  Text="{Binding TmpPhone, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"/>
                 <TextBlock  Text="Адреса: " FontSize="14" FontWeight="Bold" Grid.Row="5" VerticalAlignment="Center"/>
                 <TextBox  Text="{Binding CurrentRecord.SomeContacts.Adress, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="5" Grid.RowSpan="2" Margin="3" VerticalContentAlignment="Center"/>
                 <TextBlock  Text="Посада: " FontSize="14" FontWeight="Bold" Grid.Row="7" VerticalAlignment="Center"/>
@@ -216,7 +218,7 @@
                 </ComboBox>
                 <TextBlock  Text="Заробітна плата: " TextWrapping="Wrap" FontSize="14" FontWeight="Bold" Grid.Row="8" VerticalAlignment="Center"/>
                 <TextBox  Text="{Binding CurrentRecord.SomeEmployee.Salary, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="8" Margin="3" VerticalAlignment="Center"/>
-                
+
                 <StackPanel  Grid.Row="6" Grid.Column="2">
                     <TextBlock Text="Статус в системі бази даних" FontWeight="Bold" HorizontalAlignment="Center" FontSize="14"/>
                     <ComboBox x:Name="StatusList"  MinWidth="120"  
@@ -301,7 +303,7 @@
             </Grid>
         </Border>
     </Grid>
-            
-           
-       
+
+
+
 </Window>

@@ -58,8 +58,17 @@ namespace Parking.ViewModel.PersonOperations
         }
 
 
+        public bool TotalCompare(EmployeeRecord obj1, EmployeeRecord obj2)
+        {
+            return StatusCompare(obj1, obj2) == EmployeeCompare(obj1, obj2) == EmployeePositionCompare(obj1, obj2)
+                    == ContactsCompare(obj1, obj2) == PesoneCompare(obj1, obj2);
+        }
+
         public EmployeeRecord SetState(EmployeeRecord obj1)
         {
+            if (obj1 is null)
+                return new EmployeeRecord();
+
             return new EmployeeRecord
             {
                 SomeEmployee = new Employee

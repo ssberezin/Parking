@@ -67,9 +67,8 @@ namespace Parking.ViewModel
                     ));
 
         private void CheckUser(object obj)
-        {
+        {          
             
-            //Window win = obj as Window;
             var passwordBox = obj as PasswordBox;
             User user1 = new User { Login = UserLogin};
              user1.Pass = SHA.ComputeSHA256Hash(passwordBox.Password);
@@ -181,7 +180,7 @@ namespace Parking.ViewModel
 
                     Employee emp1 = new Employee { Salary = 20000, HireDate = new DateTime (2018, 10,15), Description = "добрий працівник"};
 
-                    empPosition.SomeEmployee = emp1;
+                    empPosition.Employees.Add(emp1);
                     
                     OwnerCompany.Employes.Add(emp1);
 
@@ -311,24 +310,11 @@ namespace Parking.ViewModel
                         join People as pers on Emp.SomePerson_PersonId=Pers.PersonId
                         join Contacts as ctn on Pers.PersonId=Ctn.SomePerson_PersonId
                         left join Users on Users.SomeEmployee_EmployeeId = Emp.EmployeeId
-                        join EmployeePositions as EmpPos on EmpPos.EmployeePositionId =Emp.EmployeeId
+                        join EmployeePositionEmployees EEemp on EEemp.Employee_EmployeeId=Emp.EmployeeId
+						join EmployeePositions EmpPos on EmpPos.EmployeePositionId=EEemp.EmployeePosition_EmployeePositionId
                         ");
 
-                    //db.Database.ExecuteSqlCommand
-                    //   (@"
-                    //     create proc sp_GetEmployeeByPhoneNumber
-                    //        @PhoneNumber nvarchar (20)
-                    //        as
-                    //        Select CTN.ContactsId '1 ContactsId', CTN.Phone '2 Phone', ctn.Adress '3 Adress', Pers.PersonId '4 PersonId', pers.SecondName '5 SecondName',
-	                   //          pers.FirstName '6 FirstName', pers.Patronimic '7 Patronimic', pers.Sex '8 Sex', pers.Photo '9 Photo',
-	                   //            Emp.EmployeeId '10 EmployeeId', emp.Description '11 Description', emp.Salary '12 Salary', emp.FireDate '13 FireDate', emp.HireDate '14 HireDate' 
-                    //        From People as pers
-                    //        join Contacts as ctn on ctn.SomePerson_PersonId=pers.PersonId
-                    //        join Employees as Emp on Pers.PersonId=emp.SomePerson_PersonId
-                    //        where ctn.Phone = @PhoneNumber and emp.FireDate is null
-
-
-                    //    ");
+                   
 
 
                     db.SaveChanges();

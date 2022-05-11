@@ -30,6 +30,8 @@ namespace Parking.Helpes
         private static readonly Regex reg = new Regex(@"\D"); //regex that matches disallowed text
         public string PhoneNumberValidation(string ph)
         {
+            if (ph is null)
+                return "";
 
             ph = reg.Replace(ph, "");
             if (ph.Length > 13)
@@ -39,7 +41,7 @@ namespace Parking.Helpes
         private static readonly Regex regTax = new Regex(@"\D"); //regex that matches disallowed text
         public string TaxCodeValidation(string code)
         {
-            return regTax.Replace(code, "");
+            return code is null? "": regTax.Replace(code, "");
         }
 
 
