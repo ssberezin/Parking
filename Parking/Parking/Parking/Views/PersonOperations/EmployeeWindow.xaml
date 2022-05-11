@@ -201,7 +201,8 @@
                     <RadioButton GroupName="A" Content=" Чоловіча" VerticalAlignment="Center" IsChecked="{Binding CurrentRecord.SomePerson.Sex, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 </StackPanel>
                 <TextBlock  Text="№ телефона: " FontSize="14" FontWeight="Bold" Grid.Row="4" VerticalAlignment="Center"/>
-                <TextBox  Text="{Binding TmpPhone, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"/>
+                <TextBox  Text="{Binding CurrentRecord.SomeContacts.Phone, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" 
+                          FontSize="14" MaxLength="13" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" VerticalContentAlignment="Center"/>
                 <TextBlock  Text="Адреса: " FontSize="14" FontWeight="Bold" Grid.Row="5" VerticalAlignment="Center"/>
                 <TextBox  Text="{Binding CurrentRecord.SomeContacts.Adress, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="5" Grid.RowSpan="2" Margin="3" VerticalContentAlignment="Center"/>
                 <TextBlock  Text="Посада: " FontSize="14" FontWeight="Bold" Grid.Row="7" VerticalAlignment="Center"/>
@@ -287,7 +288,7 @@
                 </Grid>
                 <StackPanel Grid.Row="5" Grid.Column="3" HorizontalAlignment="Center">
                     <TextBlock Text="Ідентифікаційний номер" FontWeight="Bold" HorizontalAlignment="Center" FontSize="14"/>
-                    <TextBox  Text="{Binding  TaxCode, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center"  
+                    <TextBox  Text="{Binding  CurrentRecord.SomePerson.TaxCode ,UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center"  
                               MinWidth="185" FontSize="14" MaxLength="10"  VerticalContentAlignment="Center"
                               HorizontalAlignment="Center"/>
                 </StackPanel>

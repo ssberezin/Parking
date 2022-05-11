@@ -32,6 +32,9 @@ namespace Parking.ViewModel.PersonOperations
         public ObservableCollection<EmployeePosition> EmployeePositions { get; set; }
         public ObservableCollection<string> Statuses { get; set; }
 
+       
+
+
         private EmployeeRecord selectetRecord;
         public EmployeeRecord SelectetRecord
         {
@@ -56,7 +59,7 @@ namespace Parking.ViewModel.PersonOperations
                 if (value != toSave)
                 {
                     toSave = value;
-                    OnPropertyChanged4(nameof(ToSave));
+                    OnPropertyChanged5(nameof(ToSave));
                 }
             }
         }
@@ -76,33 +79,33 @@ namespace Parking.ViewModel.PersonOperations
             }
         }
 
-        private string taxCode;
-        public string TaxCode
-        {
-            get { return taxCode; }
-            set
-            {
-                if (value != taxCode)
-                {
-                    taxCode = value;
-                    OnPropertyChanged(nameof(TaxCode));
-                }
-            }
-        }
+        //private string taxCode;
+        //public string TaxCode
+        //{
+        //    get { return taxCode; }
+        //    set
+        //    {
+        //        if (value != taxCode)
+        //        {
+        //            taxCode = value;
+        //            OnPropertyChanged4(nameof(TaxCode));
+        //        }
+        //    }
+        //}
 
-        private string tmpPhone;
-        public string TmpPhone
-        {
-            get { return tmpPhone; }
-            set
-            {
-                if (value != tmpPhone)
-                {
-                    tmpPhone = value;
-                    OnPropertyChanged(nameof(TmpPhone));
-                }
-            }
-        }
+        //private string tmpPhone;
+        //public string TmpPhone
+        //{
+        //    get { return tmpPhone; }
+        //    set
+        //    {
+        //        if (value != tmpPhone)
+        //        {
+        //            tmpPhone = value;
+        //            OnPropertyChanged3(nameof(TmpPhone));
+        //        }
+        //    }
+        //}
 
         private EmployeeRecord currentRecord;
         public EmployeeRecord CurrentRecord
@@ -163,9 +166,9 @@ namespace Parking.ViewModel.PersonOperations
             FillEmployeePositions();//filling by data collection of employee positions
 
             PropertyChanged2 += GetRecordDetales;
-            PropertyChanged += TaxCodeChange;
-            PropertyChanged += ChangePhone;
-            PropertyChanged4 += AddNewdata;
+            //PropertyChanged4 += TaxCodeChange;
+            //PropertyChanged3 += ChangePhone;
+            PropertyChanged5 += AddNewdata;
              
         }
 
@@ -180,6 +183,7 @@ namespace Parking.ViewModel.PersonOperations
 
             Statuses = new ObservableCollection<string> { "адмінісмтратор", "мастер-адмін", "без статусу" };
 
+            CurrentRecord = new EmployeeRecord();
             string sqlExpression = "sp_GetEmployeesRecords";
 
             var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
@@ -198,9 +202,10 @@ namespace Parking.ViewModel.PersonOperations
 
                     if (result.HasRows)
                     {
-                        EmployeeRecord record = new EmployeeRecord();
+                        
                         while (result.Read())
                         {
+                            EmployeeRecord record = new EmployeeRecord();
                             record.SomeEmployee.EmployeeId = (int)result.GetValue(0);
                             record.SomeEmployee.Salary = (decimal)result.GetValue(1);
                             record.SomeEmployee.HireDate = (DateTime)result.GetValue(2);
@@ -307,13 +312,16 @@ namespace Parking.ViewModel.PersonOperations
         {
             ToSaveForBtn = true;//activating 'save' button 
 
+
+
+
             CurrentRecord = SelectetRecord is null ? new EmployeeRecord() : SelectetRecord;
 
             CurrentRecord.SomeEmployee.HireDate = SelectetRecord is null ? DateTime.Now :SelectetRecord.SomeEmployee.HireDate;
 
             CurrentRecord.Status = SelectetRecord is null ?"без статусу" :CurrentRecord.SomeUser.AccessName;
 
-            TmpPhone = CurrentRecord.SomeContacts.Phone;
+            
 
             CurrentPosition = SelectetRecord is null ?
                 new EmployeePosition
@@ -324,35 +332,35 @@ namespace Parking.ViewModel.PersonOperations
                     PositionName = CurrentRecord.SomeEmpPosition.PositionName
                 };
 
-            TaxCode = SelectetRecord is null?"": CurrentRecord.SomePerson.TaxCode.Value.ToString();
+         
 
             
             PreviousState = EmpState.SetState(SelectetRecord);
 
         }
 
-        private void TaxCodeChange(object sender, PropertyChangedEventArgs e)
-        {
-            TaxCode = lib.TaxCodeValidation(TaxCode);            
-        }
+        //private void TaxCodeChange(object sender, PropertyChangedEventArgs e)
+        //{
+        //    TaxCode = lib.TaxCodeValidation(TaxCode);            
+        //}
 
         private void AddNewdata(object sender, PropertyChangedEventArgs e)
         {
             if (ToSave)
             {
-               // SelectetRecord = null;
-               // CurrentRecord = new EmployeeRecord();
-                SelectetRecord = SetTestdata();
-                TmpPhone = SelectetRecord.SomeContacts.Phone;
+                SelectetRecord = null;
+                CurrentRecord = new EmployeeRecord();
+               // SelectetRecord = SetTestdata();
+               // TmpPhone = SelectetRecord.SomeContacts.Phone;
             }
         }
 
         
 
-            private void ChangePhone(object sender, PropertyChangedEventArgs e)
-                {
-                    TmpPhone = lib.PhoneNumberValidation(TmpPhone);
-                }
+            //private void ChangePhone(object sender, PropertyChangedEventArgs e)
+            //    {
+            //        TmpPhone = lib.PhoneNumberValidation(TmpPhone);
+            //    }
 
         private RelayCommand openFileDialogCommand;
         public RelayCommand OpenFileDialogCommand => openFileDialogCommand ?? (openFileDialogCommand = new RelayCommand(
@@ -375,6 +383,8 @@ namespace Parking.ViewModel.PersonOperations
         public RelayCommand DeletePersonPhotoCommand => deletePersonPhotoCommand ?? (deletePersonPhotoCommand = new RelayCommand(
                     (obj) =>
                     {
+                        if (CurrentRecord is null)
+                            return;
                         CurrentRecord.SomePerson.Photo = null;
                     }
                     ));
@@ -383,16 +393,16 @@ namespace Parking.ViewModel.PersonOperations
         public RelayCommand SavedataCommand => savedataCommand ?? (savedataCommand = new RelayCommand(
                     (obj) =>
                     {
-                        TaxCode = CurrentRecord.SomePerson.TaxCode.ToString(); //заплатна на тестирование
+                        //TaxCode = CurrentRecord.SomePerson.TaxCode.ToString(); //заплатна на тестирование
                         if (!CheckInputValidationData())
                             return;
 
-                        CurrentRecord.SomeContacts.Phone = TmpPhone;
+                        //CurrentRecord.SomeContacts.Phone = TmpPhone;
                         CurrentRecord.SomeEmpPosition.EmployeePositionId = CurrentPosition.EmployeePositionId;
                         CurrentRecord.SomeEmpPosition.PositionName = CurrentPosition.PositionName;
                         
-                        if (long.TryParse(TaxCode, out long tmp))
-                            CurrentRecord.SomePerson.TaxCode = tmp;
+                        //if (long.TryParse(TaxCode, out long tmp))
+                        //    CurrentRecord.SomePerson.TaxCode = tmp;
                         CurrentState = EmpState.SetState(CurrentRecord);
                                                 
 
@@ -481,7 +491,7 @@ namespace Parking.ViewModel.PersonOperations
                         }
                         else
                         {
-                            if (!(db.Users.Where(p => p.Login == CurrentRecord.SomeUser.Login && p.SomeEmployee.SomePerson.PersonId != CurrentRecord.SomePerson.PersonId).FirstOrDefault() is null))
+                            if (db.Users.Where(p => p.Login == CurrentRecord.SomeUser.Login && p.SomeEmployee.SomePerson.PersonId != CurrentRecord.SomePerson.PersonId).FirstOrDefault() is null)
                                 usver.Login = CurrentState.SomeUser.Login;
                             else
                             {
@@ -616,9 +626,12 @@ namespace Parking.ViewModel.PersonOperations
                     emp1.Users.Add(usver);
                     emp1.OwnerCompany = db.OwnerCompany.Find(1);
 
+                    EmployeePosition empPos = db.EmployeePositions.Find(CurrentPosition.EmployeePositionId);
+                    emp1.EmployeePositions.Add(empPos);
                     
+                    db.Entry(empPos).State = EntityState.Modified;
+                    empPos.Employees.Add(emp1);
 
-                    emp1.EmployeePositions.Add(db.EmployeePositions.Find(CurrentPosition.EmployeePositionId));
                     db.Employees.Add(emp1);
 
                     db.SaveChanges();
@@ -660,13 +673,14 @@ namespace Parking.ViewModel.PersonOperations
                 dialogService.ShowMessage("Не задана дата народження");
                 return false;
             }
-            if (TaxCode.Length != 10)
+            if (CurrentRecord.SomePerson.TaxCode.ToString().Length != 10)
             {
                 dialogService.ShowMessage("ІНН заданий не корректно");
                 return false;
             }
 
-            if (TmpPhone is null || TmpPhone.Length != 13)
+            CurrentRecord.SomeContacts.Phone = lib.PhoneNumberValidation(CurrentRecord.SomeContacts.Phone);
+            if (CurrentRecord.SomeContacts.Phone is null || CurrentRecord.SomeContacts.Phone.Length != 13 )
             {
                 dialogService.ShowMessage("Номер телефона НЕ заданий або заданий не корректно");
                 return false;

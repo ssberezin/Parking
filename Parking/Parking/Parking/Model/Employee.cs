@@ -86,9 +86,7 @@ namespace Parking.Model
 
         public virtual Person SomePerson { get; set; }
         public virtual Company OwnerCompany { get; set; }
-        public virtual ObservableCollection<User> Users { get; set; }
-
-       public int EmployeePositionId { get; set; }
+        public virtual ObservableCollection<User> Users { get; set; }       
         public virtual ObservableCollection <EmployeePosition> EmployeePositions { get; set; }
     }
 }

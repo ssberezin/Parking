@@ -179,9 +179,13 @@ namespace Parking.ViewModel
                     db.EmployeePositions.Add(empPosition);
 
                     Employee emp1 = new Employee { Salary = 20000, HireDate = new DateTime (2018, 10,15), Description = "добрий працівник"};
+                    db.Employees.Add(emp1);
 
                     empPosition.Employees.Add(emp1);
-                    
+                    emp1.EmployeePositions.Add(empPosition);
+
+                    db.SaveChanges();
+
                     OwnerCompany.Employes.Add(emp1);
 
                     User user1 = new User { AccessName = "мастер-адмін", Pass = SHA.ComputeSHA256Hash("admin"), Login = "admin" };
