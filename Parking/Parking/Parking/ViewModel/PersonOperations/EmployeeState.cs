@@ -30,14 +30,19 @@ namespace Parking.ViewModel.PersonOperations
             }
 
 
-            return obj1.SomePerson.Patronimic == obj2.SomePerson.Patronimic && obj1.SomePerson.SecondName == obj2.SomePerson.SecondName &&
+            return (obj1.SomePerson.Patronimic is null && obj2.SomePerson.Patronimic is null && obj1.SomePerson.SecondName is null  && obj2.SomePerson.SecondName is null &&
+                   obj1.SomePerson.FirstName is null && obj2.SomePerson.FirstName is null && 
+                   obj1.SomePerson.DayBirthday is null && obj2.SomePerson.DayBirthday is null ) ||
+
+            (obj1.SomePerson.Patronimic == obj2.SomePerson.Patronimic && obj1.SomePerson.SecondName == obj2.SomePerson.SecondName &&
                    obj1.SomePerson.FirstName == obj2.SomePerson.FirstName && obj1.SomePerson.Sex == obj2.SomePerson.Sex && 
-                   obj1.SomePerson.DayBirthday == obj2.SomePerson.DayBirthday && PhotoCompare && obj1.SomePerson.TaxCode == obj2.SomePerson.TaxCode;
+                   obj1.SomePerson.DayBirthday == obj2.SomePerson.DayBirthday && PhotoCompare && obj1.SomePerson.TaxCode == obj2.SomePerson.TaxCode);
         }
 
         public bool ContactsCompare(EmployeeRecord obj1, EmployeeRecord obj2)
         {
-            return obj1.SomeContacts.Phone == obj2.SomeContacts.Phone && obj1.SomeContacts.Adress == obj2.SomeContacts.Adress;
+            return (obj1.SomeContacts.Phone is null && obj2.SomeContacts.Phone is null  && obj1.SomeContacts.Adress is null && obj2.SomeContacts.Adress is null)||
+                obj1.SomeContacts.Phone == obj2.SomeContacts.Phone && obj1.SomeContacts.Adress == obj2.SomeContacts.Adress;
         }
 
         public bool EmployeePositionCompare(EmployeeRecord obj1, EmployeeRecord obj2)
@@ -47,14 +52,16 @@ namespace Parking.ViewModel.PersonOperations
 
         public bool EmployeeCompare(EmployeeRecord obj1, EmployeeRecord obj2)
         {
-            return obj1.SomeEmployee.Salary == obj2.SomeEmployee.Salary  && obj1.SomeEmployee.Description ==obj1.SomeEmployee.Description &&
+            return (obj1.SomeEmployee.Description is null && obj1.SomeEmployee.Description is null &&
+                    obj1.SomeEmployee.HireDate is null  && obj2.SomeEmployee.HireDate is null && obj1.SomeEmployee.FireDate is null && obj2.SomeEmployee.FireDate is null) ||
+                obj1.SomeEmployee.Salary == obj2.SomeEmployee.Salary  && obj1.SomeEmployee.Description ==obj1.SomeEmployee.Description &&
                     obj1.SomeEmployee.HireDate ==obj2.SomeEmployee.HireDate && obj1.SomeEmployee.FireDate ==obj2.SomeEmployee.FireDate;
         }
 
         public bool StatusCompare(EmployeeRecord obj1, EmployeeRecord obj2)
         {
-            return obj1.SomeUser.AccessName == obj2.SomeUser.AccessName && obj1.SomeUser.Login == obj2.SomeUser.Login &&
-                   obj1.SomeUser.Pass == obj2.SomeUser.Pass;
+            return (obj1.SomeUser.AccessName is null && obj2.SomeUser.AccessName is null && obj1.SomeUser.Login is null && obj2.SomeUser.Login is null)||
+                obj1.SomeUser.AccessName == obj2.SomeUser.AccessName && obj1.SomeUser.Login == obj2.SomeUser.Login && obj1.SomeUser.Pass is null && obj2.SomeUser.Pass is null;
         }
 
 

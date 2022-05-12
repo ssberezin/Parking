@@ -56,16 +56,7 @@
                                   VerticalAlignment="Top"
                                   Command="{Binding CallStuffListCommand}"/>
                     </MenuItem>
-                    <MenuItem Header="Користувачі">
-                        <MenuItem Header="Додати нового користувача" Command="{Binding UsrOps.AddNewUserCommand}"
-                                  VerticalAlignment="Top"/>
-                        <MenuItem Header="Список користувачів" Command="{Binding UsrOps.ShowUsersListCommand}"
-                                  VerticalAlignment="Top"/>
-                        <MenuItem Header="Зміна користувача" Command="{Binding UsrOps.ChangeUserCommand}"
-                                        CommandParameter="{Binding ElementName=RootWindow}"
-                                  VerticalAlignment="Top"/>
-                    </MenuItem>
-                    <!--показать список клиентов не будет работать пока нормально не увязать на контекст. Да и нахер  его от сюда убрать ...-->
+                    
                     <MenuItem Header="Список кліентів" Command="{Binding CallClientListCommand}"
                                   VerticalAlignment="Top"/>
                     
@@ -193,14 +184,11 @@
                            Value="{Binding SomeParkingPlace.FreeStatus, Converter={StaticResource boolToBrushConverterForStatus}}" />
                     <Setter Property="Foreground" 
                             Value="{Binding SomeParkingPlace.Released ,Converter={StaticResource boolToBrushConverterForInOut}}"/>
-                   
-                   
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Обновить Ctrl+R" Command="{Binding UpdateOrederList}"/>
-                    "UpdateOrederList" we can find in  "MainViewModel.cs"
+                   
                     <MenuItem Header="Зайняти паркувальне місце"                               
                              CommandParameter="{Binding ElementName=GridOrders, Path=SelectedItem}"
                     Command="{Binding EditOrderCommand}"/>
@@ -211,19 +199,7 @@
                              Command="{Binding   EditparkPlaceCommand}"/>
                     <MenuItem Header="Роздрук квитанції"                                                            
                              Command="{Binding  CallClientOrdersInfoCommand}"/>
-                    <MenuItem Header="Изменить статус" >
-                    <MenuItem Header="Готов" Command="{Binding SetReadyStatusCommand}"/>
-                        <MenuItem Header="Отдан заказчику" Command="{Binding SetClientGivenStatusCommand}"/>
-                 
-                    </MenuItem>
-                    <MenuItem Header="Історія зайнятості паркувального місця  ">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBox Text="{Binding ChangeOrderNumber, UpdateSourceTrigger=PropertyChanged}" MaxLength="6" Margin="3" MinWidth="150" TextAlignment="Center" VerticalAlignment="Center" 
-                                     ToolTip="Только целочисленное значение"/>
-                            <Button Content="Заменить" Background="Blue" Command="{Binding ChangeOrderNumberCommand}"  MinWidth="250" />
-                        </StackPanel>
-
-                    </MenuItem>
+                    
                 </ContextMenu>
             </DataGrid.ContextMenu>
             

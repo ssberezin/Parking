@@ -40,5 +40,19 @@ namespace Parking.Helpes
             PropertyChanged6?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
+
+        public event PropertyChangedEventHandler PropertyChanged7;
+        protected void OnPropertyChanged7([CallerMemberName] string propName = "")
+        {
+            PropertyChanged7?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+
+
+        public event PropertyChangedEventHandler PropertyChanged8;
+        protected void OnPropertyChanged8([CallerMemberName] string propName = "")
+        {
+            PropertyChanged8?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+
     }
 }

@@ -10,9 +10,31 @@
         d:DataContext="{d:DesignInstance Type=parkplacesops:ParkPlaceWindowContext}"
          WindowStyle="None"
         mc:Ignorable="d"
-        Title="ParkPlaceEditWindow" Height="590" Width="730">
+        Title="ParkPlaceEditWindow" Height="590" Width="1200">
     <Window.Resources>
-        <helpes:ImagePathConverter x:Key="imagePathConverter"/>
+
+
+        <ResourceDictionary>
+            <helpes:ImagePathConverter x:Key="imagePathConverter"/>
+            <helpes:BoolToStringConverter x:Key="boolToStringConverter"/>
+            <helpes:BoolToStringConverter2 x:Key="boolToStringConverter2"/>
+
+            <DataTemplate x:Key="HeaderTemplate">
+                <TextBlock Text="{Binding}" TextWrapping="Wrap"  TextAlignment="Center"/>
+                <!--Обозначаем наличие привязки в ячеке(шапке?) таблицы, выравниванием текст в ячейках по центру и задаем перенос текста-->
+            </DataTemplate>
+            <Style TargetType="DataGridColumnHeader">
+                <!--Ограничиваем применение стиля (только для шапки DataGridColumnHeader)-->
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <!--Задаем выравнивание по центру ячейки-->
+                <Setter Property="Padding" Value="2"/>
+                <!--Задаем отступ в ячейке-->
+                <Setter Property="ContentTemplate" Value="{StaticResource HeaderTemplate}"/>
+                <!--Применяем в стиле шаблон отображения текстовых данных HeaderTemplate-->
+            </Style>
+
+        </ResourceDictionary>
+
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Gesture="Alt+F4" Command="{Binding CencelWindowCommand}"
@@ -21,18 +43,63 @@
     <Border BorderBrush="YellowGreen" BorderThickness="4" >
         <Grid Margin="4">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.41*"/>
+                <ColumnDefinition Width="0.33*"/>
 
 
                 <ColumnDefinition   />
+                <ColumnDefinition  Width="0.6*" />
 
             </Grid.ColumnDefinitions>
+            <Border  Grid.Column="2" BorderBrush="YellowGreen" BorderThickness="2" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="0.1*"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="GridOrders" ItemsSource="{Binding ParkPlaceHisrtoryRecords}"                   
+                  Margin="3"            
+                  AutoGenerateColumns="False" SelectionMode="Single"
+                  IsReadOnly="True"    VerticalAlignment="Top"
+                  RowHeight="30" FontSize="14">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="0.32*"  Binding="{Binding PPNumber}"  Header="№ місця"/>
+                            <DataGridTextColumn Width="0.5*" Binding="{Binding DateOfEvent}" Header="Дата"/>
+                            <DataGridTextColumn Width="0.5*" Binding="{Binding TimeOfEvent}" Header="Час"/>
+                            <DataGridTextColumn Width="0.5*" Binding="{Binding Released,Converter={StaticResource boolToStringConverter2}}" Header="Заїхав/ виїхав"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                        <TextBlock Text="Задати проміжок " FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,6"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text=" з  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
+                                                HorizontalAlignment="Center"                                                 
+                                                SelectedDate="{Binding StartHistoryDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                HorizontalContentAlignment="Center"/>
+                            <TextBlock Text=" до  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
+                                                HorizontalAlignment="Center"                                                 
+                                                SelectedDate="{Binding EndHistoryDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                HorizontalContentAlignment="Center"/>
+
+                        </StackPanel>
+
+
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+           
+            
             <Grid  HorizontalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="0.2*"/>
                     <RowDefinition Height="1.2*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+                
+                
                 <StackPanel HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock  Text="Паркувальне місце № " FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Foreground="Red" TextWrapping="Wrap"/>
@@ -152,7 +219,7 @@
 
                     <Border Margin="3">
                         <Border Background="#FFDEE8A1" BorderBrush="Gray" BorderThickness="1">                          
-                                <StackPanel Margin="0,0,0,2">
+                                <StackPanel Margin="0,0,0,-10">
                                     <TextBlock Text="Реєстраційний номер " TextWrapping="Wrap" FontSize="16" FontWeight="Bold"  HorizontalAlignment="Center" Foreground="Red"/>
                                     <TextBox  Text="{Binding RegNumber, UpdateSourceTrigger=PropertyChanged}" MinWidth="185"  Margin="3"
                                       FontSize="24"  TextAlignment="Center"  HorizontalAlignment="Center" FontWeight="Bold"

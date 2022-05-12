@@ -10,8 +10,10 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Parking.ViewModel.PersonOperations
 {
@@ -79,34 +81,7 @@ namespace Parking.ViewModel.PersonOperations
             }
         }
 
-        //private string taxCode;
-        //public string TaxCode
-        //{
-        //    get { return taxCode; }
-        //    set
-        //    {
-        //        if (value != taxCode)
-        //        {
-        //            taxCode = value;
-        //            OnPropertyChanged4(nameof(TaxCode));
-        //        }
-        //    }
-        //}
-
-        //private string tmpPhone;
-        //public string TmpPhone
-        //{
-        //    get { return tmpPhone; }
-        //    set
-        //    {
-        //        if (value != tmpPhone)
-        //        {
-        //            tmpPhone = value;
-        //            OnPropertyChanged3(nameof(TmpPhone));
-        //        }
-        //    }
-        //}
-
+      
         private EmployeeRecord currentRecord;
         public EmployeeRecord CurrentRecord
         {
@@ -165,9 +140,7 @@ namespace Parking.ViewModel.PersonOperations
             DefaultDataLoad();
             FillEmployeePositions();//filling by data collection of employee positions
 
-            PropertyChanged2 += GetRecordDetales;
-            //PropertyChanged4 += TaxCodeChange;
-            //PropertyChanged3 += ChangePhone;
+            PropertyChanged2 += GetRecordDetales;       
             PropertyChanged5 += AddNewdata;
              
         }
@@ -184,6 +157,9 @@ namespace Parking.ViewModel.PersonOperations
             Statuses = new ObservableCollection<string> { "адмінісмтратор", "мастер-адмін", "без статусу" };
 
             CurrentRecord = new EmployeeRecord();
+
+            PreviousState = EmpState.SetState(CurrentRecord);
+
             string sqlExpression = "sp_GetEmployeesRecords";
 
             var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
@@ -232,8 +208,8 @@ namespace Parking.ViewModel.PersonOperations
 
                             record.SomeUser.AccessName = (string)result.GetValue(15);
                             record.SomeUser.UserId = (int)result.GetValue(20);
-                            record.SomeUser.Login = (string)result.GetValue(19);
-                            record.SomeUser.Pass = (string)result.GetValue(18);
+                            record.SomeUser.Login = result.GetValue(19) is null ? null: (string)result.GetValue(19);
+                            //record.SomeUser.Pass = result.GetValue(18) is null ? null : (string)result.GetValue(18);
 
                             record.SomeEmpPosition.PositionName = (string)result.GetValue(16);
                             record.SomeEmpPosition.EmployeePositionId = (int)result.GetValue(17);
@@ -339,11 +315,6 @@ namespace Parking.ViewModel.PersonOperations
 
         }
 
-        //private void TaxCodeChange(object sender, PropertyChangedEventArgs e)
-        //{
-        //    TaxCode = lib.TaxCodeValidation(TaxCode);            
-        //}
-
         private void AddNewdata(object sender, PropertyChangedEventArgs e)
         {
             if (ToSave)
@@ -357,11 +328,7 @@ namespace Parking.ViewModel.PersonOperations
 
         
 
-            //private void ChangePhone(object sender, PropertyChangedEventArgs e)
-            //    {
-            //        TmpPhone = lib.PhoneNumberValidation(TmpPhone);
-            //    }
-
+        
         private RelayCommand openFileDialogCommand;
         public RelayCommand OpenFileDialogCommand => openFileDialogCommand ?? (openFileDialogCommand = new RelayCommand(
                     (obj) =>
@@ -393,32 +360,33 @@ namespace Parking.ViewModel.PersonOperations
         public RelayCommand SavedataCommand => savedataCommand ?? (savedataCommand = new RelayCommand(
                     (obj) =>
                     {
-                        //TaxCode = CurrentRecord.SomePerson.TaxCode.ToString(); //заплатна на тестирование
-                        if (!CheckInputValidationData())
-                            return;
-
-                        //CurrentRecord.SomeContacts.Phone = TmpPhone;
-                        CurrentRecord.SomeEmpPosition.EmployeePositionId = CurrentPosition.EmployeePositionId;
-                        CurrentRecord.SomeEmpPosition.PositionName = CurrentPosition.PositionName;
-                        
-                        //if (long.TryParse(TaxCode, out long tmp))
-                        //    CurrentRecord.SomePerson.TaxCode = tmp;
-                        CurrentState = EmpState.SetState(CurrentRecord);
-                                                
-
-                        if (ToSave)
-                        {
-                            SaveNewData();
-                            DefaultDataLoad();//update EployeeRecords
-                            ToSave = !ToSave;//diable adding new data mode
-                            SelectetRecord = null;
-                        }
-                        else
-                            Editdata();//editing of current data
-
-                        PreviousState = EmpState.SetState(CurrentRecord);
+                        SaveData();
                     }
                     ));
+
+        private void SaveData()
+        {
+            if (!CheckInputValidationData())
+                return;
+
+            CurrentRecord.SomeEmpPosition.EmployeePositionId = CurrentPosition.EmployeePositionId;
+            CurrentRecord.SomeEmpPosition.PositionName = CurrentPosition.PositionName;
+
+            CurrentState = EmpState.SetState(CurrentRecord);
+
+            if (ToSave)
+            {
+                SaveNewData();
+                DefaultDataLoad();//update EployeeRecords
+                                  //ToSave = !ToSave;//diable adding new data mode
+                                  //SelectetRecord = null;
+            }
+            else
+                Editdata();//editing of current data
+
+            PreviousState = EmpState.SetState(CurrentRecord);
+        }
+
         private void Editdata()
         {
             using (DBConteiner db = new DBConteiner())
@@ -468,6 +436,7 @@ namespace Parking.ViewModel.PersonOperations
                     if (!EmpState.EmployeePositionCompare(PreviousState, CurrentState) ||
                         !EmpState.EmployeeCompare(PreviousState, CurrentState))
                     {
+
                         Employee emp1 = db.Employees.Find(CurrentRecord.SomeEmployee.EmployeeId);
                         db.Entry(emp1).State = EntityState.Modified;
                         emp1.EmployeePositions.Remove(db.EmployeePositions.Find(PreviousState.SomeEmpPosition.EmployeePositionId));
@@ -482,6 +451,12 @@ namespace Parking.ViewModel.PersonOperations
                     {
                         User usver = db.Users.Find(CurrentRecord.SomeUser.UserId);
                           db.Entry(usver).State = EntityState.Modified;
+                        if (db.Users.Where(u => u.AccessName == "мастер-адмін").Count() < 2 && PreviousState.SomeUser.AccessName=="мастер-адмін" && CurrentRecord.SomeUser.AccessName!="мастер-адмін")
+                        {
+                            dialogService.ShowMessage("В системі має бути хочаб один користувач зі статусом мастер-адмін");
+                            return;
+                        }
+                            ;
                         if (CurrentState.SomeUser.AccessName != PreviousState.SomeUser.AccessName &&
                             CurrentState.SomeUser.AccessName == "без статусу")
                         {
@@ -491,15 +466,25 @@ namespace Parking.ViewModel.PersonOperations
                         }
                         else
                         {
-                            if (db.Users.Where(p => p.Login == CurrentRecord.SomeUser.Login && p.SomeEmployee.SomePerson.PersonId != CurrentRecord.SomePerson.PersonId).FirstOrDefault() is null)
+                            User tmUser = db.Users.Where(p => p.Login == CurrentRecord.SomeUser.Login && p.SomeEmployee.SomePerson.PersonId != CurrentRecord.SomePerson.PersonId).FirstOrDefault();
+                            if (tmUser is null)
                                 usver.Login = CurrentState.SomeUser.Login;
                             else
                             {
                                 dialogService.ShowMessage("Поточний логін вже зайнятий. \n Відкорегуйте данні");
                                 return;
                             };
-                            
-                            usver.Pass = SHA.ComputeSHA256Hash(CurrentState.SomeUser.Pass); 
+
+                            if (CurrentState.SomeUser.Pass != null)
+                            {
+                                //if passwords are not equal 
+                                if (!(SHA.Equals(SHA.ComputeSHA256Hash(CurrentState.SomeUser.Pass), usver.Pass)))
+                                {
+                                    //....have a new password
+                                    usver.Pass = SHA.ComputeSHA256Hash(CurrentState.SomeUser.Pass);
+                                    CurrentState.SomeUser.Pass = null;
+                                }
+                            }
                             usver.AccessName = CurrentState.SomeUser.AccessName;
                         }                       
                         
@@ -531,7 +516,8 @@ namespace Parking.ViewModel.PersonOperations
 
         }
 
-        
+       
+
         private void SaveNewData()
         {
             EmployeeRecord tmpEmpRec;
@@ -557,9 +543,12 @@ namespace Parking.ViewModel.PersonOperations
                             {
                                 Employee emp = db.Employees.Where(em => em.SomePerson.TaxCode == CurrentRecord.SomePerson.TaxCode).FirstOrDefault();
                                 if (emp != null)
-                                {
+                                {                                    
                                     dialogService.ShowMessage("Ця особа вже э співробітником. Обіймання двох посад не припустиме.");
                                     return;
+
+                                    // and if here we add the ability to add several positions to one employee
+                                    //we need to compare other personal data with the previous ones                            
                                 }
 
                             }
@@ -619,6 +608,15 @@ namespace Parking.ViewModel.PersonOperations
                         Pass = CurrentRecord.SomeUser.Pass,
                         AccessName = CurrentRecord.SomeUser.AccessName
                     };
+
+                    User tmpUser = db.Users.Where(u => u.Login == usver.Login).FirstOrDefault();
+                    if (!(tmpUser is null))
+                    {
+                        dialogService.ShowMessage("Вже э користувач з такми логіном.\n\t Выдкорегуйте.");
+                        return;
+                    }
+
+
                     db.Users.Add(usver);
 
                    
@@ -630,11 +628,15 @@ namespace Parking.ViewModel.PersonOperations
                     emp1.EmployeePositions.Add(empPos);
                     
                     db.Entry(empPos).State = EntityState.Modified;
+
                     empPos.Employees.Add(emp1);
 
                     db.Employees.Add(emp1);
 
                     db.SaveChanges();
+                   
+                    ToSave = !ToSave;//diable adding new data mode                    
+
                     dialogService.ShowMessage("Виконано");
                 }
                 catch (ArgumentNullException ex)
@@ -699,9 +701,9 @@ namespace Parking.ViewModel.PersonOperations
 
             if (!UserdataValidationCheck(CurrentRecord.SomeUser))
             {
-                dialogService.ShowMessage("Якщо користувач маэ статус , то поля\n пароля і логіна мають бути заповненими");
+                dialogService.ShowMessage("Якщо користувач маэ статус , то поля\n пароля і логіна мають бути заповненими\nТакож " +
+                    "користувач без статусу НЕ може мати ані логіна ані пароля");
                 return false;
-
             }
             
             return true;
@@ -728,8 +730,14 @@ namespace Parking.ViewModel.PersonOperations
 
         private bool UserdataValidationCheck( User usver)
         {
-            if (usver.AccessName != "без статусу")
-                return !(usver.Login is null || usver.Login =="" || usver.Pass is null || usver.Pass=="");
+            if (usver.AccessName == "без статусу")
+            {
+                if (usver.Login != null)
+                    return false;
+            }
+            else
+                if (usver.Login is null || usver.Login == "")
+                return false;
             return true;
         }
 
@@ -801,10 +809,32 @@ namespace Parking.ViewModel.PersonOperations
                 }
             }
 
-            return null;
-
-           
+            return null;           
         }
+
+        private RelayCommand closeWinCommand;
+        public RelayCommand CloseWinCommand => closeWinCommand ?? (closeWinCommand = new RelayCommand(
+                    (obj) =>
+                    {
+                      
+
+                        CurrentState = EmpState.SetState(CurrentRecord);
+                        if (EmpState.TotalCompare(CurrentState, PreviousState))
+                            showWindow.CloseWindow(obj as Window);
+                        else
+                        {
+                            if (dialogService.YesNoDialog("Зміни не було збережено. Зберегти?"))
+                            {
+                                SaveData();
+                                showWindow.CloseWindow(obj as Window);
+                            }
+                            else
+                                showWindow.CloseWindow(obj as Window);
+
+                        };
+                    }
+                    ));
+
 
     }
 }

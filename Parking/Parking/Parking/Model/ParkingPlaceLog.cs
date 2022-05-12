@@ -90,6 +90,34 @@ namespace Parking.Model
             }
         }
 
+        private bool released;
+        public bool Released
+        {
+            get { return released; }
+            set
+            {
+                if (value != released)
+                {
+                    released = value;
+                    OnPropertyChanged(nameof(Released));
+                }
+            }
+
+        }
+        private bool? freeStatus;
+        public bool? FreeStatus
+        {
+            get { return freeStatus; }
+            set
+            {
+                if (value != freeStatus)
+                {
+                    freeStatus = value;
+                    OnPropertyChanged(nameof(FreeStatus));
+                }
+            }
+        }
+
         public virtual ParkingPlace SomeParkingPlace { get; set; }
         public virtual User SomeUser { get; set; }
     }

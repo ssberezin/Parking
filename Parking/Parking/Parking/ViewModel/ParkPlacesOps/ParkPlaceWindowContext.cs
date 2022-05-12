@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,6 +26,8 @@ namespace Parking.ViewModel.ParkPlacesOps
 
        public ObservableCollection<int> FreeParkingPlacesList { get; set; }
        public ObservableCollection<VehicleType> VehicleTypeList { get; set; }
+
+        public ObservableCollection<ParkPlaceHisrtoryRecord> ParkPlaceHisrtoryRecords { get; set; }
 
         private ParkingPlaceRecord currentRecord;
         public ParkingPlaceRecord CurrentRecord
@@ -148,6 +152,34 @@ namespace Parking.ViewModel.ParkPlacesOps
                 {
                     prolongDate = value;
                     OnPropertyChanged2(nameof(ProlongDate));
+                }
+            }
+        }
+
+        private DateTime startHistoryDate;
+        public DateTime StartHistoryDate
+        {
+            get { return startHistoryDate; }
+            set
+            {
+                if (startHistoryDate != value)
+                {
+                    startHistoryDate = value;
+                    OnPropertyChanged7(nameof(StartHistoryDate));
+                }
+            }
+        }
+
+        private DateTime endHistoryDate;
+        public DateTime EndHistoryDate
+        {
+            get { return endHistoryDate; }
+            set
+            {
+                if (endHistoryDate != value)
+                {
+                    endHistoryDate = value;
+                    OnPropertyChanged7(nameof(EndHistoryDate));
                 }
             }
         }
@@ -310,10 +342,15 @@ namespace Parking.ViewModel.ParkPlacesOps
             Coast = "0";
             FreeParkingPlacesList = new ObservableCollection<int>();
             VehicleTypeList = new ObservableCollection<VehicleType>();
-            
+            ParkPlaceHisrtoryRecords = new ObservableCollection<ParkPlaceHisrtoryRecord>();
+
+            StartHistoryDate = DateTime.Now.AddMonths(-1);
+            EndHistoryDate = DateTime.Now;
+
+
             FillFreeParkingPlacesList();
             FillVehicleTypeList();
-
+            FillHistoryList(parkRecord.SomeClient.ClientId, parkRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
 
 
 
@@ -325,6 +362,13 @@ namespace Parking.ViewModel.ParkPlacesOps
             PropertyChanged4 += NumberValidationPhone2;
             PropertyChanged5 += RegNumberValidation;
             PropertyChanged6 += CoastValidation;
+            PropertyChanged7 += ChangeHistoryList;
+        }
+
+        
+            private void ChangeHistoryList(object sender, PropertyChangedEventArgs e)
+        {
+            FillHistoryList(CurrentRecord.SomeClient.ClientId, CurrentRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
         }
 
         private void ChangeProlongData(object sender, PropertyChangedEventArgs e)
@@ -461,6 +505,102 @@ namespace Parking.ViewModel.ParkPlacesOps
 
         }
 
+        private void FillHistoryList(int clientId, int ppnumber, DateTime startDate, DateTime endDate)
+        {
+            ParkPlaceHisrtoryRecords.Clear();
+
+            string sqlExpression = "sp_GetPPHistory";
+
+            var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
+            var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
+
+            using (SqlConnection connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(sqlExpression, connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    SqlParameter firstParam = new SqlParameter
+                    {
+                        ParameterName = "@clId",
+                        Value = clientId
+                    };
+
+                    SqlParameter secondParam = new SqlParameter
+                    {
+                        ParameterName = "@startDate",
+                        Value = new DateTime(startDate.Year, startDate.Month, startDate.Day)
+                    };
+
+                    SqlParameter thirdParam = new SqlParameter
+                    {
+                        ParameterName = "@endDate",
+                        Value = new DateTime (endDate.Year, endDate.Month, endDate.Day).AddDays(1) 
+                    };
+
+                    SqlParameter fourthParam = new SqlParameter
+                    {
+                        ParameterName = "@ppNumber",
+                        Value = ppnumber
+                    };
+
+                    command.Parameters.Add(firstParam);
+                    command.Parameters.Add(secondParam);
+                    command.Parameters.Add(thirdParam);
+                    command.Parameters.Add(fourthParam);
+
+                    SqlDataReader result = command.ExecuteReader();
+
+                    if (result.HasRows)
+                    {
+
+                        while (result.Read())
+                        {
+                            DateTime date = (DateTime)result.GetValue(1);
+                            ParkPlaceHisrtoryRecord rec= new ParkPlaceHisrtoryRecord
+                            {
+                                PPNumber = (int)result.GetValue(0),                                                                
+                                Released = (bool)result.GetValue(2)
+
+                            };                            
+                            rec.DateOfEvent = date.ToString("dd/MM/yyyy");
+                            rec.TimeOfEvent = date.ToString("HH/mm/ss");
+                            ParkPlaceHisrtoryRecords.Add(rec);
+                        };
+                    }
+                    else
+                    {
+
+                        dialogService.ShowMessage("Щось пішло не так при зчитуванні данних про паркувальні місця");
+                    }
+                }
+
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+
+            }
+
+        }
+
         private RelayCommand openFileDialogCommand;
         public RelayCommand OpenFileDialogCommand => openFileDialogCommand ?? (openFileDialogCommand = new RelayCommand(
                     (obj) =>
@@ -540,6 +680,8 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                         CurrentState = SetState();
                         SaveData();
+                        FillFreeParkingPlacesList();
+                        FillHistoryList(CurrentRecord.SomeClient.ClientId, CurrentRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
                     }
                     ));
 
@@ -548,7 +690,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             if (CurrentRecord.SomeClient.ClientId == 0)
             {
                 AddnewData();
-                FillFreeParkingPlacesList();
+               
                 PreviousState = SetState();
             }
             else
@@ -740,10 +882,16 @@ namespace Parking.ViewModel.ParkPlacesOps
                         User user = db.Users.Find(UserId);
                         db.Entry(user).State = EntityState.Modified;
 
-                        ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog{ DateOfChange = DateTime.Now };
+                        ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog{ DateOfChange = DateTime.Now,
+                                                                               FreeStatus=parkingPlace.FreeStatus.Value,
+                                                                               Released = parkingPlace.Released,
+                                                                               BookingDate = CurrentRecord.SomeParkingPlaceLog.BookingDate,
+                                                                               DeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine,
+                                                                               PayingDate = CurrentRecord.SomeParkingPlaceLog.PayingDate};
                         db.ParkingPlaceLogs.Add(parkingPlaceLog);
 
                         user.ParkingPlaceLogs.Add(parkingPlaceLog);
+                        parkingPlace.ParkingPlaceLogs.Add(parkingPlaceLog);
 
                     }                    
                     

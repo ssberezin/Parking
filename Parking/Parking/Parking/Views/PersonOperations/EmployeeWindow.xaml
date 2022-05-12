@@ -10,10 +10,10 @@
         xmlns:scm1="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         d:DataContext="{d:DesignInstance Type=personoperations:EmployeeWindowContext}"
         mc:Ignorable="d"
+        WindowStyle="None"
         Title="EmployeeWindow" Height="450" Width="1200">
 
     <Window.Resources>
-
 
         <ResourceDictionary>
             <helpes:ImagePathConverter x:Key="imagePathConverter"/>
@@ -35,14 +35,13 @@
                 <Setter Property="Padding" Value="2"/>
                 <Setter Property="ContentTemplate" Value="{StaticResource HeaderTemplate}"/>
             </Style>
-
-
-
         </ResourceDictionary>
 
-
-
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Gesture="Alt+F4" Command="{Binding CloseWinCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.85*"/>
@@ -284,7 +283,8 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Button Content="Зберегти" Background="Blue" Grid.Column="1" Command="{Binding SavedataCommand}"/>
-                    <Button Content="Зачинити" Background="Red"/>
+                    <Button Content="Зачинити" Background="Red"  Command="{Binding  CloseWinCommand }"
+                                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
                 </Grid>
                 <StackPanel Grid.Row="5" Grid.Column="3" HorizontalAlignment="Center">
                     <TextBlock Text="Ідентифікаційний номер" FontWeight="Bold" HorizontalAlignment="Center" FontSize="14"/>
@@ -299,7 +299,9 @@
                 </StackPanel>
                 <StackPanel Grid.Row="7" Grid.Column="3" HorizontalAlignment="Center">
                     <TextBlock Text="Пароль" FontWeight="Bold" HorizontalAlignment="Center" FontSize="14"/>
-                    <TextBox  Text="{Binding  CurrentRecord.SomeUser.Pass, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left"  Margin="3" VerticalContentAlignment="Center"/>
+                    <TextBox  Text="{Binding  CurrentRecord.SomeUser.Pass, UpdateSourceTrigger=PropertyChanged}" 
+                              MinWidth="185" FontSize="14" MaxLength="26" ToolTip="Тільки для встановлення або зміни паролю"
+                              HorizontalAlignment="Left"  Margin="3" VerticalContentAlignment="Center"/>
                 </StackPanel>
             </Grid>
         </Border>

@@ -102,6 +102,7 @@
     <Compile Include="ViewModel\CompanyOps\CompanyInfoContext.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ParkPlacesOps\CompareStatesForParkingPlace.cs" />
+    <Compile Include="ViewModel\ParkPlacesOps\ParkPlaceHisrtoryRecord.cs" />
     <Compile Include="ViewModel\ParkPlacesOps\ParkPlaceWindowContext.cs" />
     <Compile Include="ViewModel\PersonOperations\EmployeeRecord.cs" />
     <Compile Include="ViewModel\PersonOperations\EmployeeState.cs" />

@@ -464,16 +464,7 @@ namespace Parking.ViewModel
                     }
                     ));
 
-        //private void UpdateRecords()
-        //{
-        //    foreach (ParkingPlaceRecord item in Records)
-        //        if (item.SomeParkingPlace.ParkPlaceNumber == CurrentRecord.SomeParkingPlace.ParkPlaceNumber)
-        //        {
-        //            item.SomeParkingPlace.Released = CurrentRecord.SomeParkingPlace.Released;
-        //            item.SomeParkingPlace.FreeStatus = CurrentRecord.SomeParkingPlace.FreeStatus;
-        //            break;
-        //        }
-        //}
+        
         private void AddtestData()
         {
             CurrentRecord.SomePerson.SecondName = "Петров";

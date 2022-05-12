@@ -196,7 +196,12 @@ namespace Parking.ViewModel
                     parkingPlace1.FreeStatus = false;
                     
 
-                    ParkingPlaceLog log1 = new ParkingPlaceLog() { BookingDate = DateTime.Now, DeadLine = DateTime.Now.AddDays(30), Money = 1500, PayingDate = DateTime.Now };
+                    ParkingPlaceLog log1 = new ParkingPlaceLog() { BookingDate = DateTime.Now, 
+                                                                   DeadLine = DateTime.Now.AddDays(30), 
+                                                                   Money = 1500, 
+                                                                   PayingDate = DateTime.Now ,
+                                                                   FreeStatus  = parkingPlace1.FreeStatus.Value,
+                                                                   Released = parkingPlace1.Released};
 
                     parkingPlace1.ParkingPlaceLogs.Add(log1);
 
@@ -318,7 +323,20 @@ namespace Parking.ViewModel
 						join EmployeePositions EmpPos on EmpPos.EmployeePositionId=EEemp.EmployeePosition_EmployeePositionId
                         ");
 
-                   
+                    db.Database.ExecuteSqlCommand
+                       (@"
+                     create proc sp_GetPPHistory
+                        @clId int, 
+                        @startDate date,
+                        @endDate date,
+                        @ppNumber int
+                        as
+                        Select PP.ParkPlaceNumber '1_ParkPlaceNumber', PPL.DateOfChange '2_DateOfEvent',  PPl.Released '4_Released'
+                        From ParkingPlaces PP
+                        join ParkingPlaceLogs PPl on PPL.SomeParkingPlace_ParkingPlaceId=PP.ParkingPlaceId
+                        join Clients Cl on Cl.ClientId=PP.SomeClient_ClientId
+                        where Cl.ClientId=@clId and Pp.ParkPlaceNumber= @ppNumber and Ppl.DateOfChange>=@startDate and ppl.DateOfChange<=@endDate
+                        ");
 
 
                     db.SaveChanges();
