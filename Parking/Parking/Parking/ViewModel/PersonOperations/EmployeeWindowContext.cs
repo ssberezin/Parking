@@ -742,75 +742,75 @@ namespace Parking.ViewModel.PersonOperations
         }
 
 
-        private EmployeeRecord SetTestdata()
-        {
+        //private EmployeeRecord SetTestdata()
+        //{
 
-            using (DBConteiner db = new DBConteiner())
-            {
-                try
-                {
-                    return new EmployeeRecord
-                    {
-                        SomePerson = new Person
-                        {
-                            SecondName = "Федор",
-                            FirstName = "Павлов",
-                            Patronimic = "Груздэв",
-                            Sex = true,
-                            TaxCode = 3087360225,
-                            DayBirthday = new DateTime(1985, 12, 11)
-                        },
-                        SomeContacts = new Contacts
-                        {
-                            Phone = "+380505064658",
-                            Adress = "м.Київ, вул. м.Коцюбинського б.36, кв.21"
-                        },
-                        SomeEmployee = new Employee
-                        {
-                            Salary = 20000,
-                            HireDate = DateTime.Now,
+        //    using (DBConteiner db = new DBConteiner())
+        //    {
+        //        try
+        //        {
+        //            return new EmployeeRecord
+        //            {
+        //                SomePerson = new Person
+        //                {
+        //                    SecondName = "Федор",
+        //                    FirstName = "Павлов",
+        //                    Patronimic = "Груздэв",
+        //                    Sex = true,
+        //                    TaxCode = 3087360225,
+        //                    DayBirthday = new DateTime(1985, 12, 11)
+        //                },
+        //                SomeContacts = new Contacts
+        //                {
+        //                    Phone = "+380505064658",
+        //                    Adress = "м.Київ, вул. м.Коцюбинського б.36, кв.21"
+        //                },
+        //                SomeEmployee = new Employee
+        //                {
+        //                    Salary = 20000,
+        //                    HireDate = DateTime.Now,
                            
-                        },
-                        SomeUser = new User
-                        {
-                            Login = "pavlusha",
-                            Pass = "123456",
-                            AccessName = "адміністратор"
+        //                },
+        //                SomeUser = new User
+        //                {
+        //                    Login = "pavlusha",
+        //                    Pass = "123456",
+        //                    AccessName = "адміністратор"
                             
-                        },
-                        SomeEmpPosition = new EmployeePosition 
-                        {
-                            EmployeePositionId = 1,
-                            PositionName = "адміністратор"
-                        }
+        //                },
+        //                SomeEmpPosition = new EmployeePosition 
+        //                {
+        //                    EmployeePositionId = 1,
+        //                    PositionName = "адміністратор"
+        //                }
                        
-                    };
+        //            };
 
-                }
-                catch (ArgumentNullException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-                catch (OverflowException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-                catch (System.Data.SqlClient.SqlException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-                catch (System.Data.Entity.Core.EntityException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-            }
+        //        }
+        //        catch (ArgumentNullException ex)
+        //        {
+        //            dialogService.ShowMessage(ex.Message);
+        //        }
+        //        catch (OverflowException ex)
+        //        {
+        //            dialogService.ShowMessage(ex.Message);
+        //        }
+        //        catch (System.Data.SqlClient.SqlException ex)
+        //        {
+        //            dialogService.ShowMessage(ex.Message);
+        //        }
+        //        catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+        //        {
+        //            dialogService.ShowMessage(ex.Message);
+        //        }
+        //        catch (System.Data.Entity.Core.EntityException ex)
+        //        {
+        //            dialogService.ShowMessage(ex.Message);
+        //        }
+        //    }
 
-            return null;           
-        }
+        //    return null;           
+        //}
 
         private RelayCommand closeWinCommand;
         public RelayCommand CloseWinCommand => closeWinCommand ?? (closeWinCommand = new RelayCommand(

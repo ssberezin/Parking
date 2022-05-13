@@ -132,3 +132,5 @@ D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Vi
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\CompanyOps\CompanyInfo.baml
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\PrintOps\PrintBlank.baml
 E:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.SuggestedBindingRedirects.cache
+E:\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\ReportOps.g.cs
+E:\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\ReportOps.baml

@@ -108,6 +108,9 @@
     <Compile Include="ViewModel\PersonOperations\EmployeeState.cs" />
     <Compile Include="ViewModel\PersonOperations\EmployeeWindowContext.cs" />
     <Compile Include="ViewModel\PrintOps\PrintBlankContext.cs" />
+    <Compile Include="ViewModel\ReportOps\OwnerRecord.cs" />
+    <Compile Include="ViewModel\ReportOps\ReportOpsContext.cs" />
+    <Compile Include="ViewModel\ReportOps\ReportOpsRecord.cs" />
     <Compile Include="Views\CompanyOps\CompanyInfo.xaml.cs">
       <DependentUpon>CompanyInfo.xaml</DependentUpon>
     </Compile>
@@ -119,6 +122,9 @@
     </Compile>
     <Compile Include="Views\PrintOps\PrintBlank.xaml.cs">
       <DependentUpon>PrintBlank.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReportOps\ReportOps.xaml.cs">
+      <DependentUpon>ReportOps.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SecondWindow.xaml.cs">
       <DependentUpon>SecondWindow.xaml</DependentUpon>
@@ -159,6 +165,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PrintOps\PrintBlank.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ReportOps\ReportOps.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

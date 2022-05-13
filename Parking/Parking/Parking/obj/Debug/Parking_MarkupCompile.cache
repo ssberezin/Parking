@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 E:\Parking\Parking\Parking\Parking\App.xaml
-7766863104
+8-1627091960
 
-46-1372100810
+504163942
 24-1836329657
-MainWindow.xaml;Views\Buttons.xaml;Views\CompanyOps\CompanyInfo.xaml;Views\ParkPlacesOps\ParkPlaceEditWindow.xaml;Views\PersonOperations\EmployeeWindow.xaml;Views\PrintOps\PrintBlank.xaml;Views\SecondWindow.xaml;
+MainWindow.xaml;Views\Buttons.xaml;Views\CompanyOps\CompanyInfo.xaml;Views\ParkPlacesOps\ParkPlaceEditWindow.xaml;Views\PersonOperations\EmployeeWindow.xaml;Views\PrintOps\PrintBlank.xaml;Views\ReportOps\ReportOps.xaml;Views\SecondWindow.xaml;
 
 False
 

@@ -365,8 +365,8 @@ namespace Parking.ViewModel.ParkPlacesOps
             PropertyChanged7 += ChangeHistoryList;
         }
 
-        
-            private void ChangeHistoryList(object sender, PropertyChangedEventArgs e)
+
+        private void ChangeHistoryList(object sender, PropertyChangedEventArgs e)
         {
             FillHistoryList(CurrentRecord.SomeClient.ClientId, CurrentRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
         }
@@ -812,7 +812,9 @@ namespace Parking.ViewModel.ParkPlacesOps
                     ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog();
                     parkingPlaceLog.DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month, ProlongDate.Day);
                     parkingPlaceLog.Money = CurrentRecord.SomeParkingPlaceLog.Money;
-                    parkingPlaceLog.PayingDate = DateTime.Now;
+                     if (CurrentRecord.SomeParkingPlaceLog.Money>0)
+                        parkingPlaceLog.PayingDate=DateTime.Now;
+                    parkingPlaceLog.DateOfChange = DateTime.Now;
                     db.ParkingPlaceLogs.Add(parkingPlaceLog);
 
                     user.ParkingPlaceLogs.Add(parkingPlaceLog);
@@ -962,10 +964,12 @@ namespace Parking.ViewModel.ParkPlacesOps
                         ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog 
                         {
                             DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month, ProlongDate.Day),
-                            Money = CurrentRecord.SomeParkingPlaceLog.Money,
-                            PayingDate = DateTime.Now,
+                            Money = CurrentRecord.SomeParkingPlaceLog.Money,                           
                             DateOfChange = DateTime.Now
                         };
+                        if (CurrentRecord.SomeParkingPlaceLog.Money > 0)                        
+                            parkingPlaceLog.PayingDate = DateTime.Now;
+
                         db.ParkingPlaceLogs.Add(parkingPlaceLog);
                         
                         user.ParkingPlaceLogs.Add(parkingPlaceLog);
