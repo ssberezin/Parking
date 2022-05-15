@@ -7,12 +7,15 @@
         xmlns:wtk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
         xmlns:local="clr-namespace:Parking.Views.PersonOperations" 
         xmlns:personoperations="clr-namespace:Parking.ViewModel.PersonOperations"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:w="clr-namespace:Parking.Helpes"
         xmlns:scm1="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         d:DataContext="{d:DesignInstance Type=personoperations:EmployeeWindowContext}"
-        mc:Ignorable="d"
-        WindowStyle="None"
+        mc:Ignorable="d"        
         Title="EmployeeWindow" Height="450" Width="1200">
-
+    <i:Interaction.Behaviors>
+        <w:HideCloseButtonOnWindow />
+    </i:Interaction.Behaviors>
     <Window.Resources>
 
         <ResourceDictionary>

@@ -31,9 +31,8 @@
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" >
             <Menu  FontSize="14" Padding="1"  VerticalAlignment="Top" Height="30" Margin="0,0,0,1" >
                 <MenuItem Header="Звіти"   VerticalAlignment="Top" >
-                    <MenuItem Header="Боржники" 
-                                  Command="{Binding CopyDBCommand}"/>
-                    <MenuItem Header="Відвідування парковки ТЗ" Command="{Binding CloseMainWindow}"/>
+
+                    <MenuItem Header="Звіт за власниками ТЗ" Command="{Binding CallOwnersReportCommand}"/>
                     <MenuItem Header="Виручка каси"  
                                   Command="{Binding RestoreDBCommand}"/>
                     <MenuItem Header="Зайнятість місць" Command="{Binding CloseMainWindow}"/>

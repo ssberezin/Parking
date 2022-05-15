@@ -1,4 +1,5 @@
 ﻿
+using Parking.Model;
 using System;
 using System.Collections.ObjectModel;
 
@@ -9,14 +10,14 @@ namespace Parking.ViewModel.ReportOps
     {
         public OwnerRecord()
         {
-            ReportOpsRecords = new ObservableCollection<ReportOpsRecord>();
+            ParPlaceRecords = new ObservableCollection<ParPlaceRecord>();
         }
 
         public int ClientId { get; set; }
         
 
         private string ownerName;
-        public string OwnerName //its marker for block an opportunity of parking place number change
+        public string OwnerName 
         {
             get { return ownerName; }
             set
@@ -30,13 +31,14 @@ namespace Parking.ViewModel.ReportOps
         }
 
 
+        
 
         public int PersonId { get; set; }
 
         
 
         private DateTime maxDeadLine;
-        public DateTime MaxDeadLine //its marker for block an opportunity of parking place number change
+        public DateTime MaxDeadLine 
         {
             get { return maxDeadLine; }
             set
@@ -48,7 +50,10 @@ namespace Parking.ViewModel.ReportOps
                 }
             }
         }
-        public ObservableCollection<ReportOpsRecord> ReportOpsRecords { get; set; }
+
+        
+         public ObservableCollection<ParPlaceRecord> ParPlaceRecords { get; set; }
+        //public ObservableCollection<ReportOpsRecord> ReportOpsRecords { get; set; }
 
     }
 }

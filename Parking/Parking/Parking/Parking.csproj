@@ -54,6 +54,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Expression.Blend.Sdk.1.0.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -92,6 +95,7 @@
     <Compile Include="Helpes\BoolToBrushConverterForStatus.cs" />
     <Compile Include="Helpes\BoolToStringConverter2.cs" />
     <Compile Include="Helpes\BoolToStringConverter.cs" />
+    <Compile Include="Helpes\HideCloseButtonOnWindow.cs" />
     <Compile Include="Helpes\ImagePathConverter.cs" />
     <Compile Include="Helpes\ParkingPlaceRecord.cs" />
     <Compile Include="Model\Contacts.cs" />
@@ -109,6 +113,7 @@
     <Compile Include="ViewModel\PersonOperations\EmployeeWindowContext.cs" />
     <Compile Include="ViewModel\PrintOps\PrintBlankContext.cs" />
     <Compile Include="ViewModel\ReportOps\OwnerRecord.cs" />
+    <Compile Include="ViewModel\ReportOps\ParPlaceRecord.cs" />
     <Compile Include="ViewModel\ReportOps\ReportOpsContext.cs" />
     <Compile Include="ViewModel\ReportOps\ReportOpsRecord.cs" />
     <Compile Include="Views\CompanyOps\CompanyInfo.xaml.cs">
@@ -123,8 +128,8 @@
     <Compile Include="Views\PrintOps\PrintBlank.xaml.cs">
       <DependentUpon>PrintBlank.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ReportOps\ReportOps.xaml.cs">
-      <DependentUpon>ReportOps.xaml</DependentUpon>
+    <Compile Include="Views\ReportOps\ReportOpsWindow.xaml.cs">
+      <DependentUpon>ReportOpsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SecondWindow.xaml.cs">
       <DependentUpon>SecondWindow.xaml</DependentUpon>
@@ -168,7 +173,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ReportOps\ReportOps.xaml">
+    <Page Include="Views\ReportOps\ReportOpsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

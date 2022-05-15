@@ -145,7 +145,7 @@ namespace Parking.ViewModel
                     
                     db.SaveChanges();
 
-                    Client client1 = new Client { OrgName = "ТОВ \"Парковка\"", OrgDetals = "надання послуг з паркування" };
+                    Client client1 = new Client { OrgName = "ТОВ \"Прайм\"", OrgDetals = "надання послуг з паркування" };
 
                     client1.Vehicles.Add(SomeVehicle1);
 
@@ -342,36 +342,50 @@ namespace Parking.ViewModel
 
                     db.Database.ExecuteSqlCommand
                        (@"
-                     create proc sp_GetClientInfoForReport
-                        @freeStatus bit,
-                        @startDate date,
-                        @endDate date
-                        as
-                        Select Cl.ClientId '0_ClientId' ,  Cl.OrgName '1_OrgName', Pers.PersonId '2_PersonId', Pers.SecondName + ' ' + pers.FirstName + ' ' + pers.Patronimic '3_FIO'
-                        From Clients Cl
-                        join People Pers on Cl.PersonCustomer_PersonId = Pers.PersonId
-                        join ParkingPlaces PP on Cl.ClientId = PP.SomeClient_ClientId
-                        join ParkingPlaceLogs PPl on PP.ParkingPlaceId = Ppl.SomeParkingPlace_ParkingPlaceId
+                    create proc sp_GetClientInfoForReport
+                            as
+                            Select Cl.ClientId '0_ClientId' ,  Cl.OrgName '1_OrgName', Pers.PersonId '2_PersonId', Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic '3_FIO',
+					                             MAX(ppl.DeadLine) '4_Max deadline'
+                            From Clients Cl
+                            join People Pers on Cl.PersonCustomer_PersonId=Pers.PersonId
+                            join ParkingPlaces PP on Cl.ClientId=PP.SomeClient_ClientId
+                            join ParkingPlaceLogs PPl on PP.ParkingPlaceId=Ppl.SomeParkingPlace_ParkingPlaceId
+                            group by Cl.ClientId ,  Cl.OrgName , Pers.PersonId , Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic			 
 
-                        Where PP.FreeStatus = @freeStatus and Ppl.PayingDate >= @startDate and Ppl.PayingDate < @endDate
                         ");
                     db.Database.ExecuteSqlCommand
                      (@"
-                     create proc sp_GetClRepRecord
-                        @clId int
+                    create proc sp_GetClRepRecord
+                        @ppId int,
+                        @startDate date,
+                        @endDate date
                         as
-                        Select PP.ParkingPlaceId '0_ParkingPlaceId', pp.ParkPlaceNumber '1_ParkPlaceNumber', pp.FreeStatus '2_FreeStatus', pp.Released '3_Released'
-	                          ,PPl.DateOfChange '4_DateOfChange'
-	                           ,Us.UserId '5_UserId' 
-	                           ,Pers.SecondName+' '+Pers.FirstName+' '+pers.Patronimic '6_PIB'
+                        Select  veh.VehicleId '0_VehicleId',veh.RegNumber '1_RegNumber',
+		                        PPl.DateOfChange '2_DateOfChange'
+	                           ,Us.UserId '3_UserId' 
+	                           ,Pers.SecondName+' '+Pers.FirstName+' '+pers.Patronimic '4_PIB'
+	   
                         From Clients Cl
                         join ParkingPlaces PP on Cl.ClientId=Pp.SomeClient_ClientId
                         join ParkingPlaceLogs PPl on Ppl.SomeParkingPlace_ParkingPlaceId=ppl.ParkingPlaceLogId
                         join.Users us on ppl.SomeUser_UserId=us.UserId
                         join People Pers on cl.PersonCustomer_PersonId=pers.PersonId
-                        where cl.ClientId=@clId
-                        ");
+                        join Vehicles Veh on cl.ClientId=Veh.ClientOwner_ClientId 
+                        where pp.ParkingPlaceId=@ppId and Ppl.DateOfChange>=@startDate and Ppl.DateOfChange <@endDate
 
+                        ");
+                    db.Database.ExecuteSqlCommand
+                    (@"
+                     create proc sp_GetClientParkPlaces
+                        @clId int
+                        as
+                        Select PP.ParkingPlaceId '0_ParkingPlaceId', pp.ParkPlaceNumber '1_ParkPlaceNumber', pp.FreeStatus '2_FreeStatus', pp.Released '3_Released'	  
+                        From Clients Cl
+                        join ParkingPlaces PP on Cl.ClientId=Pp.SomeClient_ClientId
+                        join ParkingPlaceLogs PPl on Ppl.SomeParkingPlace_ParkingPlaceId=ppl.ParkingPlaceLogId
+
+                        where cl.ClientId=@clId and pp.FreeStatus = 0
+                        ");
 
 
                     db.SaveChanges();

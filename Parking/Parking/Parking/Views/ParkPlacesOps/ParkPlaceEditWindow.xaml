@@ -6,11 +6,16 @@
         xmlns:local="clr-namespace:Parking.Views.ParkPlacesOps" 
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:helpes="clr-namespace:Parking.Helpes" 
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:w="clr-namespace:Parking.Helpes"
         xmlns:parkplacesops="clr-namespace:Parking.ViewModel.ParkPlacesOps"
         d:DataContext="{d:DesignInstance Type=parkplacesops:ParkPlaceWindowContext}"
-         WindowStyle="None"
+         
         mc:Ignorable="d"
         Title="ParkPlaceEditWindow" Height="590" Width="1200">
+    <i:Interaction.Behaviors>
+        <w:HideCloseButtonOnWindow />
+    </i:Interaction.Behaviors>
     <Window.Resources>
 
 

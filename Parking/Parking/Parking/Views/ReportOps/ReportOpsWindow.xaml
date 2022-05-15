@@ -1,14 +1,27 @@
-﻿<Window x:Class="Parking.Views.ReportOps.ReportOps"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<Window x:Class="Parking.Views.ReportOps.ReportOpsWindow"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Parking.Views.ReportOps" xmlns:reportops="clr-namespace:Parking.ViewModel.ReportOps" d:DataContext="{d:DesignInstance Type=reportops:ReportOpsContext}"
+        xmlns:local="clr-namespace:Parking.Views.ReportOps"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:w="clr-namespace:Parking.Helpes"
+        xmlns:helpes ="clr-namespace:Parking.Helpes"
+        xmlns:reportops="clr-namespace:Parking.ViewModel.ReportOps" d:DataContext="{d:DesignInstance Type=reportops:ReportOpsContext}"
         mc:Ignorable="d"
         Title="ReportOps" Height="450" Width="1200"
         WindowStartupLocation="CenterScreen" >
+    <i:Interaction.Behaviors>
+        <w:HideCloseButtonOnWindow />
+    </i:Interaction.Behaviors>
     <Window.Resources>
         <ResourceDictionary>
+            
+            <helpes:BoolToStringConverter x:Key="boolToStringConverter"/>
+            <helpes:BoolToStringConverter2 x:Key="boolToStringConverter2"/>
+            <helpes:BoolToBrushConverterForStatus x:Key="boolToBrushConverterForStatus"/>
+            <helpes:BoolToBrushConverterForInOut x:Key="boolToBrushConverterForInOut"/>
+
             <DataTemplate x:Key="HeaderTemplate">
                 <TextBlock Text="{Binding}" TextWrapping="Wrap"  TextAlignment="Center"/>
             </DataTemplate>
@@ -19,51 +32,21 @@
             </Style>
         </ResourceDictionary>
     </Window.Resources>
-    
+
     <Border  BorderBrush="#FF9BECE6" BorderThickness="3">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.44* "/>
-                
+                <ColumnDefinition Width="0.44* "/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Border  BorderBrush="#FF9BECE6" BorderThickness="2">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="0.1*"/>
+                        <RowDefinition Height="0.06*"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal">
-                        <StackPanel   >
-                            <RadioButton GroupName="A" Content="Лише зайняті парко. місця " VerticalAlignment="Center" FontWeight="Bold"/>
-                            <RadioButton GroupName="A" Content=" Вся інформація " VerticalAlignment="Center"  FontWeight="Bold"/>
-                        </StackPanel>
-                        <CheckBox  Content=" Боржники " Foreground="Red" HorizontalContentAlignment="Left" 
-                          VerticalAlignment="Center"
-                              FontWeight="Bold" Margin="30,0,0,0" />
-                    </StackPanel>
-                    <DataGrid x:Name="GridOrders" Grid.Row="1"
-                              ItemsSource="{Binding OwnerRecords}"                   
-                              Margin="3"            
-                              AutoGenerateColumns="False" SelectionMode="Single"
-                              IsReadOnly="True"    VerticalAlignment="Top"
-                              RowHeight="30" FontSize="14">
-
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Width="0.82*"  Binding="{Binding OwnerName, UpdateSourceTrigger=PropertyChanged}"  Header="Власник"/>
-                            <DataGridTextColumn Width="0.32*"  Binding="{Binding MaxDeadLine, UpdateSourceTrigger=PropertyChanged}"  Header="Сплачено до"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </Border>
-            
-            <Border  BorderBrush="#FF9BECE6" BorderThickness="2" Grid.Column="2">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="0.06*"/>
-                        <RowDefinition/>                   
-                    </Grid.RowDefinitions>
-                    <StackPanel  HorizontalAlignment="Left" Orientation="Horizontal">
                         <CheckBox  Content=" Фільтри " Foreground="Green" HorizontalContentAlignment="Left" 
                           VerticalAlignment="Center"
                               FontWeight="Bold" Margin="3,0,0,0" />
@@ -75,6 +58,10 @@
                                AllowsTransparency="True">
                             <Border BorderBrush="Black" BorderThickness="1">
                                 <StackPanel >
+                                    <StackPanel   >
+                                        <RadioButton GroupName="A" Content="Лише зайняті парко. місця " VerticalAlignment="Center" FontWeight="Bold"/>
+                                        <RadioButton GroupName="A" Content=" Вся інформація " VerticalAlignment="Center"  FontWeight="Bold"/>
+                                    </StackPanel>
                                     <StackPanel>
                                         <StackPanel   Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
                                             <CheckBox x:Name="FIO" TabIndex="2" Content=" ПІБ співробітника " VerticalAlignment="Center"
@@ -148,45 +135,113 @@
                             </Border>
                         </Popup>
 
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <TextBlock Text="Задати проміжок " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="30,0,0,0" />
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text=" з  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
-                                                HorizontalAlignment="Center"                                                 
-                                                SelectedDate="{Binding StartHistoryDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                HorizontalContentAlignment="Center"/>
-                                    <TextBlock Text=" до  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
-                                                HorizontalAlignment="Center"                                                 
-                                                SelectedDate="{Binding EndHistoryDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                HorizontalContentAlignment="Center"/>
-                                <Button Content=" Показати " Background="Blue"/>
-
-                            </StackPanel>
-                            </StackPanel>
-                        </StackPanel>
-                     
-
-
-                
-
-                    <DataGrid x:Name="GridInfo" Grid.Row="1"
-                              ItemsSource="{Binding SelectedRecord.ReportOpsRecords}"                   
+                        <CheckBox  Content=" Боржники " Foreground="Red" HorizontalContentAlignment="Left" 
+                          VerticalAlignment="Center"
+                              FontWeight="Bold" Margin="5,0,0,0" />
+                    </StackPanel>
+                    <DataGrid x:Name="GridOrders" Grid.Row="1"
+                              ItemsSource="{Binding OwnerRecords}" 
+                              SelectedItem="{Binding SelectedRecord}"
                               Margin="3"            
                               AutoGenerateColumns="False" SelectionMode="Single"
                               IsReadOnly="True"    VerticalAlignment="Top"
                               RowHeight="30" FontSize="14">
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="0.32*"  Binding="{Binding ParkPlaceNumber}"  Header="№ парко. місця"/>
-                            <DataGridTextColumn Width="0.32*"  Binding="{Binding PPNumber}"  Header="Статус"/>
-                            <DataGridTextColumn Width="0.32*"  Binding="{Binding PPNumber}"  Header="Виїхав/заїхав"/>
-                            <DataGridTextColumn Width="0.34*"  Binding="{Binding PPNumber}"  Header="Дата"/>
-                            <DataGridTextColumn Width="0.34*"  Binding="{Binding PPNumber}"  Header="Час"/>
-                            <DataGridTextColumn Width="0.84*"  Binding="{Binding PPNumber}"  Header="ПІБ оператора"/>
-                            
-                            
+                            <DataGridTextColumn Width="0.82*"  Binding="{Binding OwnerName, UpdateSourceTrigger=PropertyChanged}"  Header="Власник"/>
+                            <DataGridTextColumn Width="0.32*"  Binding="{Binding MaxDeadLine, UpdateSourceTrigger=PropertyChanged}"  Header="Сплачено до"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+
+
+            <Border  BorderBrush="#FF9BECE6" BorderThickness="2" Grid.Column="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.06*"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+
+
+
+
+                    <DataGrid x:Name="PPRecords" Grid.Row="1"
+                              ItemsSource="{Binding SelectedRecord.ParPlaceRecords}" 
+                               SelectedItem="{Binding ParPlaceSelecteRecord, UpdateSourceTrigger=PropertyChanged}"
+                              Margin="3"            
+                              AutoGenerateColumns="False" SelectionMode="Single"
+                              IsReadOnly="True"    VerticalAlignment="Top"
+                              RowHeight="30" FontSize="14">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <!--here we are setting the background for orders that are free-->
+                                <Setter Property="Background"
+                           Value="{Binding PPlace.FreeStatus, Converter={StaticResource boolToBrushConverterForStatus}}" />
+                                <Setter Property="Foreground" 
+                            Value="{Binding PPlace.Released ,Converter={StaticResource boolToBrushConverterForInOut}}"/>
+                            </Style>
+                        </DataGrid.RowStyle>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="0.32*"  Binding="{Binding PPlace.ParkPlaceNumber}"  Header="№ парко. місця"/>
+                            <DataGridTextColumn Width="0.32*"  Binding="{Binding PPlace.FreeStatus, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource boolToStringConverter}}"  Header="Статус"/>
+                            <DataGridTextColumn Width="0.32*"  Binding="{Binding PPlace.Released, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource boolToStringConverter2 }}"  Header="Виїхав/заїхав"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+
+            <Border  BorderBrush="#FF9BECE6" BorderThickness="2" Grid.Column="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.06*"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel  HorizontalAlignment="Left" Orientation="Horizontal">
+
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Text="Задати проміжок " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="30,0,0,0" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text=" з  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
+                                                HorizontalAlignment="Center"                                                 
+                                                SelectedDate="{Binding StartHistoryDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                HorizontalContentAlignment="Center"/>
+                                <TextBlock Text=" до  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
+                                                HorizontalAlignment="Center"                                                 
+                                                SelectedDate="{Binding EndHistoryDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                HorizontalContentAlignment="Center"/>
+                                <Button Content=" Показати " Background="Blue" Command="{Binding ShowCommandCommand}" />
+
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+
+
+
+
+
+                    <DataGrid Grid.Row="1"
+                              ItemsSource="{Binding ReportOpsRecords}"                   
+                              Margin="3"            
+                              AutoGenerateColumns="False" SelectionMode="Single"
+                              IsReadOnly="True"    VerticalAlignment="Top"
+                              RowHeight="30" FontSize="14">
+
+                        <DataGrid.Columns>
+
+
+                            <DataGridTextColumn Width="0.40*"  Binding="{Binding VehicleNumber, UpdateSourceTrigger=PropertyChanged}"  Header="Держ.номер ТЗ"/>
+
+                            <DataGridTextColumn Width="0.34*"  Binding="{Binding EventDate}"  Header="Дата"/>
+                            <DataGridTextColumn Width="0.34*"  Binding="{Binding EventTime}"  Header="Час"/>
+                            <DataGridTextColumn Width="0.84*"  Binding="{Binding UserData}"  Header="ПІБ оператора"/>
+
+
 
 
                         </DataGrid.Columns>

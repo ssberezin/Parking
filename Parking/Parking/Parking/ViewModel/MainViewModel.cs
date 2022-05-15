@@ -3,6 +3,7 @@ using Parking.Model;
 using Parking.Views.CompanyOps;
 using Parking.Views.ParkPlacesOps;
 using Parking.Views.PersonOperations;
+using Parking.Views.ReportOps;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -540,7 +541,16 @@ namespace Parking.ViewModel
             return false;
         }
 
-        
+        private RelayCommand callOwnersReportCommand;
+        public RelayCommand CallOwnersReportCommand => callOwnersReportCommand ?? (callOwnersReportCommand = new RelayCommand(
+                    (obj) =>
+                    {
+
+                        ReportOpsWindow win = new ReportOpsWindow(IncomUserId);
+                        showWindow.ShowDialog(win);                     
+
+                    }
+                    ));
 
     }
 }

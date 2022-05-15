@@ -1,14 +1,27 @@
 ﻿
 namespace Parking.ViewModel.ReportOps
 {
-    public class ReportOpsRecord
+    public class ReportOpsRecord:Helpes.ObservableObject
     {
-        public int ParkPlaceId { get; set; }
-        public int ParkPlaceNumber { get; set; }
-        public bool FreeStatus { get; set; }
-        public bool Released { get; set; }
+       
+        public int VehicleId { get; set; }
+        // public string VehicleNumber { get; set;}
+        private string vehicleNumber;
+        public string VehicleNumber
+        {
+            get { return vehicleNumber; }
+            set
+            {
+                if (vehicleNumber != value)
+                {
+                    vehicleNumber = value;
+                    OnPropertyChanged(nameof(VehicleNumber));
+                }
+            }
+        }
         public string EventDate { get; set; }
         public string EventTime { get; set; }
+       
         public int UserId { get; set; }
         public string UserData { get; set; }
 

@@ -134,3 +134,6 @@ D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Vi
 E:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.SuggestedBindingRedirects.cache
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\ReportOps.g.cs
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\ReportOps.baml
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\bin\Debug\System.Windows.Interactivity.dll
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\ReportOpsWindow.g.cs
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\ReportOpsWindow.baml
