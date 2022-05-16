@@ -1,5 +1,6 @@
 ﻿using Parking.Helpes;
 using Parking.Model;
+using Parking.Views.ParkPlacesOps;
 using Parking.Views.PrintOps;
 using System;
 using System.Collections.ObjectModel;
@@ -96,16 +97,22 @@ namespace Parking.ViewModel.ReportOps
             }
         }
 
+        int CurretnUserId { get; set; }
+
+        Library lib;//for call methods from here
 
         public ReportOpsContext() 
         {
             showWindow = new DefaultShowWindowService();
             dialogService = new DefaultDialogService();
+            lib = new Library();
         }
         public ReportOpsContext(int inputUserid) 
         {
             showWindow = new DefaultShowWindowService();
             dialogService = new DefaultDialogService();
+            lib = new Library();
+            CurretnUserId = inputUserid;
             OwnerRecords = new ObservableCollection<OwnerRecord>();
             ReportOpsRecords = new ObservableCollection<ReportOpsRecord>(); 
             StartHistoryDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddMonths(-1);
@@ -119,24 +126,17 @@ namespace Parking.ViewModel.ReportOps
         private void ChangeSelectedRecord(object sender, PropertyChangedEventArgs e)
         {
             SelectedRecord.ParPlaceRecords = GetClientParkingPlaces(SelectedRecord.ClientId, StartHistoryDate, EndHistoryDate);
-            ParPlaceSelecteRecord = null;
-            ReportOpsRecords.Clear();   
-
         }
 
         private void ChangeParkPlaceSelecteRecord(object sender, PropertyChangedEventArgs e)
-        {
-            //ParPlaceSelecteRecord.ReportOpsRecords = SelectedRecord.ParPlaceRecords.
+        {            
             FillReportRecods(ParPlaceSelecteRecord.PPlace.ParkingPlaceId, StartHistoryDate, EndHistoryDate);
-
         }
 
 
         private void FillOwnerRecords()
 
-        {
-
-            
+        {            
             OwnerRecords.Clear();
 
             string sqlExpression = "sp_GetClientInfoForReport";
@@ -293,101 +293,6 @@ namespace Parking.ViewModel.ReportOps
 
 
 
-        private ObservableCollection<ReportOpsRecord> GetReportData(int ppId, DateTime startDate, DateTime endDate )
-
-        {
-            startDate = new DateTime(startDate.Year, startDate.Month, startDate.Day);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day).AddDays(1);
-
-            ObservableCollection<ReportOpsRecord> records = new ObservableCollection<ReportOpsRecord>();
-            string sqlExpression = "sp_GetClRepRecord";
-
-            var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
-            var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
-
-
-
-            using (SqlConnection connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
-            {
-                try
-                {
-                    connection.Open();
-                    SqlCommand command = new SqlCommand(sqlExpression, connection);
-                    command.CommandType = System.Data.CommandType.StoredProcedure;
-
-                    SqlParameter firstParam = new SqlParameter
-                    {
-                        ParameterName = "@ppId",
-                        Value = ppId
-                    };
-                    SqlParameter secondParam = new SqlParameter
-                    {
-                        ParameterName = "@startDate",
-                        Value = startDate
-                    };
-                    SqlParameter thirdParam = new SqlParameter
-                    {
-                        ParameterName = "@endDate",
-                        Value = endDate
-                    };
-
-                    command.Parameters.Add(firstParam);
-                    command.Parameters.Add(secondParam);
-                    command.Parameters.Add(thirdParam);
-
-                    SqlDataReader result = command.ExecuteReader();
-
-                    if (result.HasRows)
-                    {
-                        while (result.Read())
-                        {
-                            ReportOpsRecord rec = new ReportOpsRecord
-                            {
-                                VehicleId = (int)result.GetValue(0),
-                                VehicleNumber = (string)result.GetValue(1),                                
-                                UserId = (int)result.GetValue(3),
-                                UserData = (string)result.GetValue(4)
-                            };
-                            if (!(result.GetValue(4) is DBNull))
-                            {
-                                DateTime dat = (DateTime)result.GetValue(2);
-                                rec.EventDate = dat.ToString("dd/MM/yyyy"); 
-                                rec.EventTime = dat.ToString("HH/mm/ss");                                
-                            };
-                            records.Add(rec);
-
-                        };
-                        return records;
-                    }
-                    else
-                        dialogService.ShowMessage("Немає збіжностей");
-                    
-                }
-
-                catch (ArgumentNullException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-                catch (OverflowException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-                catch (System.Data.SqlClient.SqlException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-                catch (System.Data.Entity.Core.EntityException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-
-            }
-            return null;
-        }
 
 
         private void FillReportRecods(int ppId, DateTime startDate, DateTime endDate)
@@ -449,7 +354,7 @@ namespace Parking.ViewModel.ReportOps
                             {
                                 DateTime dat = (DateTime)result.GetValue(2);
                                 rec.EventDate = dat.ToString("dd/MM/yyyy");
-                                rec.EventTime = dat.ToString("HH/mm/ss");
+                                rec.EventTime = dat.ToString("HH:mm:ss");
                             };
                            ReportOpsRecords.Add(rec);
 
@@ -485,16 +390,34 @@ namespace Parking.ViewModel.ReportOps
             
         }
 
-        private RelayCommand showCommandCommand;
-        public RelayCommand ShowCommandCommand => showCommandCommand ?? (showCommandCommand = new RelayCommand(
+        private ParkingPlaceRecord currentPPRecord;
+        public ParkingPlaceRecord CurrentPPRecord
+        {
+            get { return currentPPRecord; }
+            set
+            {
+                if (currentPPRecord != value)
+                {
+                    currentPPRecord = value;
+                    OnPropertyChanged(nameof(CurrentPPRecord));
+                }
+            }
+        }
+
+
+        private RelayCommand editparkPlaceCommand;
+        public RelayCommand EditparkPlaceCommand => editparkPlaceCommand ?? (editparkPlaceCommand = new RelayCommand(
                     (obj) =>
-                    {
-
-                        //ReportOpsRecords = GetReportData(ParPlaceSelecteRecord.PPlace.ParkingPlaceId, StartHistoryDate, EndHistoryDate);
-                        FillReportRecods(ParPlaceSelecteRecord.PPlace.ParkingPlaceId, StartHistoryDate, EndHistoryDate);
-
+                    {                       
+                        CurrentPPRecord = lib.GetPPRecord(ParPlaceSelecteRecord.PPlace.ParkingPlaceId);
+                        ParkPlaceEditWindow parkWindow = new ParkPlaceEditWindow(CurretnUserId, CurrentPPRecord);
+                        showWindow.ShowDialog(parkWindow);
+                        //update visible data
+                        SelectedRecord.ParPlaceRecords = GetClientParkingPlaces(SelectedRecord.ClientId, StartHistoryDate, EndHistoryDate);
+                        FillReportRecods(ParPlaceSelecteRecord.PPlace.ParkingPlaceId, StartHistoryDate, EndHistoryDate);                       
                     }
                     ));
+
 
     }
 }

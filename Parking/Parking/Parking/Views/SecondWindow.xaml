@@ -158,7 +158,7 @@
             <Border BorderBrush="Gray"  BorderThickness="2">
                 <StackPanel HorizontalAlignment="Center" >
                     <TextBlock Text="Прострочено чи ні? " FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="{Binding OutOfDeadLine, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Green" FontSize="20" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding OutOfDeadLine, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Red" FontSize="20" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Border>
         </StackPanel>

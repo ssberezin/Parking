@@ -45,7 +45,7 @@ namespace Parking.ViewModel
                 if (currentRecord != value)
                 {
                     currentRecord = value;
-                    OnPropertyChanged(nameof(currentRecord));
+                    OnPropertyChanged(nameof(CurrentRecord));
                 }
             }
         }
@@ -93,10 +93,13 @@ namespace Parking.ViewModel
                 }
             }
         }
+
+        Library lib;
         public MainViewModel()
         {
             showWindow = new DefaultShowWindowService();
             dialogService = new DefaultDialogService();
+            lib = new Library();
             VisaBility = "Visible";//for display vehicle type  and  owner infor
         }
 
@@ -106,6 +109,7 @@ namespace Parking.ViewModel
         {
             showWindow = new DefaultShowWindowService();
             dialogService = new DefaultDialogService();
+            lib = new Library();
             VisaBility = "Visible";//for display vehicle type  and  owner infor            
             IncomUserId = UserId;
             Records = new ObservableCollection<ParkingPlaceRecord>();
@@ -189,13 +193,13 @@ namespace Parking.ViewModel
         
         private void ChangeSelectedRecord(object sender, PropertyChangedEventArgs e)
         {
-            if(Records.Count()!=0)
+            if (Records.Count() != 0) 
                 UpdateRecord();
         }
 
         private void UpdateRecord()
         {
-
+            
             string sqlExpression = "sp_GetparkingPlacesRecord";
 
             var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
@@ -282,16 +286,30 @@ namespace Parking.ViewModel
                                 if (CurrentRecord.SomeClient.OrgName == null || CurrentRecord.SomeClient.OrgName == "не вказано")
                                     CurrentRecord.SomeClient.OrgName = CurrentRecord.SomePerson.SecondName + " " + CurrentRecord.SomePerson.FirstName + " " + CurrentRecord.SomePerson.Patronimic;
 
-                                if (!(result.GetValue(18) is System.DBNull))
+                                if (!(result.GetValue(17) is System.DBNull))
                                     CurrentRecord.SomePerson.TrustedPerson_Id = (int?)result.GetValue(17);
 
                                 if (CurrentRecord.SomePerson.TrustedPerson_Id != null)
                                 {
-
+                                    
                                     GetTrustedPerson(CurrentRecord.SomePerson.TrustedPerson_Id.Value, out Person nPerson, out Contacts nContacts);
-                                    CurrentRecord.TrustedPerson = nPerson;
+                                    CurrentRecord.TrustedPerson = new Person
+                                    {
+                                        PersonId = nPerson.PersonId,
+                                        SecondName = nPerson.SecondName,
+                                        FirstName = nPerson.FirstName,
+                                        Patronimic = nPerson.Patronimic,
+                                        Sex = nPerson.Sex,
+                                        Photo = nPerson.Photo,
+                                        TaxCode = nPerson.TaxCode
+                                    };
                                     CurrentRecord.FemaleTrustPers = !CurrentRecord.TrustedPerson.Sex;
-                                    CurrentRecord.TrContacts = nContacts;
+                                    CurrentRecord.TrContacts = new Contacts
+                                    {
+                                        ContactsId = nContacts.ContactsId,
+                                        Phone = nContacts.Phone,
+                                        Adress = nContacts.Adress
+                                    };
 
                                 }
                                 VisaBility = "Visible";
@@ -399,7 +417,7 @@ namespace Parking.ViewModel
                     {
                         while (result.Read())
                         {
-                            nPerson.PersonId = CurrentRecord.SomePerson.TrustedPerson_Id.Value;
+                            nPerson.PersonId = trustedPersId;
                             nPerson.SecondName = (string)result.GetValue(0);
                             nPerson.FirstName = (string)result.GetValue(1);
                             nPerson.Patronimic = (string)result.GetValue(2);
@@ -466,24 +484,24 @@ namespace Parking.ViewModel
                     ));
 
         
-        private void AddtestData()
-        {
-            CurrentRecord.SomePerson.SecondName = "Петров";
-            CurrentRecord.SomePerson.FirstName = "Іван";
-            CurrentRecord.SomePerson.Patronimic = "Дмитрович";
-            CurrentRecord.SomePerson.Sex = true;
-            CurrentRecord.SomeContacts.Phone = "+380509632514";
-            CurrentRecord.SomeContacts.Adress = "м.Київ, вул. Героїв АТО, б.37";
-            CurrentRecord.TrustedPerson.SecondName = "Кірієнко";
-            CurrentRecord.TrustedPerson.FirstName = "Ірина";
-            CurrentRecord.TrustedPerson.Patronimic = "Вікторівна";
-            CurrentRecord.TrContacts.Phone = "+380975214652";
-            CurrentRecord.TrustedPerson.Sex = false;
-            CurrentRecord.SomeVehicle.Color = "Синій";
-            CurrentRecord.SomeVehicleType.TypeName = "легковий";
-            CurrentRecord.SomeVehicle.RegNumber = "AE2965KO";
+        //private void AddtestData()
+        //{
+        //    CurrentRecord.SomePerson.SecondName = "Петров";
+        //    CurrentRecord.SomePerson.FirstName = "Іван";
+        //    CurrentRecord.SomePerson.Patronimic = "Дмитрович";
+        //    CurrentRecord.SomePerson.Sex = true;
+        //    CurrentRecord.SomeContacts.Phone = "+380509632514";
+        //    CurrentRecord.SomeContacts.Adress = "м.Київ, вул. Героїв АТО, б.37";
+        //    CurrentRecord.TrustedPerson.SecondName = "Кірієнко";
+        //    CurrentRecord.TrustedPerson.FirstName = "Ірина";
+        //    CurrentRecord.TrustedPerson.Patronimic = "Вікторівна";
+        //    CurrentRecord.TrContacts.Phone = "+380975214652";
+        //    CurrentRecord.TrustedPerson.Sex = false;
+        //    CurrentRecord.SomeVehicle.Color = "Синій";
+        //    CurrentRecord.SomeVehicleType.TypeName = "легковий";
+        //    CurrentRecord.SomeVehicle.RegNumber = "AE2965KO";
 
-        }
+        //}
 
         private RelayCommand callCompanyInfoWindowCommand;
         public RelayCommand CallCompanyInfoWindowCommand => callCompanyInfoWindowCommand ?? (callCompanyInfoWindowCommand = new RelayCommand(

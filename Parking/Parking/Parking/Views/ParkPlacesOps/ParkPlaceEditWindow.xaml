@@ -219,7 +219,7 @@
                 <Grid Grid.Row="1" Grid.Column="1">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
-                        <RowDefinition Height="0.95*"/>
+                        <RowDefinition Height="0.75*"/>
                     </Grid.RowDefinitions>
 
                     <Border Margin="3">
@@ -231,18 +231,18 @@
                                       ToolTip="Лише латиниця та цифри"/>
                                     <TextBlock Text="Колір " FontSize="14" FontWeight="Bold"  HorizontalAlignment="Center" Foreground="Red" />
                                     <TextBox  Text="{Binding CurrentRecord.SomeVehicle.Color, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="20"  TextAlignment="Center" TextWrapping="Wrap"  HorizontalAlignment="Center" FontWeight="Bold" Margin="3"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <TextBlock Text="Тип ТЗ " TextWrapping="Wrap" FontSize="12" FontWeight="Bold"  
                                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <ComboBox   MinWidth="130"  
-                                      IsEditable="False" IsSynchronizedWithCurrentItem="True"                                     
-                                     SelectedItem="{Binding VType, UpdateSourceTrigger=PropertyChanged}"                        
-                                     ItemsSource="{Binding  VehicleTypeList}" 
-                                     HorizontalContentAlignment="Center"
-                                     DisplayMemberPath="TypeName"
-                                     Background="White" 
-                                     FontSize="14" >
-                                        </ComboBox>
+                                    <ComboBox   MinWidth="130"  VerticalAlignment="Center"
+                                          IsEditable="False" IsSynchronizedWithCurrentItem="True"                                     
+                                         SelectedItem="{Binding VType, UpdateSourceTrigger=PropertyChanged}"                        
+                                         ItemsSource="{Binding  VehicleTypeList}" 
+                                         HorizontalContentAlignment="Center"
+                                         DisplayMemberPath="TypeName"
+                                         Background="White" 
+                                         FontSize="14" >
+                                    </ComboBox>
                                     </StackPanel>
                                 </StackPanel>
                            
@@ -256,7 +256,7 @@
                             <TextBlock Text="{Binding DeadLine, UpdateSourceTrigger=PropertyChanged}" FontSize="14"  TextAlignment="Center" Foreground="Blue" FontWeight="Bold"  HorizontalAlignment="Center" />
 
                             <StackPanel  >
-                                <TextBlock Text="Подовжити дату оренди до" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,3"/>
+                                <TextBlock Text="Подовжити дату оренди до" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,1"/>
                                 <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
                                                 HorizontalAlignment="Center"  
                                                DisplayDateStart="{Binding Mode=OneWay, Source={x:Static System:DateTime.Today}}"

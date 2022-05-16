@@ -1,6 +1,8 @@
 ﻿using Parking.Model;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -179,6 +181,260 @@ namespace Parking.Helpes
             }
             return null;
         }
+
+        public ParkingPlaceRecord  GetPPRecord(int pPId)
+        {
+                      
+
+            string sqlExpression = "sp_GetparkingPlacesRecord";
+
+            var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
+            var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
+
+            using (SqlConnection connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(sqlExpression, connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    SqlParameter firstParam = new SqlParameter
+                    {
+                        ParameterName = "@ppId",
+                        Value = pPId
+                    };
+                    command.Parameters.Add(firstParam);
+
+                    SqlDataReader result = command.ExecuteReader();
+
+
+                    if (result.HasRows)
+                    {
+                        ParkingPlaceRecord CurrentRecord = new ParkingPlaceRecord();
+
+                        while (result.Read())
+                        {
+                            CurrentRecord = new ParkingPlaceRecord()
+                            {
+                                SomeParkingPlace = new ParkingPlace
+                                {
+                                    ParkingPlaceId = (int)result.GetValue(0),
+                                    ParkPlaceNumber = (int)result.GetValue(1),
+                                    FreeStatus = (bool)result.GetValue(2),
+                                    Released = (bool)result.GetValue(3)
+                                }
+                            };
+
+
+                            if (!CurrentRecord.SomeParkingPlace.FreeStatus.Value)
+                            {
+
+                                CurrentRecord.SomeClient = new Client
+                                {
+                                    ClientId = (int)result.GetValue(4),
+                                    OrgName = result.GetValue(4) is System.DBNull ? (string)result.GetValue(7) + " " + (string)result.GetValue(8) + " " + (string)result.GetValue(7) : (string)result.GetValue(5)
+                                };
+
+                                CurrentRecord.SomePerson = new Person
+                                {
+                                    PersonId = (int)result.GetValue(6),
+                                    SecondName = (string)result.GetValue(7),
+                                    FirstName = (string)result.GetValue(8),
+                                    Patronimic = (string)result.GetValue(9),
+                                    Sex = (bool)result.GetValue(21)
+                                };
+                                CurrentRecord.FemaleOwnPers = !CurrentRecord.SomePerson.Sex;
+
+                                CurrentRecord.SomeContacts = new Contacts
+                                {
+                                    ContactsId = (int)result.GetValue(10),
+                                    Phone = (string)result.GetValue(11),
+                                    Adress = result.GetValue(18) is System.DBNull ? null : (string)result.GetValue(18)
+                                };
+                                CurrentRecord.SomeVehicle = new Vehicle
+                                {
+                                    VehicleId = (int)result.GetValue(12),
+                                    RegNumber = (string)result.GetValue(13),
+                                    Color = (string)result.GetValue(14),
+                                    VPhoto = result.GetValue(22) is System.DBNull ? null : (byte[])result.GetValue(22)
+
+                                };
+                                CurrentRecord.SomeParkingPlaceLog = new ParkingPlaceLog
+                                {
+                                    ParkingPlaceLogId = (int)result.GetValue(15),
+                                    DeadLine = (DateTime)result.GetValue(16)
+                                };
+                                CurrentRecord.SomeVehicleType = new VehicleType
+                                {
+                                    VehicleTypeId = (int)result.GetValue(19),
+                                    TypeName = (string)result.GetValue(20)
+                                };
+
+
+                                if (CurrentRecord.SomeClient.OrgName == null || CurrentRecord.SomeClient.OrgName == "не вказано")
+                                    CurrentRecord.SomeClient.OrgName = CurrentRecord.SomePerson.SecondName + " " + CurrentRecord.SomePerson.FirstName + " " + CurrentRecord.SomePerson.Patronimic;
+
+                                if (!(result.GetValue(18) is System.DBNull))
+                                    CurrentRecord.SomePerson.TrustedPerson_Id = (int?)result.GetValue(17);
+
+                                if (CurrentRecord.SomePerson.TrustedPerson_Id != null)
+                                {
+
+                                    GetTrustedPerson(CurrentRecord.SomePerson.TrustedPerson_Id.Value, out Person nPerson, out Contacts nContacts);
+                                    CurrentRecord.TrustedPerson = new Person 
+                                                                 { PersonId = nPerson.PersonId,
+                                                                   SecondName  = nPerson.SecondName,
+                                                                   FirstName = nPerson.FirstName,
+                                                                   Patronimic = nPerson.Patronimic,
+                                                                   Sex = nPerson.Sex,
+                                                                   Photo = nPerson.Photo,
+                                                                   TaxCode = nPerson.TaxCode
+                                                                 };
+                                    CurrentRecord.FemaleTrustPers = !CurrentRecord.TrustedPerson.Sex;
+                                    CurrentRecord.TrContacts = new Contacts 
+                                                                {
+                                                                   ContactsId = nContacts.ContactsId,
+                                                                   Phone = nContacts.Phone,
+                                                                   Adress = nContacts.Adress
+                                                                };
+
+                                }
+                                
+                            }
+                            else
+                            {
+                                //in case if parking place is free                               
+                                CurrentRecord.SomeClient = new Client
+                                {
+                                    OrgDetals = "не задано",
+                                    OrgName = "не задано",
+
+                                };
+                                CurrentRecord.SomePerson = new Person();
+                                CurrentRecord.FemaleOwnPers = !CurrentRecord.SomePerson.Sex;
+                                CurrentRecord.SomeContacts = new Contacts();
+                                CurrentRecord.SomeVehicle = new Vehicle();
+
+                                CurrentRecord.SomeParkingPlaceLog = new ParkingPlaceLog { DeadLine = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) };
+
+                                CurrentRecord.SomeVehicleType = new VehicleType
+                                {
+                                    VehicleTypeId = 1,
+                                    TypeName = "легкове авто"
+                                };
+                                CurrentRecord.TrustedPerson = new Person();
+                                CurrentRecord.FemaleTrustPers = !CurrentRecord.TrustedPerson.Sex;
+                                CurrentRecord.TrContacts = new Contacts();
+                                DateTime dt = DateTime.Now;                                
+                            }
+                        };
+                        return CurrentRecord;
+
+                    }
+                    else
+                    {
+
+                        dialogService.ShowMessage("Щось пішло не так при зчитуванні данних про паркувальні місця");
+                    }
+                }
+
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+
+            }
+            return null;
+        }
+
+        private void GetTrustedPerson(int trustedPersId, out Person nPerson, out Contacts nContacts)
+        {
+
+            nPerson = new Person();
+            nContacts = new Contacts();
+
+            string sqlExpression = "sp_GetTrustedPerson";
+
+            var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
+            var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
+
+            using (SqlConnection connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
+            {
+                try
+                {
+
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(sqlExpression, connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    SqlParameter firstParam = new SqlParameter
+                    {
+                        ParameterName = "@TrustPersId",
+                        Value = trustedPersId
+                    };
+
+                    command.Parameters.Add(firstParam);
+
+
+                    SqlDataReader result = command.ExecuteReader();
+
+                    if (result.HasRows)
+                    {
+                        while (result.Read())
+                        {
+                            nPerson.PersonId = trustedPersId;
+                            nPerson.SecondName = (string)result.GetValue(0);
+                            nPerson.FirstName = (string)result.GetValue(1);
+                            nPerson.Patronimic = (string)result.GetValue(2);
+                            nPerson.Sex = (bool)result.GetValue(5);
+
+
+                            nContacts = new Contacts { ContactsId = (int)result.GetValue(3), Phone = (string)result.GetValue(4) };
+                        };
+
+                    }
+                    else
+                        dialogService.ShowMessage("Щось пішло не так при зчитуванні данних про паркувальні місця");
+                }
+
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+        }
+
 
     }
 }

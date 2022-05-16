@@ -146,10 +146,9 @@
                               AutoGenerateColumns="False" SelectionMode="Single"
                               IsReadOnly="True"    VerticalAlignment="Top"
                               RowHeight="30" FontSize="14">
-
                         <DataGrid.Columns>
                             <DataGridTextColumn Width="0.82*"  Binding="{Binding OwnerName, UpdateSourceTrigger=PropertyChanged}"  Header="Власник"/>
-                            <DataGridTextColumn Width="0.32*"  Binding="{Binding MaxDeadLine, UpdateSourceTrigger=PropertyChanged}"  Header="Сплачено до"/>
+                            <DataGridTextColumn Width="0.32*"  Binding="{Binding MaxDeadLine,StringFormat=\{0:dd.MM.yy \}, UpdateSourceTrigger=PropertyChanged}"  Header="Сплачено до"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -168,24 +167,29 @@
 
 
                     <DataGrid x:Name="PPRecords" Grid.Row="1"
-                              ItemsSource="{Binding SelectedRecord.ParPlaceRecords}" 
+                              ItemsSource="{Binding SelectedRecord.ParPlaceRecords, UpdateSourceTrigger=PropertyChanged}" 
                                SelectedItem="{Binding ParPlaceSelecteRecord, UpdateSourceTrigger=PropertyChanged}"
                               Margin="3"            
                               AutoGenerateColumns="False" SelectionMode="Single"
                               IsReadOnly="True"    VerticalAlignment="Top"
                               RowHeight="30" FontSize="14">
+                        <DataGrid.InputBindings>
+                            <MouseBinding MouseAction="LeftDoubleClick"
+                                         
+                                         Command="{Binding EditparkPlaceCommand}"/>
+                        </DataGrid.InputBindings>
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
                                 <!--here we are setting the background for orders that are free-->
                                 <Setter Property="Background"
-                           Value="{Binding PPlace.FreeStatus, Converter={StaticResource boolToBrushConverterForStatus}}" />
+                           Value="{Binding PPlace.FreeStatus, Converter={StaticResource boolToBrushConverterForStatus}, UpdateSourceTrigger=PropertyChanged}" />
                                 <Setter Property="Foreground" 
-                            Value="{Binding PPlace.Released ,Converter={StaticResource boolToBrushConverterForInOut}}"/>
+                            Value="{Binding PPlace.Released ,Converter={StaticResource boolToBrushConverterForInOut}, UpdateSourceTrigger=PropertyChanged}"/>
                             </Style>
                         </DataGrid.RowStyle>
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="0.32*"  Binding="{Binding PPlace.ParkPlaceNumber}"  Header="№ парко. місця"/>
+                            <DataGridTextColumn Width="0.32*"  Binding="{Binding PPlace.ParkPlaceNumber, UpdateSourceTrigger=PropertyChanged}"  Header="№ парко. місця"/>
                             <DataGridTextColumn Width="0.32*"  Binding="{Binding PPlace.FreeStatus, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource boolToStringConverter}}"  Header="Статус"/>
                             <DataGridTextColumn Width="0.32*"  Binding="{Binding PPlace.Released, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource boolToStringConverter2 }}"  Header="Виїхав/заїхав"/>
                         </DataGrid.Columns>

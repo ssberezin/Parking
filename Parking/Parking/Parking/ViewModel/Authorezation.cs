@@ -350,12 +350,13 @@ namespace Parking.ViewModel
                             join People Pers on Cl.PersonCustomer_PersonId=Pers.PersonId
                             join ParkingPlaces PP on Cl.ClientId=PP.SomeClient_ClientId
                             join ParkingPlaceLogs PPl on PP.ParkingPlaceId=Ppl.SomeParkingPlace_ParkingPlaceId
+                            where pp.FreeStatus = 0
                             group by Cl.ClientId ,  Cl.OrgName , Pers.PersonId , Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic			 
 
                         ");
                     db.Database.ExecuteSqlCommand
                      (@"
-                    create proc sp_GetClRepRecord
+                   create proc sp_GetClRepRecord
                         @ppId int,
                         @startDate date,
                         @endDate date
@@ -367,10 +368,11 @@ namespace Parking.ViewModel
 	   
                         From Clients Cl
                         join ParkingPlaces PP on Cl.ClientId=Pp.SomeClient_ClientId
-                        join ParkingPlaceLogs PPl on Ppl.SomeParkingPlace_ParkingPlaceId=ppl.ParkingPlaceLogId
+                        join ParkingPlaceLogs PPl on Ppl.SomeParkingPlace_ParkingPlaceId=pp.ParkingPlaceId
+                        join Vehicles Veh on cl.ClientId=Veh.ClientOwner_ClientId 
                         join.Users us on ppl.SomeUser_UserId=us.UserId
                         join People Pers on cl.PersonCustomer_PersonId=pers.PersonId
-                        join Vehicles Veh on cl.ClientId=Veh.ClientOwner_ClientId 
+
                         where pp.ParkingPlaceId=@ppId and Ppl.DateOfChange>=@startDate and Ppl.DateOfChange <@endDate
 
                         ");

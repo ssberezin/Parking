@@ -335,7 +335,12 @@ namespace Parking.ViewModel.ParkPlacesOps
             TrustPhone = CurrentRecord.TrContacts.Phone;
             RegNumber = CurrentRecord.SomeVehicle.RegNumber;
             VType = CurrentRecord.SomeVehicleType;
+            if (CurrentRecord.SomeParkingPlace.FreeStatus.Value)
+            {
+                CurrentRecord.SomeParkingPlace.FreeStatus = false;//by dafault we have 'not free status' when we want to rent a parking place
+            }
             NotFree = !CurrentRecord.SomeParkingPlace.FreeStatus.Value;
+            
             NotInPlace = !CurrentRecord.SomeParkingPlace.Released;
             ProlongDate = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value;
 
@@ -348,9 +353,10 @@ namespace Parking.ViewModel.ParkPlacesOps
             EndHistoryDate = DateTime.Now;
 
 
-            FillFreeParkingPlacesList();
+            FillFreeParkingPlacesList();//for display parking places in combox 
             FillVehicleTypeList();
-            FillHistoryList(parkRecord.SomeClient.ClientId, parkRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
+            if (parkRecord.SomeClient.ClientId!=0)
+                FillHistoryList(parkRecord.SomeClient.ClientId, parkRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
 
 
 
@@ -565,7 +571,7 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                             };                            
                             rec.DateOfEvent = date.ToString("dd/MM/yyyy");
-                            rec.TimeOfEvent = date.ToString("HH/mm/ss");
+                            rec.TimeOfEvent = date.ToString("HH:mm:ss");
                             ParkPlaceHisrtoryRecords.Add(rec);
                         };
                     }
@@ -677,32 +683,35 @@ namespace Parking.ViewModel.ParkPlacesOps
                         CurrentRecord.SomeVehicle.RegNumber = RegNumber;
                         CurrentRecord.SomeContacts.Phone = OwnerPhone1;
                         CurrentRecord.TrContacts.Phone = TrustPhone;
+                        if (decimal.TryParse(Coast, out decimal tmp))
+                            CurrentRecord.SomeParkingPlaceLog.Money = tmp;
+                        
 
                         CurrentState = SetState();
                         SaveData();
-                        FillFreeParkingPlacesList();
-                        FillHistoryList(CurrentRecord.SomeClient.ClientId, CurrentRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
+                       
                     }
                     ));
 
         private void SaveData()
         {
-            if (CurrentRecord.SomeClient.ClientId == 0)
-            {
+            if (CurrentRecord.SomeClient.ClientId == 0)           
                 AddnewData();
-               
-                PreviousState = SetState();
-            }
-            else
-            {
-                EditData();
-                PreviousState = SetState();
-            }
+            else           
+                EditData();               
+           
         }
 
 
         private void AddnewData()
         {
+
+            if (CurrentRecord.SomeParkingPlace.FreeStatus.Value && CurrentRecord.SomeParkingPlaceLog.DeadLine.Value < DateTime.Now)
+            {
+                dialogService.ShowMessage("Необхідно змінити статус паркомісця на \"зайнято\"");
+                return;
+            };
+        
 
             CompareStatesForParkingPlace compare = new CompareStatesForParkingPlace();
             if (!ValidationInputData())
@@ -812,8 +821,8 @@ namespace Parking.ViewModel.ParkPlacesOps
                     ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog();
                     parkingPlaceLog.DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month, ProlongDate.Day);
                     parkingPlaceLog.Money = CurrentRecord.SomeParkingPlaceLog.Money;
-                     if (CurrentRecord.SomeParkingPlaceLog.Money>0)
-                        parkingPlaceLog.PayingDate=DateTime.Now;
+                    
+                    parkingPlaceLog.PayingDate=DateTime.Now;
                     parkingPlaceLog.DateOfChange = DateTime.Now;
                     db.ParkingPlaceLogs.Add(parkingPlaceLog);
 
@@ -834,6 +843,12 @@ namespace Parking.ViewModel.ParkPlacesOps
                     DeadLine = ProlongDate.ToString("dd/MM/yyyy");
                   
                     NewDataAddedSaved = true;//allow an opportunity of changing parking plase number
+                    
+                    
+                    PreviousState = SetState();
+
+                    FillFreeParkingPlacesList();
+                    FillHistoryList(Cl.ClientId, CurrentRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
 
                     dialogService.ShowMessage("Ok");
                 }
@@ -977,7 +992,11 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                     db.SaveChanges();
 
-                    
+                    PreviousState = SetState();
+
+                    FillFreeParkingPlacesList();
+                    FillHistoryList(CurrentRecord.SomeClient.ClientId, CurrentRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
+
                     dialogService.ShowMessage("Ok");
                 }
                 catch (ArgumentNullException ex)
@@ -1076,7 +1095,15 @@ namespace Parking.ViewModel.ParkPlacesOps
         
         private bool ValidationInputData()
         {
-                     
+            if (CurrentRecord.SomeContacts.Phone == CurrentRecord.TrContacts.Phone)
+            {
+                dialogService.ShowMessage("Номери телефонів клієнта і довіреної\n особи НЕ можуть будти однаковими");
+                return false;
+            }
+
+          
+
+
             if (CurrentRecord.SomeClient.OrgName is null || CurrentRecord.SomePerson.SecondName is null ||
                 CurrentRecord.SomePerson.FirstName is null || CurrentRecord.SomePerson.Patronimic is null ||
                 CurrentRecord.TrustedPerson.SecondName is null || CurrentRecord.TrustedPerson.FirstName is null ||
@@ -1092,6 +1119,16 @@ namespace Parking.ViewModel.ParkPlacesOps
                     ".\n\t\tВідкорегуйте");
                 return false;
             }
+            CurrentRecord.SomeClient.OrgName = CurrentRecord.SomeClient.OrgName.Trim();
+            CurrentRecord.SomePerson.SecondName = CurrentRecord.SomePerson.SecondName.Trim();
+            CurrentRecord.SomePerson.FirstName = CurrentRecord.SomePerson.FirstName.Trim();
+            CurrentRecord.SomePerson.Patronimic = CurrentRecord.SomePerson.Patronimic.Trim();
+
+            CurrentRecord.TrustedPerson.SecondName = CurrentRecord.TrustedPerson.SecondName.Trim();
+            CurrentRecord.TrustedPerson.FirstName = CurrentRecord.TrustedPerson.FirstName.Trim();
+            CurrentRecord.TrustedPerson.Patronimic = CurrentRecord.TrustedPerson.Patronimic.Trim();
+
+
             if (CurrentRecord.SomeVehicle.Color is null || CurrentRecord.SomeVehicle.Color == "")
             {
                 dialogService.ShowMessage("Не заданий колір транспортного засобу." +
