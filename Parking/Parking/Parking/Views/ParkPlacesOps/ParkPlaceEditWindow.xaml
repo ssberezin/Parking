@@ -288,7 +288,8 @@
                                               IsEnabled="{Binding NewDataAddedSaved, UpdateSourceTrigger=PropertyChanged}"/>
                                     <ComboBox   MinWidth="80"  
                                      IsEnabled="{Binding ElementName=ReplaceEnable,  Path=IsChecked}"
-                                     IsEditable="False" IsSynchronizedWithCurrentItem="True"                                     
+                                     IsEditable="False" IsSynchronizedWithCurrentItem="True" 
+                                     SelectedValue="{Binding FreeparkPlace, UpdateSourceTrigger=PropertyChanged}"
                                      SelectedItem="{Binding FreeparkPlace,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"                        
                                      ItemsSource="{Binding  FreeParkingPlacesList, UpdateSourceTrigger=PropertyChanged}" 
                                      HorizontalContentAlignment="Center"

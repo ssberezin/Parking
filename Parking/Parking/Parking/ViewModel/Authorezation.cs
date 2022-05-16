@@ -134,10 +134,17 @@ namespace Parking.ViewModel
 
                     db.SaveChanges();
 
-                    VehicleType vtype = new VehicleType { TypeName = "Легкове авто" };
-                    db.VehicleTypes.Add(vtype);
+                    VehicleType vtype2 = new VehicleType { TypeName = "-не здано-" };
+                    VehicleType vtype = new VehicleType { TypeName = "легкове авто" };
+                    VehicleType vtype1 = new VehicleType { TypeName = "мотоцикл" };
+                    VehicleType vtype3 = new VehicleType { TypeName = "причеп" };
 
-                    
+                    db.VehicleTypes.Add(vtype);
+                    db.VehicleTypes.Add(vtype1);
+                    db.VehicleTypes.Add(vtype2);
+                    db.VehicleTypes.Add(vtype3);
+
+
 
                     Vehicle SomeVehicle1 = new Vehicle { Color = "Чорний", RegNumber = "AE2865BO", DateOfmanufacture = new DateTime(2020, 12, 12) };
 

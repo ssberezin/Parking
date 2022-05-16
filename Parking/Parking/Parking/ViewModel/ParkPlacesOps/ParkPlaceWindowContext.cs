@@ -481,10 +481,15 @@ namespace Parking.ViewModel.ParkPlacesOps
                     {
                         foreach (ParkingPlace item in result)
                             FreeParkingPlacesList.Add(item.ParkPlaceNumber);
-                        MessageForChangeParkPlace = null;
+
+                        FreeparkPlace = FreeParkingPlacesList[0];
+                        MessageForChangeParkPlace = "Вільних місць " + FreeParkingPlacesList.Count();
                     }
                     else
-                        MessageForChangeParkPlace = "Немає вільних місць";            
+                    {
+                        FreeparkPlace = 0;
+                        MessageForChangeParkPlace = "Немаэ вільних місць";
+                    }
 
                 }
                 catch (ArgumentNullException ex)
@@ -693,11 +698,16 @@ namespace Parking.ViewModel.ParkPlacesOps
                     }
                     ));
 
+        bool saved { get; set; }// if false - we can save new data, if true - only edit
+
         private void SaveData()
         {
-            if (CurrentRecord.SomeClient.ClientId == 0)           
+            if (!saved)
+            {
                 AddnewData();
-            else           
+                saved = true;
+            }
+            else
                 EditData();               
            
         }
@@ -757,11 +767,13 @@ namespace Parking.ViewModel.ParkPlacesOps
                         Cl = db.Clients.Where(cl => cl.PersonCustomer.PersonId == OwnerPerson.PersonId).FirstOrDefault();
                     }
 
+                   
+
                     lib.GetPersonAndContactsIds(CurrentRecord.TrContacts.Phone, CurrentRecord.TrustedPerson, out int? trCtnId, out int? trPersId);
 
                     Person TrustPerson;
                     Contacts TrustContacts;// = db.Contacts.Where(ctn => ctn.Phone == CurrentRecord.TrContacts.Phone).FirstOrDefault();
-
+                    Client TrCl;
                     if (trCtnId is null || trCtnId == 0 && trPersId == 0)
                     {
                         TrustPerson = CurrentRecord.TrustedPerson;
@@ -773,12 +785,18 @@ namespace Parking.ViewModel.ParkPlacesOps
                         TrustPerson.ContactsData.Add(TrustContacts);
 
                         OwnerPerson.TrustedPerson = TrustPerson;
+                        TrCl = new Client {OrgName="не задано" };
+
+                        db.Clients.Add(TrCl);
+
+                        TrCl.PersonCustomer = TrustPerson;
+
                     }
                     else
                     {
                         TrustContacts = db.Contacts.Find(trCtnId);
                         TrustPerson = db.Persons.Find(trPersId);
-
+                        TrCl = db.Clients.Where(cl => cl.PersonCustomer.PersonId == TrustPerson.PersonId).FirstOrDefault();
                         // db.Entry(editableVehicle).State = EntityState.Modified;
 
                         if (OwnerPerson.TrustedPerson != null && OwnerPerson.TrustedPerson.PersonId != 0)
@@ -790,6 +808,9 @@ namespace Parking.ViewModel.ParkPlacesOps
                             OwnerPerson.TrustedPerson = TrustPerson;
 
                     }
+
+                    
+                    
 
 
                     Vehicle newVehicle = db.Vehicles.Where(veh => veh.RegNumber == CurrentRecord.SomeVehicle.RegNumber).FirstOrDefault();
@@ -803,10 +824,20 @@ namespace Parking.ViewModel.ParkPlacesOps
                             VPhoto = CurrentRecord.SomeVehicle.VPhoto
                         };
                         db.Vehicles.Add(newVehicle);
-                        newVehicle.ClientOwner = Cl;
+                        newVehicle.ClientOwner = Cl;                       
                     }
                     else
                     {
+                        ParkingPlace pp = db.ParkingPlaces.Where(p => p.SomeClient.Vehicles.Contains(newVehicle) && p.ParkPlaceNumber!=CurrentRecord.SomeParkingPlace.ParkPlaceNumber).FirstOrDefault();
+                        if (pp != null && !pp.FreeStatus.Value && !pp.Released)
+                        {
+                            dialogService.ShowMessage("Цей транспортний зазіб вже стоїть " +
+                                "на паркувальному місці \""+pp.ParkPlaceNumber+"\".\n" +
+                                "Відкорегуйте реэстраційний номер ТЗ або \n підберіть інше паркувальне місце");
+                            return;
+                        };
+                        
+                        
                         db.Entry(newVehicle).State = EntityState.Modified;
                         newVehicle.Color = CurrentRecord.SomeVehicle.Color;
                         newVehicle.RegNumber = CurrentRecord.SomeVehicle.RegNumber;
@@ -817,6 +848,7 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                     User user = db.Users.Find(UserId);
                     db.Entry(user).State = EntityState.Modified;
+                    
 
                     ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog();
                     parkingPlaceLog.DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month, ProlongDate.Day);
@@ -849,6 +881,9 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                     FillFreeParkingPlacesList();
                     FillHistoryList(Cl.ClientId, CurrentRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
+
+
+                   
 
                     dialogService.ShowMessage("Ok");
                 }
@@ -1022,6 +1057,20 @@ namespace Parking.ViewModel.ParkPlacesOps
             }
         }
 
+        private string toolTipMess;
+        public string ToolTipMess
+        {
+            get { return toolTipMess; }
+            set
+            {
+                if (toolTipMess != value)
+                {
+                    toolTipMess = value;
+                    OnPropertyChanged(nameof(ToolTipMess));
+                }
+            }
+        }
+
         private RelayCommand changeParkinPlaceCommand;
 
         public RelayCommand ChangeParkinPlaceCommand => changeParkinPlaceCommand ?? (changeParkinPlaceCommand = new RelayCommand(
@@ -1030,6 +1079,10 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                         EditDataParkPlaceNamber();
                         FillFreeParkingPlacesList();
+                        
+
+
+
                     }
                     ));
 

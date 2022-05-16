@@ -209,7 +209,7 @@
                 <TextBox  Text="{Binding CurrentRecord.SomeContacts.Adress, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="5" Grid.RowSpan="2" Margin="3" VerticalContentAlignment="Center"/>
                 <TextBlock  Text="Посада: " FontSize="14" FontWeight="Bold" Grid.Row="7" VerticalAlignment="Center"/>
 
-                <ComboBox  MinWidth="120"  Grid.Column="1" Grid.Row="7"  Margin="3" 
+                <ComboBox  MinWidth="120"  Grid.Column="1" Grid.Row="7"  Margin="3,3,3,0" 
                       IsEditable="False" IsSynchronizedWithCurrentItem="True"
                            ItemsSource="{Binding Source={StaticResource SortedItems}, UpdateSourceTrigger=PropertyChanged}" 
                            SelectedValue="{Binding CurrentPosition.EmployeePositionId, Mode=TwoWay}"
@@ -217,7 +217,7 @@
                            SelectedItem="{Binding CurrentPosition, UpdateSourceTrigger=PropertyChanged}" 
                            DisplayMemberPath="PositionName" 
                       HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                     Background="White" >
+                     Background="White" Height="41" VerticalAlignment="Top" >
                 </ComboBox>
                 <TextBlock  Text="Заробітна плата: " TextWrapping="Wrap" FontSize="14" FontWeight="Bold" Grid.Row="8" VerticalAlignment="Center"/>
                 <TextBox  Text="{Binding CurrentRecord.SomeEmployee.Salary, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="14" MaxLength="26" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="8" Margin="3" VerticalAlignment="Center"/>
