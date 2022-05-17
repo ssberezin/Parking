@@ -266,10 +266,14 @@ namespace Parking.ViewModel
                                 CurrentRecord.SomeVehicle = new Vehicle
                                 {
                                     VehicleId = (int)result.GetValue(12),
-                                    RegNumber = (string)result.GetValue(13),
-                                    Color = (string)result.GetValue(14),
+                                    RegNumber = (string)result.GetValue(13),                                    
                                     VPhoto = result.GetValue(22) is System.DBNull ? null: (byte[])result.GetValue(22)
 
+                                };
+                                CurrentRecord.VehColor = new VehicleColor 
+                                {
+                                    VehicleColorId = (int)result.GetValue(23),
+                                    ColorName = (string)result.GetValue(14)    
                                 };
                                 CurrentRecord.SomeParkingPlaceLog = new ParkingPlaceLog
                                 {
@@ -483,25 +487,7 @@ namespace Parking.ViewModel
                     }
                     ));
 
-        
-        //private void AddtestData()
-        //{
-        //    CurrentRecord.SomePerson.SecondName = "Петров";
-        //    CurrentRecord.SomePerson.FirstName = "Іван";
-        //    CurrentRecord.SomePerson.Patronimic = "Дмитрович";
-        //    CurrentRecord.SomePerson.Sex = true;
-        //    CurrentRecord.SomeContacts.Phone = "+380509632514";
-        //    CurrentRecord.SomeContacts.Adress = "м.Київ, вул. Героїв АТО, б.37";
-        //    CurrentRecord.TrustedPerson.SecondName = "Кірієнко";
-        //    CurrentRecord.TrustedPerson.FirstName = "Ірина";
-        //    CurrentRecord.TrustedPerson.Patronimic = "Вікторівна";
-        //    CurrentRecord.TrContacts.Phone = "+380975214652";
-        //    CurrentRecord.TrustedPerson.Sex = false;
-        //    CurrentRecord.SomeVehicle.Color = "Синій";
-        //    CurrentRecord.SomeVehicleType.TypeName = "легковий";
-        //    CurrentRecord.SomeVehicle.RegNumber = "AE2965KO";
 
-        //}
 
         private RelayCommand callCompanyInfoWindowCommand;
         public RelayCommand CallCompanyInfoWindowCommand => callCompanyInfoWindowCommand ?? (callCompanyInfoWindowCommand = new RelayCommand(

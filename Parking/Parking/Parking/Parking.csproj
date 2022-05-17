@@ -101,6 +101,7 @@
     <Compile Include="Model\Contacts.cs" />
     <Compile Include="Model\Company.cs" />
     <Compile Include="Model\EmployeePosition.cs" />
+    <Compile Include="Model\VehicleColor.cs" />
     <Compile Include="Model\VehicleType.cs" />
     <Compile Include="ViewModel\Authorezation.cs" />
     <Compile Include="ViewModel\CompanyOps\CompanyInfoContext.cs" />

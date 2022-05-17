@@ -140,7 +140,7 @@
             </Border>
             <StackPanel HorizontalAlignment="Center" >
                 <TextBlock Text="Колір ТЗ " FontWeight="Bold" HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding CurrentRecord.SomeVehicle.Color, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Black" FontSize="16" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding CurrentRecord.VehColor.ColorName, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Foreground="Black" FontSize="16" HorizontalAlignment="Center"/>
             </StackPanel>
 
             <Border BorderBrush="Gray"  BorderThickness="2">

@@ -14,7 +14,7 @@ namespace Parking.ViewModel.ParkPlacesOps
         public string OwnerFirstName { get; set; }
         public string OwnerPatronimic { get; set; }
         public bool OwnerSex { get; set; }
-        
+
         public string OwnerPhone { get; set; }
         public string Adress { get; set; }
         public byte[] VPhoto { get; set; }
@@ -25,7 +25,7 @@ namespace Parking.ViewModel.ParkPlacesOps
         public string TrustFirstName { get; set; }
         public string TrustPatronimic { get; set; }
         public bool TrustPersSex { get; set; }
-        
+
         public string TrustPhone { get; set; }
 
 
@@ -35,39 +35,39 @@ namespace Parking.ViewModel.ParkPlacesOps
 
         public DateTime ProlongDate { get; set; }
         public decimal Coast { get; set; }
-   
 
-        
+
+
         public bool ReleasedPlace { get; set; }
         public bool ParkingPlaceFreeStatus { get; set; }
 
 
-       
 
-        public bool  ParkingPalceDataCompare(CompareStatesForParkingPlace obj1, CompareStatesForParkingPlace obj2)
+
+        public bool ParkingPalceDataCompare(CompareStatesForParkingPlace obj1, CompareStatesForParkingPlace obj2)
         {
-           
+
             bool ReleasedParkPlaceCompare = obj1.ReleasedPlace == obj2.ReleasedPlace;
             bool ParkPlaceStatusCompare = obj1.ParkingPlaceFreeStatus == obj2.ParkingPlaceFreeStatus;
 
-            return  ReleasedParkPlaceCompare == ParkPlaceStatusCompare;
+            return ReleasedParkPlaceCompare && ParkPlaceStatusCompare;
         }
 
         public bool OwnerPersonDataCompare(CompareStatesForParkingPlace obj1, CompareStatesForParkingPlace obj2)
         {
-            
+
             bool OwnerSecondNameCompare = obj1.OwnerSecondName == obj2.OwnerSecondName;
             bool OwnerFirstNameCompare = obj1.OwnerFirstName == obj2.OwnerFirstName;
             bool PatronimicCompare = obj1.OwnerPatronimic == obj2.OwnerPatronimic;
             bool OwnerPersSexCompare = obj1.OwnerSex == obj2.OwnerSex;
 
-            return  OwnerSecondNameCompare == OwnerFirstNameCompare == PatronimicCompare == OwnerPersSexCompare;
+            return OwnerSecondNameCompare && OwnerFirstNameCompare && PatronimicCompare && OwnerPersSexCompare;
         }
 
         public bool ClientDataCompare(CompareStatesForParkingPlace obj1, CompareStatesForParkingPlace obj2)
         {
             bool OwnerCompare = obj1.Owner == obj2.Owner;
-            
+
 
             return obj1.Owner == obj2.Owner;
         }
@@ -77,7 +77,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             bool OwnerPhoneCompare = obj1.OwnerPhone == obj2.OwnerPhone;
             bool AdressCompare = obj1.Adress == obj2.Adress;
 
-            return OwnerPhoneCompare == AdressCompare;
+            return OwnerPhoneCompare && AdressCompare;
         }
 
         public bool TrustPersonDataCompare(CompareStatesForParkingPlace obj1, CompareStatesForParkingPlace obj2)
@@ -87,12 +87,12 @@ namespace Parking.ViewModel.ParkPlacesOps
             bool TrustPatronimicCompare = obj1.TrustPatronimic == obj2.TrustPatronimic;
             bool TrustSexCompare = obj1.TrustPersSex == obj2.TrustPersSex;
 
-            return TrustSecondnameCompare == TrustFirstNameCompare == TrustPatronimicCompare == TrustSexCompare;
+            return TrustSecondnameCompare && TrustFirstNameCompare && TrustPatronimicCompare && TrustSexCompare;
         }
 
         public bool TrustContactsDataCompare(CompareStatesForParkingPlace obj1, CompareStatesForParkingPlace obj2)
         {
-            return obj1.TrustPhone == obj2.TrustPhone; 
+            return obj1.TrustPhone == obj2.TrustPhone;
         }
 
         public bool VehicleDataCompare(CompareStatesForParkingPlace obj1, CompareStatesForParkingPlace obj2)
@@ -104,17 +104,19 @@ namespace Parking.ViewModel.ParkPlacesOps
             {
                 if ((obj1.VPhoto is null && !(obj2.VPhoto is null)) || (!(obj1.VPhoto is null) && obj2.VPhoto is null))
                     VPhotoCompare = false;
-                else                 
-                    VPhotoCompare= obj1.VPhoto.Length == obj2.VPhoto.Length; 
-            }            
-                
-            bool RegNamberCompare = obj1.RegNumber == obj2.RegNumber;
-            bool ColorCompare = obj1.Color == obj2.Color;
-            
+                else
+                    VPhotoCompare = obj1.VPhoto.Length == obj2.VPhoto.Length;
+            }
 
-            return VPhotoCompare && RegNamberCompare && ColorCompare ;
+            bool RegNamberCompare = obj1.RegNumber == obj2.RegNumber;
+
+            return VPhotoCompare && RegNamberCompare;
         }
 
+        public bool VehicleColoCompare(CompareStatesForParkingPlace obj1, CompareStatesForParkingPlace obj2)
+        { 
+            return obj1.Color == obj2.Color;    
+        }
         public bool ParkingPlaceLogDataCompare(CompareStatesForParkingPlace obj1, CompareStatesForParkingPlace obj2)
         {
             bool ProlongDateCompare = obj1.ProlongDate == obj2.ProlongDate;

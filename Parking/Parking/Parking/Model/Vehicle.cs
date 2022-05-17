@@ -39,22 +39,6 @@ namespace Parking.Model
         }
 
 
-        [Column("Color", TypeName = "nvarchar")]
-        [MaxLength(50)]
-        private string color;
-        public string Color
-        {
-            get { return color; }
-            set
-            {
-                if (value != color)
-                {
-                    color = value;
-                    OnPropertyChanged(nameof(Color));
-                }
-            }
-        }
-
        
 
         [Column("DateOfmanufacture", TypeName = "datetime2")]
@@ -95,6 +79,8 @@ namespace Parking.Model
         public virtual ParkingPlace ParkingPlace { get; set; }
 
         public virtual VehicleType  SomeVehicleType {get;set;}
+
+        public virtual VehicleColor SomeVehicleColor { get; set; }
 
 }
 }

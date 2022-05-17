@@ -18,14 +18,17 @@ using System.Windows.Input;
 
 namespace Parking.ViewModel.ParkPlacesOps
 {
-  
-    public class ParkPlaceWindowContext: Helpes.ObservableObject
+
+    public class ParkPlaceWindowContext : Helpes.ObservableObject
     {
         IDialogService dialogService;
         IShowWindowService showWindow;
 
-       public ObservableCollection<int> FreeParkingPlacesList { get; set; }
-       public ObservableCollection<VehicleType> VehicleTypeList { get; set; }
+        public ObservableCollection<int> FreeParkingPlacesList { get; set; }
+        public ObservableCollection<VehicleType> VehicleTypeList { get; set; }
+
+        public ObservableCollection<VehicleColor> VehicleColors { get; set; }
+
 
         public ObservableCollection<ParkPlaceHisrtoryRecord> ParkPlaceHisrtoryRecords { get; set; }
 
@@ -42,8 +45,20 @@ namespace Parking.ViewModel.ParkPlacesOps
                 }
             }
         }
+        private VehicleColor selectedColor;
+        public VehicleColor SelectedColor
+        {
+            get { return selectedColor; }
+            set
+            {
+                if (selectedColor != value)
+                {
+                    selectedColor = value;
+                    OnPropertyChanged(nameof(SelectedColor));
+                }
+            }
+        }
 
-        
 
         private bool parkingPlaceStatus;
         public bool ParkingPlaceStatus
@@ -72,6 +87,8 @@ namespace Parking.ViewModel.ParkPlacesOps
                 }
             }
         }
+
+       
 
         private bool notFree;
         public bool NotFree
@@ -240,7 +257,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             }
         }
 
-        
+
 
 
         private string messageForChangeParkPlace;
@@ -270,8 +287,8 @@ namespace Parking.ViewModel.ParkPlacesOps
             }
             get { return "/Parking;component/Images/" + defaultPhoto; }
         }
-        
-        private bool newDataAddedSaved;        
+
+        private bool newDataAddedSaved;
         public bool NewDataAddedSaved //its marker for block an opportunity of parking place number change
         {
             get { return newDataAddedSaved; }
@@ -292,8 +309,8 @@ namespace Parking.ViewModel.ParkPlacesOps
 
         Library lib;//for using some methodes 
 
-        
-        public int UserId { get; set; } 
+
+        public int UserId { get; set; }
 
         public ParkPlaceWindowContext()
         {
@@ -317,16 +334,16 @@ namespace Parking.ViewModel.ParkPlacesOps
             saved = true;//set editting mode
             //set default value of radio batton 'Released'
             if (CurrentRecord.SomePerson.PersonId == 0)
-            if (CurrentRecord.SomePerson.PersonId == 0)
-            {
-                CurrentRecord.SomeParkingPlace.Released = !parkRecord.SomeParkingPlace.Released;
-                
-            }
+                if (CurrentRecord.SomePerson.PersonId == 0)
+                {
+                    CurrentRecord.SomeParkingPlace.Released = !parkRecord.SomeParkingPlace.Released;
+
+                }
             //if there is some client by this parking place we have an opportunity to change parking place number
             NewDataAddedSaved = CurrentRecord.SomeClient.ClientId == 0 ? false : true;
             CurrentRecord.SomeClient.OrgName = CurrentRecord.SomeClient.OrgName == null ? "фізична особа" : CurrentRecord.SomeClient.OrgName;
             NextDeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value;
-            
+            SelectedColor = CurrentRecord.VehColor;
             OwnerPhone1 = CurrentRecord.SomeContacts.Phone;
             TrustPhone = CurrentRecord.TrContacts.Phone;
             RegNumber = CurrentRecord.SomeVehicle.RegNumber;
@@ -336,7 +353,7 @@ namespace Parking.ViewModel.ParkPlacesOps
                 CurrentRecord.SomeParkingPlace.FreeStatus = false;//by dafault we have 'not free status' when we want to rent a parking place
             }
             NotFree = !CurrentRecord.SomeParkingPlace.FreeStatus.Value;
-            
+
             NotInPlace = !CurrentRecord.SomeParkingPlace.Released;
             ProlongDate = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value;
 
@@ -344,14 +361,15 @@ namespace Parking.ViewModel.ParkPlacesOps
             FreeParkingPlacesList = new ObservableCollection<int>();
             VehicleTypeList = new ObservableCollection<VehicleType>();
             ParkPlaceHisrtoryRecords = new ObservableCollection<ParkPlaceHisrtoryRecord>();
-
+            VehicleColors = new ObservableCollection<VehicleColor>();
             StartHistoryDate = DateTime.Now.AddMonths(-1);
             EndHistoryDate = DateTime.Now;
 
 
             FillFreeParkingPlacesList();//for display parking places in combox 
             FillVehicleTypeList();
-            if (parkRecord.SomeClient.ClientId!=0)
+            FillVehicleColorsList();
+            if (parkRecord.SomeClient.ClientId != 0)
                 FillHistoryList(parkRecord.SomeClient.ClientId, parkRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
 
 
@@ -377,21 +395,21 @@ namespace Parking.ViewModel.ParkPlacesOps
         {
             int res = ProlongDate.Subtract(CurrentRecord.SomeParkingPlaceLog.DeadLine.Value).Days;
             if (res > 0)
-                ProlonDaysCount = res.ToString()+" дн.";
+                ProlonDaysCount = res.ToString() + " дн.";
         }
 
-        
+
         private void NumberValidationPhone1(object sender, PropertyChangedEventArgs e)
-        {           
-            OwnerPhone1 = lib.PhoneNumberValidation(OwnerPhone1);          
+        {
+            OwnerPhone1 = lib.PhoneNumberValidation(OwnerPhone1);
         }
 
         private void NumberValidationPhone2(object sender, PropertyChangedEventArgs e)
-        {            
+        {
             TrustPhone = lib.PhoneNumberValidation(TrustPhone);
         }
 
-        
+
 
         private static readonly Regex regexRegNumer = new Regex("[^0-9A-Z]+"); //regex that matches disallowed text
         private void RegNumberValidation(object sender, PropertyChangedEventArgs e)
@@ -401,7 +419,7 @@ namespace Parking.ViewModel.ParkPlacesOps
 
             if (regexRegNumer.IsMatch(RegNumber))
             {
-                RegNumber = RegNumber.Remove(RegNumber.Length-1,1);                
+                RegNumber = RegNumber.Remove(RegNumber.Length - 1, 1);
             }
         }
 
@@ -409,24 +427,24 @@ namespace Parking.ViewModel.ParkPlacesOps
         private void CoastValidation(object sender, PropertyChangedEventArgs e)
         {
             if (regexCoast.IsMatch(Coast))
-            {                
+            {
                 Coast = Coast.Remove(Coast.Length - 1, 1);
-            }            
+            }
 
         }
 
 
         //uses in previous data loading
-       
+
         private void FillVehicleTypeList()
         {
-            
+
             VehicleTypeList.Clear();
             using (DBConteiner db = new DBConteiner())
             {
                 try
                 {
-                   
+
                     var VTlist = db.VehicleTypes.ToList();
                     if (!(VTlist is null))
                     {
@@ -461,13 +479,59 @@ namespace Parking.ViewModel.ParkPlacesOps
                     dialogService.ShowMessage(ex.Message);
                 }
             }
+        }
+
+        private void FillVehicleColorsList()
+        {
+
+            VehicleColors.Clear();
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {
+
+                    var VClist = db.Colors.ToList();
+                    if (!(VClist is null))
+                    {
+                        foreach (var item in VClist)
+                            VehicleColors.Add(
+                                new VehicleColor
+                                {
+                                    VehicleColorId = item.VehicleColorId,
+                                    ColorName = item.ColorName
+                                });
+
+                    }
+
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
 
         }
 
         private void FillFreeParkingPlacesList()
         {
             FreeParkingPlacesList.Clear();
-            
+
             using (DBConteiner db = new DBConteiner())
             {
                 try
@@ -543,7 +607,7 @@ namespace Parking.ViewModel.ParkPlacesOps
                     SqlParameter thirdParam = new SqlParameter
                     {
                         ParameterName = "@endDate",
-                        Value = new DateTime (endDate.Year, endDate.Month, endDate.Day).AddDays(1) 
+                        Value = new DateTime(endDate.Year, endDate.Month, endDate.Day).AddDays(1)
                     };
 
                     SqlParameter fourthParam = new SqlParameter
@@ -565,12 +629,12 @@ namespace Parking.ViewModel.ParkPlacesOps
                         while (result.Read())
                         {
                             DateTime date = (DateTime)result.GetValue(1);
-                            ParkPlaceHisrtoryRecord rec= new ParkPlaceHisrtoryRecord
+                            ParkPlaceHisrtoryRecord rec = new ParkPlaceHisrtoryRecord
                             {
-                                PPNumber = (int)result.GetValue(0),                                                                
+                                PPNumber = (int)result.GetValue(0),
                                 Released = (bool)result.GetValue(2)
 
-                            };                            
+                            };
                             rec.DateOfEvent = date.ToString("dd/MM/yyyy");
                             rec.TimeOfEvent = date.ToString("HH:mm:ss");
                             ParkPlaceHisrtoryRecords.Add(rec);
@@ -639,7 +703,7 @@ namespace Parking.ViewModel.ParkPlacesOps
 
 
             //ParkingPlace's data
-      
+
             tmp.ParkingPlaceFreeStatus = CurrentRecord.SomeParkingPlace.FreeStatus.Value;
             tmp.ReleasedPlace = CurrentRecord.SomeParkingPlace.Released;
 
@@ -664,12 +728,12 @@ namespace Parking.ViewModel.ParkPlacesOps
             //vehicle's data
             tmp.VPhoto = CurrentRecord.SomeVehicle.VPhoto is null ? null : lib.CopyPhoto(CurrentRecord.SomeVehicle.VPhoto);
             tmp.RegNumber = CurrentRecord.SomeVehicle.RegNumber;
-            tmp.Color = CurrentRecord.SomeVehicle.Color;
+            tmp.Color = CurrentRecord.VehColor.ColorName;
             tmp.VType = CurrentRecord.SomeVehicleType.TypeName;
 
             //trusted person's data
             tmp.TrustPhone = CurrentRecord.TrContacts.Phone;
-            
+
             tmp.ProlongDate = ProlongDate;
             tmp.Coast = CurrentRecord.SomeParkingPlaceLog.Money;
 
@@ -681,21 +745,74 @@ namespace Parking.ViewModel.ParkPlacesOps
         public RelayCommand SavedataCommand => savedataCommand ?? (savedataCommand = new RelayCommand(
                     (obj) =>
                     {
+
+                        //check existing color
+                        string color = (string)obj;
+                        CheckColor(color, out int colId);
+                        CurrentRecord.VehColor = new VehicleColor { VehicleColorId = colId, ColorName = color };
+
                         CurrentRecord.SomeVehicle.RegNumber = RegNumber;
                         CurrentRecord.SomeContacts.Phone = OwnerPhone1;
                         CurrentRecord.TrContacts.Phone = TrustPhone;
                         CurrentRecord.SomeParkingPlace.Released = !NotInPlace;
                         CurrentRecord.SomeParkingPlaceLog.DeadLine = ProlongDate;
+                        CurrentRecord.VehColor = SelectedColor;
+                        
+                        
+                        
 
                         if (decimal.TryParse(Coast, out decimal tmp))
                             CurrentRecord.SomeParkingPlaceLog.Money = tmp;
-                        
+
 
                         CurrentState = SetState();
                         SaveData();
-                       
+
                     }
                     ));
+
+        //if new colorname does not exist in DB we'll add it 
+        private void CheckColor(string vehColor, out int colId)
+        {
+            colId = 0;
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {
+                    VehicleColor col = db.Colors.Where(w => w.ColorName == vehColor).FirstOrDefault();
+                    if (col is null)
+                    {
+                        VehicleColor newColor = new VehicleColor { ColorName = vehColor};
+                        db.Colors.Add(newColor);
+                        db.SaveChanges();
+                        colId = newColor.VehicleColorId;
+                    }
+                    else
+                        colId = col.VehicleColorId;
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+
+        }
 
         bool saved { get; set; }// if false - we can save new data, if true - only edit
 
@@ -818,12 +935,12 @@ namespace Parking.ViewModel.ParkPlacesOps
                     if (newVehicle is null)
                     {
                         newVehicle = new Vehicle
-                        {
-                            Color = CurrentRecord.SomeVehicle.Color,
+                        {                         
                             RegNumber = CurrentRecord.SomeVehicle.RegNumber,
                             SomeVehicleType = db.VehicleTypes.Find(VType.VehicleTypeId),
                             VPhoto = CurrentRecord.SomeVehicle.VPhoto
                         };
+                        newVehicle.SomeVehicleColor = db.Colors.Find(CurrentRecord.VehColor.VehicleColorId);
                         db.Vehicles.Add(newVehicle);
                         newVehicle.ClientOwner = Cl;                       
                     }
@@ -837,13 +954,6 @@ namespace Parking.ViewModel.ParkPlacesOps
                                 "Відкорегуйте реэстраційний номер ТЗ ");
                             return;
                         };                       
-                        
-                        //db.Entry(newVehicle).State = EntityState.Modified;
-                        //newVehicle.Color = CurrentRecord.SomeVehicle.Color;
-                        //newVehicle.RegNumber = CurrentRecord.SomeVehicle.RegNumber;
-                        //newVehicle.SomeVehicleType = db.VehicleTypes.Find(VType.VehicleTypeId);
-                        //newVehicle.VPhoto = CurrentRecord.SomeVehicle.VPhoto;
-                        //newVehicle.ClientOwner = Cl;
                     }
 
                     User user = db.Users.Find(UserId);
@@ -998,10 +1108,16 @@ namespace Parking.ViewModel.ParkPlacesOps
                     if (!compare.VehicleDataCompare(PreviousState, CurrentState))
                     {
                         Vehicle editableVehicle = db.Vehicles.Find(CurrentRecord.SomeVehicle.VehicleId);
-                        db.Entry(editableVehicle).State = EntityState.Modified;
-                        editableVehicle.Color = CurrentRecord.SomeVehicle.Color;
+                        db.Entry(editableVehicle).State = EntityState.Modified;                      
                         editableVehicle.RegNumber = CurrentRecord.SomeVehicle.RegNumber;
                         editableVehicle.VPhoto = CurrentRecord.SomeVehicle.VPhoto;
+                        
+                    }
+                    if (!compare.VehicleColoCompare(PreviousState,CurrentState))
+                    {
+                        Vehicle editableVehicle = db.Vehicles.Find(CurrentRecord.SomeVehicle.VehicleId);
+                        db.Entry(editableVehicle).State = EntityState.Modified;
+                        editableVehicle.SomeVehicleColor = db.Colors.Find(CurrentRecord.VehColor.VehicleColorId);
                     }
 
                     if (VType.TypeName != CurrentRecord.SomeVehicleType.TypeName)
@@ -1187,12 +1303,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             CurrentRecord.TrustedPerson.Patronimic = CurrentRecord.TrustedPerson.Patronimic.Trim();
 
 
-            if (CurrentRecord.SomeVehicle.Color is null || CurrentRecord.SomeVehicle.Color == "")
-            {
-                dialogService.ShowMessage("Не заданий колір транспортного засобу." +
-                    ".\n\t\tВідкорегуйте");
-                return false;
-            }
+
             if (RegNumber is null || RegNumber=="" || RegNumber.Length<8 )
             {
                 dialogService.ShowMessage("Значення номера держ. реэстрації НЕ корректне.\n або не задано\n \t\t Відкорегуйте" +

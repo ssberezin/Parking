@@ -172,8 +172,20 @@ namespace Parking.Helpes
             }
         }
 
+        private VehicleColor vehColor;
+        public  VehicleColor VehColor
+        {
+            get { return vehColor; }
+            set
+            {
+                if (value != vehColor)
+                {
+                    vehColor = value;
+                    OnPropertyChanged(nameof(VehColor));
+                }
+            }
+        }
 
-      
 
     }
 }

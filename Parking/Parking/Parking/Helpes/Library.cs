@@ -257,8 +257,7 @@ namespace Parking.Helpes
                                 CurrentRecord.SomeVehicle = new Vehicle
                                 {
                                     VehicleId = (int)result.GetValue(12),
-                                    RegNumber = (string)result.GetValue(13),
-                                    Color = (string)result.GetValue(14),
+                                    RegNumber = (string)result.GetValue(13),                                    
                                     VPhoto = result.GetValue(22) is System.DBNull ? null : (byte[])result.GetValue(22)
 
                                 };
@@ -273,6 +272,11 @@ namespace Parking.Helpes
                                     TypeName = (string)result.GetValue(20)
                                 };
 
+                                CurrentRecord.VehColor = new VehicleColor 
+                                {
+                                    VehicleColorId = (int)result.GetValue(23),
+                                    ColorName = (string)result.GetValue(14),
+                                };
 
                                 if (CurrentRecord.SomeClient.OrgName == null || CurrentRecord.SomeClient.OrgName == "не вказано")
                                     CurrentRecord.SomeClient.OrgName = CurrentRecord.SomePerson.SecondName + " " + CurrentRecord.SomePerson.FirstName + " " + CurrentRecord.SomePerson.Patronimic;

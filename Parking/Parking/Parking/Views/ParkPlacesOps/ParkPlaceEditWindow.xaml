@@ -8,7 +8,7 @@
         xmlns:helpes="clr-namespace:Parking.Helpes" 
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:w="clr-namespace:Parking.Helpes"
-        xmlns:parkplacesops="clr-namespace:Parking.ViewModel.ParkPlacesOps"
+        xmlns:parkplacesops="clr-namespace:Parking.ViewModel.ParkPlacesOps" xmlns:scm1="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         d:DataContext="{d:DesignInstance Type=parkplacesops:ParkPlaceWindowContext}"
          
         mc:Ignorable="d"
@@ -25,18 +25,20 @@
             <helpes:BoolToStringConverter2 x:Key="boolToStringConverter2"/>
 
             <DataTemplate x:Key="HeaderTemplate">
-                <TextBlock Text="{Binding}" TextWrapping="Wrap"  TextAlignment="Center"/>
-                <!--Обозначаем наличие привязки в ячеке(шапке?) таблицы, выравниванием текст в ячейках по центру и задаем перенос текста-->
+                <TextBlock Text="{Binding}" TextWrapping="Wrap"  TextAlignment="Center"/>                
             </DataTemplate>
-            <Style TargetType="DataGridColumnHeader">
-                <!--Ограничиваем применение стиля (только для шапки DataGridColumnHeader)-->
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                <!--Задаем выравнивание по центру ячейки-->
-                <Setter Property="Padding" Value="2"/>
-                <!--Задаем отступ в ячейке-->
-                <Setter Property="ContentTemplate" Value="{StaticResource HeaderTemplate}"/>
-                <!--Применяем в стиле шаблон отображения текстовых данных HeaderTemplate-->
+            <Style TargetType="DataGridColumnHeader">                
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>                
+                <Setter Property="Padding" Value="2"/>                
+                <Setter Property="ContentTemplate" Value="{StaticResource HeaderTemplate}"/>                
             </Style>
+
+            <CollectionViewSource x:Key="SortedItems" Source="{Binding  VehicleColors}"
+                xmlns:scm="clr-namespace:System.ComponentModel;assembly=Win‌​dowsBase">
+                <CollectionViewSource.SortDescriptions>
+                    <scm1:SortDescription PropertyName="ColorName"/>
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
 
         </ResourceDictionary>
 
@@ -230,8 +232,18 @@
                                       FontSize="24"  TextAlignment="Center"  HorizontalAlignment="Center" FontWeight="Bold"
                                       ToolTip="Лише латиниця та цифри"/>
                                     <TextBlock Text="Колір " FontSize="14" FontWeight="Bold"  HorizontalAlignment="Center" Foreground="Red" />
-                                    <TextBox  Text="{Binding CurrentRecord.SomeVehicle.Color, UpdateSourceTrigger=PropertyChanged}" MinWidth="185" FontSize="20"  TextAlignment="Center" TextWrapping="Wrap"  HorizontalAlignment="Center" FontWeight="Bold" Margin="3"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <ComboBox x:Name="ColorCombo"  Width="185"  VerticalAlignment="Center" Margin="0,0,0,20"
+                                         IsEditable="True" IsSynchronizedWithCurrentItem="True"  
+                                         ItemsSource="{Binding  Source={StaticResource SortedItems}}"                                          
+                                         SelectedValue="{Binding SelectedColor.ColorName}"
+                                            SelectedValuePath="ColorName"
+                                         SelectedItem="{Binding SelectedColor, UpdateSourceTrigger=PropertyChanged}"                                                                 
+                                         HorizontalContentAlignment="Left"
+                                         DisplayMemberPath="ColorName"
+                                         Background="White" 
+                                         FontSize="14" >
+                                </ComboBox>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <TextBlock Text="Тип ТЗ " TextWrapping="Wrap" FontSize="12" FontWeight="Bold"  
                                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <ComboBox   MinWidth="130"  VerticalAlignment="Center"
@@ -315,7 +327,8 @@
                                          Command="{Binding PrintQuitanceCommand}"/>
                                 <Button  Content="Зачинити"  Height="25" Command="{Binding CencelWindowCommand}"
                                      CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                                <Button  Content="Зберегти" Background="Blue" Height="25" Command="{Binding SavedataCommand}" />
+                                <Button  Content="Зберегти" Background="Blue" Height="25" Command="{Binding SavedataCommand}"
+                                         CommandParameter="{Binding ElementName=ColorCombo, Path=Text}"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>

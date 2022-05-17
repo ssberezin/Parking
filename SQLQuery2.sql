@@ -1,6 +1,6 @@
  use DbParking
 
- create proc sp_GetparkingPlacesRecord
+ create proc sp_GetparkingPlacesRecord--------------------------------------------------------
                             @ppId int
                             as
                             Select PP.ParkingPlaceId '0_ParkingPlaceId', PP.ParkPlaceNumber '1_PlaceNumber', PP.FreeStatus '2_FreeStatus', PP.Released '3_Released',
@@ -15,7 +15,8 @@
                             left Join People as Pers on Cl.PersonCustomer_PersonId = pers.PersonId                            
                             left join Contacts as Ctn on Ctn.SomePerson_PersonId=Pers.PersonId
                             left join ParkingPlaceLogs as PPL on PPL.SomeParkingPlace_ParkingPlaceId=PP.ParkingPlaceId
-                            left join Vehicletypes as VT on VT.VehicleTypeId=Veh.SomeVehicleType_VehicleTypeId     
+                            left join Vehicletypes as VT on VT.VehicleTypeId=Veh.SomeVehicleType_VehicleTypeId  
+							join    
                             Where PP.ParkingPlaceId = @ppId
 
 execute sp_GetparkingPlacesRecord '1'

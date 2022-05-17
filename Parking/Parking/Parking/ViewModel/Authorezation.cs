@@ -134,6 +134,27 @@ namespace Parking.ViewModel
 
                     db.SaveChanges();
 
+
+                    VehicleColor color = new VehicleColor { ColorName = "-не задано-" };
+                    VehicleColor color1 = new VehicleColor { ColorName="червоний"};
+                    VehicleColor color2 = new VehicleColor { ColorName = "чорний" };
+                    VehicleColor color3 = new VehicleColor { ColorName = "синій" };
+                    VehicleColor color4 = new VehicleColor { ColorName = "жовтий" };
+                    VehicleColor color5 = new VehicleColor { ColorName = "фіолетвий" };
+                    
+                    VehicleColor color6 = new VehicleColor { ColorName = "помаранчевий" };
+
+                    db.Colors.Add(color);
+                    db.Colors.Add(color1);
+                    db.Colors.Add(color2);
+                    db.Colors.Add(color3);
+                    db.Colors.Add(color2);
+                    db.Colors.Add(color4);
+                    db.Colors.Add(color5);
+                    db.Colors.Add(color6);
+
+                    db.SaveChanges();
+
                     VehicleType vtype2 = new VehicleType { TypeName = "-не здано-" };
                     VehicleType vtype = new VehicleType { TypeName = "легкове авто" };
                     VehicleType vtype1 = new VehicleType { TypeName = "мотоцикл" };
@@ -146,10 +167,13 @@ namespace Parking.ViewModel
 
 
 
-                    Vehicle SomeVehicle1 = new Vehicle { Color = "Чорний", RegNumber = "AE2865BO", DateOfmanufacture = new DateTime(2020, 12, 12) };
-
+                    Vehicle SomeVehicle1 = new Vehicle { RegNumber = "AE2865BO", DateOfmanufacture = new DateTime(2020, 12, 12) };
+                    
+                    SomeVehicle1.SomeVehicleColor = db.Colors.Find(2    );
                     vtype.Vehicles.Add(SomeVehicle1);
                     
+
+
                     db.SaveChanges();
 
                     Client client1 = new Client { OrgName = "ТОВ \"Прайм\"", OrgDetals = "надання послуг з паркування" };
@@ -281,22 +305,23 @@ namespace Parking.ViewModel
 
                     db.Database.ExecuteSqlCommand
                         (@"
-                         create proc sp_GetparkingPlacesRecord
+                        create proc sp_GetparkingPlacesRecord
                             @ppId int
                             as
                             Select PP.ParkingPlaceId '0_ParkingPlaceId', PP.ParkPlaceNumber '1_PlaceNumber', PP.FreeStatus '2_FreeStatus', PP.Released '3_Released',
 	                             Cl.ClientId '4_ClientId', Cl.OrgName '5_OrgName',
 	                             Pers.PersonId '6_PersonId',   Pers.SecondName '7_SecondName', Pers.FirstName '8_FirstName', Pers.Patronimic '9_Patronimic',
-	                             Ctn.ContactsId '10_ContactsId', Ctn.Phone '11_Phone', Veh.VehicleId '12_VehicleId', Veh.RegNumber '13_VehicleRegNumber', Veh.Color '14_VehicleColor',
+	                             Ctn.ContactsId '10_ContactsId', Ctn.Phone '11_Phone', Veh.VehicleId '12_VehicleId', Veh.RegNumber '13_VehicleRegNumber', vehCol.ColorName '14_VehicleColor',
 	                             PPL.ParkingPlaceLogId  '15_PPLId', PPL.DeadLine '16_DeadLine', Pers.TrustedPerson_Id '17_TrustedPerson_Id', Ctn.Adress '18_DriversAdress',
-	                             VT.VehicleTypeId '19_VehicleTypeId', VT.TypeName  '20_VTypeName', Pers.Sex '21_Pers_Sex', Veh.VPhoto '22_VPhoto'
+	                             VT.VehicleTypeId '19_VehicleTypeId', VT.TypeName  '20_VTypeName', Pers.Sex '21_Pers_Sex', Veh.VPhoto '22_VPhoto', vehCol.VehicleColorId '23_VehicleColorId'
                             From ParkingPlaces as PP 
 							left join Vehicles as Veh on Veh.ParkingPlace_ParkingPlaceId=pp.ParkingPlaceId
                             left join Clients as Cl on veh.ClientOwner_ClientId=cl.ClientId
                             left Join People as Pers on Cl.PersonCustomer_PersonId = pers.PersonId                            
                             left join Contacts as Ctn on Ctn.SomePerson_PersonId=Pers.PersonId
                             left join ParkingPlaceLogs as PPL on PPL.SomeParkingPlace_ParkingPlaceId=PP.ParkingPlaceId
-                            left join Vehicletypes as VT on VT.VehicleTypeId=Veh.SomeVehicleType_VehicleTypeId     
+                            left join Vehicletypes as VT on VT.VehicleTypeId=Veh.SomeVehicleType_VehicleTypeId  
+							join VehicleColors vehCol on vehCol.VehicleColorId=veh.SomeVehicleColor_VehicleColorId
                             Where PP.ParkingPlaceId = @ppId
 
                         ");
