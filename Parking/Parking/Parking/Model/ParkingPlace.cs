@@ -13,7 +13,7 @@ namespace Parking.Model
         public ParkingPlace()
         {
             ParkingPlaceLogs = new ObservableCollection<ParkingPlaceLog>();
-           
+            Vehicles = new ObservableCollection<Vehicle>();
            
         }
 
@@ -66,8 +66,8 @@ namespace Parking.Model
 
         public virtual ObservableCollection<ParkingPlaceLog> ParkingPlaceLogs { get; set; }
 
+        public virtual ObservableCollection<Vehicle> Vehicles { get; set; }
 
-        public virtual Client SomeClient { get; set; }
 
     }
 }

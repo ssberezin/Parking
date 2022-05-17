@@ -253,11 +253,11 @@
                         <StackPanel Background="#FFDAEDED" Margin="3">
 
                             <TextBlock Text="Дата закінчення строку оренди" FontSize="12" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red" FontWeight="Bold"  HorizontalAlignment="Center" />
-                            <TextBlock Text="{Binding DeadLine, UpdateSourceTrigger=PropertyChanged}" FontSize="14"  TextAlignment="Center" Foreground="Blue" FontWeight="Bold"  HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding NextDeadLine,StringFormat=\{0:dd.MM.yy \}, UpdateSourceTrigger=PropertyChanged}" FontSize="14"  TextAlignment="Center" Foreground="Blue" FontWeight="Bold"  HorizontalAlignment="Center" />
 
                             <StackPanel  >
                                 <TextBlock Text="Подовжити дату оренди до" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,1"/>
-                                <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
+                                <DatePicker  IsDropDownOpen="False" SelectedDateFormat="Short"                             
                                                 HorizontalAlignment="Center"  
                                                DisplayDateStart="{Binding Mode=OneWay, Source={x:Static System:DateTime.Today}}"
                                                 SelectedDate="{Binding ProlongDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

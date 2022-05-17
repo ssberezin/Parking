@@ -50,7 +50,7 @@ namespace Parking.Helpes
         //this is for AddnewData methode in ParkPlaceWindowContext.cs 
         public  void GetPersonAndContactsIds (string phoneNumber, Person tmpPerson, out int? ctnId, out int? persId)
         {
-            ctnId = null; persId = null;
+            ctnId =0; persId = 0;
             using (DBConteiner db = new DBConteiner())
             {
                 try
@@ -84,8 +84,11 @@ namespace Parking.Helpes
                                 ctnId = ctn.ContactsId;
                                 persId = ctn.SomePerson.PersonId;
                             }
-                            else                            
-                                dialogService.ShowMessage("Добре, тоді необхідно задати інший номер телефону. ");                                
+                            else
+                            {
+                                dialogService.ShowMessage("Добре, тоді необхідно задати інший номер телефону. ");
+                                ctnId = null;
+                            }
                             
                         }
                     }
@@ -329,6 +332,79 @@ namespace Parking.Helpes
                             }
                         };
                         return CurrentRecord;
+
+                    }
+                    else
+                    {
+
+                        dialogService.ShowMessage("Щось пішло не так при зчитуванні данних про паркувальні місця");
+                    }
+                }
+
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+
+            }
+            return null;
+        }
+
+        public ParkingPlace GetPPByVehNumber(string vehNumber)
+        {
+
+
+            string sqlExpression = "sp_GetPPByVehNumber";
+
+            var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
+            var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
+
+            using (SqlConnection connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(sqlExpression, connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    SqlParameter firstParam = new SqlParameter
+                    {
+                        ParameterName = "@vehNumber",
+                        Value = vehNumber
+                    };
+                    command.Parameters.Add(firstParam);
+
+                    SqlDataReader result = command.ExecuteReader();
+
+
+                    if (result.HasRows)
+                    {
+                        ParkingPlace Record = new ParkingPlace();
+
+                        while (result.Read())
+                        {
+
+                            Record.ParkingPlaceId = (int)result.GetValue(0);
+                            Record.ParkPlaceNumber = (int)result.GetValue(1);
+                            Record.FreeStatus = (bool)result.GetValue(2);
+                            Record.Released = (bool)result.GetValue(3);                            
+                        }
+                        return Record;
 
                     }
                     else

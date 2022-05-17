@@ -34,7 +34,7 @@ namespace Parking.ViewModel.ParkPlacesOps
         public string VType { get; set; }
 
         public DateTime ProlongDate { get; set; }
-        public string Coast { get; set; }
+        public decimal Coast { get; set; }
    
 
         
@@ -112,7 +112,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             bool ColorCompare = obj1.Color == obj2.Color;
             
 
-            return VPhotoCompare == RegNamberCompare == ColorCompare ;
+            return VPhotoCompare && RegNamberCompare && ColorCompare ;
         }
 
         public bool ParkingPlaceLogDataCompare(CompareStatesForParkingPlace obj1, CompareStatesForParkingPlace obj2)
@@ -120,14 +120,14 @@ namespace Parking.ViewModel.ParkPlacesOps
             bool ProlongDateCompare = obj1.ProlongDate == obj2.ProlongDate;
             bool CoastCompare = obj1.Coast == obj2.Coast;
 
-            return ProlongDateCompare == CoastCompare;
+            return ProlongDateCompare && CoastCompare;
         }
 
         public bool TotalCompare(CompareStatesForParkingPlace ob1, CompareStatesForParkingPlace obj2)
         {
-            return ParkingPlaceLogDataCompare(ob1, obj2) == VehicleDataCompare(ob1, obj2) == TrustContactsDataCompare(ob1, obj2)
-                    == TrustPersonDataCompare(ob1, obj2) == OwnerContactsDataCompare(ob1, obj2) == ClientDataCompare(ob1, obj2) ==
-                    OwnerPersonDataCompare(ob1, obj2) == ParkingPalceDataCompare(ob1, obj2);
+            return ParkingPlaceLogDataCompare(ob1, obj2) && VehicleDataCompare(ob1, obj2) && TrustContactsDataCompare(ob1, obj2)
+                    && TrustPersonDataCompare(ob1, obj2) && OwnerContactsDataCompare(ob1, obj2) && ClientDataCompare(ob1, obj2) &&
+                    OwnerPersonDataCompare(ob1, obj2) && ParkingPalceDataCompare(ob1, obj2);
         }
     }
 }

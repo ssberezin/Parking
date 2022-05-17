@@ -240,19 +240,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             }
         }
 
-        private string deadLine;
-        public string DeadLine
-        {
-            get { return deadLine; }
-            set
-            {
-                if (deadLine != value)
-                {
-                    deadLine = value;
-                    OnPropertyChanged(nameof(DeadLine));
-                }
-            }
-        }
+        
 
 
         private string messageForChangeParkPlace;
@@ -326,11 +314,19 @@ namespace Parking.ViewModel.ParkPlacesOps
             lib = new Library();
             UserId = userId;
             CurrentRecord = parkRecord;
-
+            saved = true;//set editting mode
+            //set default value of radio batton 'Released'
+            if (CurrentRecord.SomePerson.PersonId == 0)
+            if (CurrentRecord.SomePerson.PersonId == 0)
+            {
+                CurrentRecord.SomeParkingPlace.Released = !parkRecord.SomeParkingPlace.Released;
+                
+            }
             //if there is some client by this parking place we have an opportunity to change parking place number
             NewDataAddedSaved = CurrentRecord.SomeClient.ClientId == 0 ? false : true;
             CurrentRecord.SomeClient.OrgName = CurrentRecord.SomeClient.OrgName == null ? "фізична особа" : CurrentRecord.SomeClient.OrgName;
             NextDeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value;
+            
             OwnerPhone1 = CurrentRecord.SomeContacts.Phone;
             TrustPhone = CurrentRecord.TrContacts.Phone;
             RegNumber = CurrentRecord.SomeVehicle.RegNumber;
@@ -675,7 +671,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             tmp.TrustPhone = CurrentRecord.TrContacts.Phone;
             
             tmp.ProlongDate = ProlongDate;
-            tmp.Coast = Coast;
+            tmp.Coast = CurrentRecord.SomeParkingPlaceLog.Money;
 
             return tmp;
         }
@@ -688,6 +684,9 @@ namespace Parking.ViewModel.ParkPlacesOps
                         CurrentRecord.SomeVehicle.RegNumber = RegNumber;
                         CurrentRecord.SomeContacts.Phone = OwnerPhone1;
                         CurrentRecord.TrContacts.Phone = TrustPhone;
+                        CurrentRecord.SomeParkingPlace.Released = !NotInPlace;
+                        CurrentRecord.SomeParkingPlaceLog.DeadLine = ProlongDate;
+
                         if (decimal.TryParse(Coast, out decimal tmp))
                             CurrentRecord.SomeParkingPlaceLog.Money = tmp;
                         
@@ -728,9 +727,6 @@ namespace Parking.ViewModel.ParkPlacesOps
                 return;
            
 
-            CurrentRecord.SomeVehicle.RegNumber = RegNumber;
-            CurrentRecord.SomeContacts.Phone = OwnerPhone1;
-            CurrentRecord.TrContacts.Phone = TrustPhone;
 
 
             //next we have to save data to DB
@@ -743,6 +739,9 @@ namespace Parking.ViewModel.ParkPlacesOps
                     Client Cl;
                     Person OwnerPerson;
                     Contacts OwnerContacts;// = db.Contacts.Where(ctn => ctn.Phone == CurrentRecord.SomeContacts.Phone).FirstOrDefault();
+
+                    if (ctnId is null)
+                        return;
 
                     if (ctnId is null || ctnId == 0 && persId == 0)
                     {
@@ -771,6 +770,8 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                     lib.GetPersonAndContactsIds(CurrentRecord.TrContacts.Phone, CurrentRecord.TrustedPerson, out int? trCtnId, out int? trPersId);
 
+                    if (trCtnId is null)
+                        return;
                     Person TrustPerson;
                     Contacts TrustContacts;// = db.Contacts.Where(ctn => ctn.Phone == CurrentRecord.TrContacts.Phone).FirstOrDefault();
                     Client TrCl;
@@ -828,22 +829,21 @@ namespace Parking.ViewModel.ParkPlacesOps
                     }
                     else
                     {
-                        ParkingPlace pp = db.ParkingPlaces.Where(p => p.SomeClient.Vehicles.Contains(newVehicle) && p.ParkPlaceNumber!=CurrentRecord.SomeParkingPlace.ParkPlaceNumber).FirstOrDefault();
-                        if (pp != null && !pp.FreeStatus.Value && !pp.Released)
+                        ParkingPlace pp = lib.GetPPByVehNumber(newVehicle.RegNumber);
+                        if (pp != null)
                         {
                             dialogService.ShowMessage("Цей транспортний зазіб вже стоїть " +
                                 "на паркувальному місці \""+pp.ParkPlaceNumber+"\".\n" +
-                                "Відкорегуйте реэстраційний номер ТЗ або \n підберіть інше паркувальне місце");
+                                "Відкорегуйте реэстраційний номер ТЗ ");
                             return;
-                        };
+                        };                       
                         
-                        
-                        db.Entry(newVehicle).State = EntityState.Modified;
-                        newVehicle.Color = CurrentRecord.SomeVehicle.Color;
-                        newVehicle.RegNumber = CurrentRecord.SomeVehicle.RegNumber;
-                        newVehicle.SomeVehicleType = db.VehicleTypes.Find(VType.VehicleTypeId);
-                        newVehicle.VPhoto = CurrentRecord.SomeVehicle.VPhoto;
-                        newVehicle.ClientOwner = Cl;
+                        //db.Entry(newVehicle).State = EntityState.Modified;
+                        //newVehicle.Color = CurrentRecord.SomeVehicle.Color;
+                        //newVehicle.RegNumber = CurrentRecord.SomeVehicle.RegNumber;
+                        //newVehicle.SomeVehicleType = db.VehicleTypes.Find(VType.VehicleTypeId);
+                        //newVehicle.VPhoto = CurrentRecord.SomeVehicle.VPhoto;
+                        //newVehicle.ClientOwner = Cl;
                     }
 
                     User user = db.Users.Find(UserId);
@@ -867,15 +867,17 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                     db.Entry(parkingPlace).State = EntityState.Modified;
                     parkingPlace.FreeStatus = false;
-                    parkingPlace.Released = false;
-
-                    parkingPlace.SomeClient = Cl;
+                    parkingPlace.Released = CurrentRecord.SomeParkingPlace.Released;
+                    parkingPlace.Vehicles.Clear();
+                    parkingPlace.Vehicles.Add(newVehicle);
+                    
 
                     db.SaveChanges();
-                    DeadLine = ProlongDate.ToString("dd/MM/yyyy");
-                  
-                    NewDataAddedSaved = true;//allow an opportunity of changing parking plase number
-                    
+
+
+                    NextDeadLine = ProlongDate;
+
+                    NewDataAddedSaved = true;//allow an opportunity of changing parking plase number                    
                     
                     PreviousState = SetState();
 
@@ -914,12 +916,10 @@ namespace Parking.ViewModel.ParkPlacesOps
             
             CompareStatesForParkingPlace compare = new CompareStatesForParkingPlace();
             if (!ValidationInputData())
-                return;
-
-          
+                return;         
           
             
-            //next we have to save data to DB
+            //next we have to edit data in DB
             using (DBConteiner db = new DBConteiner())
             {
                 try
@@ -934,12 +934,18 @@ namespace Parking.ViewModel.ParkPlacesOps
                         User user = db.Users.Find(UserId);
                         db.Entry(user).State = EntityState.Modified;
 
-                        ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog{ DateOfChange = DateTime.Now,
-                                                                               FreeStatus=parkingPlace.FreeStatus.Value,
-                                                                               Released = parkingPlace.Released,
-                                                                               BookingDate = CurrentRecord.SomeParkingPlaceLog.BookingDate,
-                                                                               DeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine,
-                                                                               PayingDate = CurrentRecord.SomeParkingPlaceLog.PayingDate};
+                        ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog
+                        {
+                            DateOfChange = DateTime.Now,
+                            FreeStatus = parkingPlace.FreeStatus.Value,
+                            Released = parkingPlace.Released,
+                            BookingDate = CurrentRecord.SomeParkingPlaceLog.BookingDate,
+                            DeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine
+                        };                                                                     
+
+                        if (CurrentRecord.SomeParkingPlaceLog.Money != 0)
+                            parkingPlaceLog.PayingDate = DateTime.Now;
+
                         db.ParkingPlaceLogs.Add(parkingPlaceLog);
 
                         user.ParkingPlaceLogs.Add(parkingPlaceLog);
@@ -1023,11 +1029,17 @@ namespace Parking.ViewModel.ParkPlacesOps
                         db.ParkingPlaceLogs.Add(parkingPlaceLog);
                         
                         user.ParkingPlaceLogs.Add(parkingPlaceLog);
+
+                        ParkingPlace parkingPlace = db.ParkingPlaces.Find(CurrentRecord.SomeParkingPlace.ParkingPlaceId);
+                        db.Entry(parkingPlace).State = EntityState.Modified;
+                        parkingPlace.ParkingPlaceLogs.Add(parkingPlaceLog);
                     }
 
                     db.SaveChanges();
 
                     PreviousState = SetState();
+
+                    NextDeadLine = ProlongDate;
 
                     FillFreeParkingPlacesList();
                     FillHistoryList(CurrentRecord.SomeClient.ClientId, CurrentRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
@@ -1076,20 +1088,13 @@ namespace Parking.ViewModel.ParkPlacesOps
         public RelayCommand ChangeParkinPlaceCommand => changeParkinPlaceCommand ?? (changeParkinPlaceCommand = new RelayCommand(
                     (obj) =>
                     {
-
-                        EditDataParkPlaceNamber();
+                        EditDataParkPlaceNumber();
                         FillFreeParkingPlacesList();
-                        
-
-
-
                     }
                     ));
 
-        private void EditDataParkPlaceNamber()
-        {
-
-            
+        private void EditDataParkPlaceNumber()
+        {            
             using (DBConteiner db = new DBConteiner())
             {
                 try
@@ -1099,27 +1104,27 @@ namespace Parking.ViewModel.ParkPlacesOps
                      db.Entry(parkingPlace).State = EntityState.Modified;
                     parkingPlace.FreeStatus = true;
                     parkingPlace.Released = false;
-                    parkingPlace.SomeClient = null;
+                    
+                    parkingPlace.Vehicles.Remove (CurrentRecord.SomeVehicle);
 
                     ParkingPlace newParkingPlace = db.ParkingPlaces.Where(par => par.ParkPlaceNumber == FreeparkPlace).FirstOrDefault();
                     db.Entry(newParkingPlace).State = EntityState.Modified;
                     newParkingPlace.FreeStatus = false;
                     newParkingPlace.Released = false;
+                    newParkingPlace.Vehicles.Clear();
+                    newParkingPlace.Vehicles.Add(CurrentRecord.SomeVehicle);
 
-                    Client curClient = db.Clients.Find(CurrentRecord.SomeClient.ClientId);
-                    db.Entry(curClient).State = EntityState.Modified;
-                    curClient.ParkingPlaces.Remove(parkingPlace);
-                    curClient.ParkingPlaces.Add(newParkingPlace);
 
-                    ParkingPlaceLog curParkPlaceLog = db.ParkingPlaceLogs.Find(CurrentRecord.SomeParkingPlaceLog.ParkingPlaceLogId);
-                    db.Entry(curParkPlaceLog).State = EntityState.Modified;
+                    //Client curClient = db.Clients.Find(CurrentRecord.SomeClient.ClientId);
+                    //db.Entry(curClient).State = EntityState.Modified;                    
+
+                    ParkingPlaceLog curParkPlaceLog = CurrentRecord.SomeParkingPlaceLog;
+                    curParkPlaceLog.ParkingPlaceLogId = 0;
+                    db.ParkingPlaceLogs.Add(curParkPlaceLog);
                     curParkPlaceLog.SomeParkingPlace = newParkingPlace;
 
-                    db.SaveChanges();
-                    CurrentRecord.SomeParkingPlace = newParkingPlace;
-                    CurrentRecord.SomeParkingPlaceLog = curParkPlaceLog;
-                  
 
+                    db.SaveChanges();
                     dialogService.ShowMessage("\t\tOk");
                 }
                 catch (ArgumentNullException ex)

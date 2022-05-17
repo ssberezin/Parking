@@ -92,6 +92,8 @@ namespace Parking.Model
 
         public virtual Client ClientOwner { get; set; }
 
+        public virtual ParkingPlace ParkingPlace { get; set; }
+
         public virtual VehicleType  SomeVehicleType {get;set;}
 
 }

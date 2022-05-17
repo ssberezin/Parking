@@ -12,7 +12,7 @@ namespace Parking.Model
         public Client()
         {
             Vehicles = new ObservableCollection<Vehicle>();
-            ParkingPlaces = new ObservableCollection<ParkingPlace>();
+           // ParkingPlaces = new ObservableCollection<ParkingPlace>();
         }
 
         public int ClientId { get; set; }
@@ -50,6 +50,6 @@ namespace Parking.Model
         }
         public virtual Person PersonCustomer { get; set; }
         public virtual ObservableCollection<Vehicle> Vehicles { get; set; }
-        public virtual ObservableCollection<ParkingPlace> ParkingPlaces { get; set; }
+      //  public virtual ObservableCollection<ParkingPlace> ParkingPlaces { get; set; }
     }
 }
