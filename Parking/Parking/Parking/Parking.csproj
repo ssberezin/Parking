@@ -97,6 +97,7 @@
     <Compile Include="Helpes\BoolToStringConverter.cs" />
     <Compile Include="Helpes\HideCloseButtonOnWindow.cs" />
     <Compile Include="Helpes\ImagePathConverter.cs" />
+    <Compile Include="Helpes\NullToBooleanConverter.cs" />
     <Compile Include="Helpes\ParkingPlaceRecord.cs" />
     <Compile Include="Model\Contacts.cs" />
     <Compile Include="Model\Company.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="ViewModel\ReportOps\ParPlaceRecord.cs" />
     <Compile Include="ViewModel\ReportOps\ReportOpsContext.cs" />
     <Compile Include="ViewModel\ReportOps\ReportOpsRecord.cs" />
+    <Compile Include="ViewModel\VehicleTypesOps\VehicleTypesOpsContext.cs" />
     <Compile Include="Views\CompanyOps\CompanyInfo.xaml.cs">
       <DependentUpon>CompanyInfo.xaml</DependentUpon>
     </Compile>
@@ -134,6 +136,9 @@
     </Compile>
     <Compile Include="Views\SecondWindow.xaml.cs">
       <DependentUpon>SecondWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VehicleTypesOps\VehicleTypesOpsWin.xaml.cs">
+      <DependentUpon>VehicleTypesOpsWin.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -179,6 +184,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SecondWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VehicleTypesOps\VehicleTypesOpsWin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

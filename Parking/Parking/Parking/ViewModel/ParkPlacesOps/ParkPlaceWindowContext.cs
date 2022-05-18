@@ -104,6 +104,20 @@ namespace Parking.ViewModel.ParkPlacesOps
             }
         }
 
+        private string newVType;
+        public string NewVType
+        {
+            get { return newVType; }
+            set
+            {
+                if (newVType != value)
+                {
+                    newVType = value;
+                    OnPropertyChanged(nameof(NewVType));
+                }
+            }
+        }
+
         private VehicleType vType;
         public VehicleType VType
         {
@@ -348,6 +362,8 @@ namespace Parking.ViewModel.ParkPlacesOps
             TrustPhone = CurrentRecord.TrContacts.Phone;
             RegNumber = CurrentRecord.SomeVehicle.RegNumber;
             VType = CurrentRecord.SomeVehicleType;
+            NewVType = VType.TypeName;
+
             if (CurrentRecord.SomeParkingPlace.FreeStatus.Value)
             {
                 CurrentRecord.SomeParkingPlace.FreeStatus = false;//by dafault we have 'not free status' when we want to rent a parking place
@@ -414,13 +430,16 @@ namespace Parking.ViewModel.ParkPlacesOps
         private static readonly Regex regexRegNumer = new Regex("[^0-9A-Z]+"); //regex that matches disallowed text
         private void RegNumberValidation(object sender, PropertyChangedEventArgs e)
         {
-            if (!(RegNumber is null))
-                RegNumber = RegNumber.ToUpper();
-
-            if (regexRegNumer.IsMatch(RegNumber))
+            if (RegNumber != "не задано")
             {
-                RegNumber = RegNumber.Remove(RegNumber.Length - 1, 1);
-            }
+                if (!(RegNumber is null))
+                    RegNumber = RegNumber.ToUpper();
+
+                if (regexRegNumer.IsMatch(RegNumber) || RegNumber.Length > 8)
+                {
+                    RegNumber = RegNumber.Remove(RegNumber.Length - 1, 1);
+                }
+            }   
         }
 
         private static readonly Regex regexCoast = new Regex("[^0-9,.]+"); //regex that matches disallowed text
@@ -625,7 +644,7 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                     if (result.HasRows)
                     {
-
+                        
                         while (result.Read())
                         {
                             DateTime date = (DateTime)result.GetValue(1);
@@ -637,13 +656,22 @@ namespace Parking.ViewModel.ParkPlacesOps
                             };
                             rec.DateOfEvent = date.ToString("dd/MM/yyyy");
                             rec.TimeOfEvent = date.ToString("HH:mm:ss");
-                            ParkPlaceHisrtoryRecords.Add(rec);
+                            if (ParkPlaceHisrtoryRecords.Count() == 0)                        
+                                ParkPlaceHisrtoryRecords.Add(rec);
+                            else
+                            {
+                                if (!(ParkPlaceHisrtoryRecords[ParkPlaceHisrtoryRecords.Count()- 1].Released == rec.Released &&
+                                      ParkPlaceHisrtoryRecords[ParkPlaceHisrtoryRecords.Count() - 1].DateOfEvent == rec.DateOfEvent))
+                                    ParkPlaceHisrtoryRecords.Add(rec);                                
+                            }
+
                         };
                     }
                     else
                     {
 
-                        dialogService.ShowMessage("Щось пішло не так при зчитуванні данних про паркувальні місця");
+                        dialogService.ShowMessage("Щось пішло не так при зчитуванні данних про паркувальні місця.\n" +
+                                                  "Можливо некоректно задано проміжок дати");
                     }
                 }
 
@@ -728,9 +756,9 @@ namespace Parking.ViewModel.ParkPlacesOps
             //vehicle's data
             tmp.VPhoto = CurrentRecord.SomeVehicle.VPhoto is null ? null : lib.CopyPhoto(CurrentRecord.SomeVehicle.VPhoto);
             tmp.RegNumber = CurrentRecord.SomeVehicle.RegNumber;
-            tmp.Color = CurrentRecord.VehColor.ColorName;
+            tmp.Color =   CurrentRecord.VehColor.ColorName;
             tmp.VType = CurrentRecord.SomeVehicleType.TypeName;
-
+            //GetVehicleColor()
             //trusted person's data
             tmp.TrustPhone = CurrentRecord.TrContacts.Phone;
 
@@ -748,8 +776,18 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                         //check existing color
                         string color = (string)obj;
-                        CheckColor(color, out int colId);
+                        lib.CheckColor(color, out int colId);
                         CurrentRecord.VehColor = new VehicleColor { VehicleColorId = colId, ColorName = color };
+
+
+                        if (VType is null)
+                        {
+                            lib.CheckVehicleType(NewVType, out int vTypeId);
+                            CurrentRecord.SomeVehicleType = new VehicleType { VehicleTypeId = vTypeId, TypeName = NewVType };
+                            VType = CurrentRecord.SomeVehicleType;
+                        }
+                        
+
 
                         CurrentRecord.SomeVehicle.RegNumber = RegNumber;
                         CurrentRecord.SomeContacts.Phone = OwnerPhone1;
@@ -772,57 +810,14 @@ namespace Parking.ViewModel.ParkPlacesOps
                     ));
 
         //if new colorname does not exist in DB we'll add it 
-        private void CheckColor(string vehColor, out int colId)
-        {
-            colId = 0;
-            using (DBConteiner db = new DBConteiner())
-            {
-                try
-                {
-                    VehicleColor col = db.Colors.Where(w => w.ColorName == vehColor).FirstOrDefault();
-                    if (col is null)
-                    {
-                        VehicleColor newColor = new VehicleColor { ColorName = vehColor};
-                        db.Colors.Add(newColor);
-                        db.SaveChanges();
-                        colId = newColor.VehicleColorId;
-                    }
-                    else
-                        colId = col.VehicleColorId;
-                }
-                catch (ArgumentNullException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-                catch (OverflowException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-                catch (System.Data.SqlClient.SqlException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-                catch (System.Data.Entity.Core.EntityException ex)
-                {
-                    dialogService.ShowMessage(ex.Message);
-                }
-            }
-
-        }
+       
 
         bool saved { get; set; }// if false - we can save new data, if true - only edit
 
         private void SaveData()
         {
-            if (!saved)
-            {
+            if (!saved)            
                 AddnewData();
-                saved = true;
-            }
             else
                 EditData();               
            
@@ -842,7 +837,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             CompareStatesForParkingPlace compare = new CompareStatesForParkingPlace();
             if (!ValidationInputData())
                 return;
-           
+
 
 
 
@@ -883,7 +878,7 @@ namespace Parking.ViewModel.ParkPlacesOps
                         Cl = db.Clients.Where(cl => cl.PersonCustomer.PersonId == OwnerPerson.PersonId).FirstOrDefault();
                     }
 
-                   
+
 
                     lib.GetPersonAndContactsIds(CurrentRecord.TrContacts.Phone, CurrentRecord.TrustedPerson, out int? trCtnId, out int? trPersId);
 
@@ -903,7 +898,7 @@ namespace Parking.ViewModel.ParkPlacesOps
                         TrustPerson.ContactsData.Add(TrustContacts);
 
                         OwnerPerson.TrustedPerson = TrustPerson;
-                        TrCl = new Client {OrgName="не задано" };
+                        TrCl = new Client { OrgName = "не задано" };
 
                         db.Clients.Add(TrCl);
 
@@ -927,34 +922,35 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                     }
 
-                    
-                    
 
-
-                    Vehicle newVehicle = db.Vehicles.Where(veh => veh.RegNumber == CurrentRecord.SomeVehicle.RegNumber).FirstOrDefault();
-                    if (newVehicle is null)
-                    {
-                        newVehicle = new Vehicle
-                        {                         
-                            RegNumber = CurrentRecord.SomeVehicle.RegNumber,
-                            SomeVehicleType = db.VehicleTypes.Find(VType.VehicleTypeId),
-                            VPhoto = CurrentRecord.SomeVehicle.VPhoto
-                        };
-                        newVehicle.SomeVehicleColor = db.Colors.Find(CurrentRecord.VehColor.VehicleColorId);
-                        db.Vehicles.Add(newVehicle);
-                        newVehicle.ClientOwner = Cl;                       
-                    }
-                    else
-                    {
-                        ParkingPlace pp = lib.GetPPByVehNumber(newVehicle.RegNumber);
-                        if (pp != null)
+                   
+                   
+                        Vehicle newVehicle = db.Vehicles.Where(veh => veh.RegNumber == CurrentRecord.SomeVehicle.RegNumber).FirstOrDefault();
+                        if (newVehicle is null)
                         {
-                            dialogService.ShowMessage("Цей транспортний зазіб вже стоїть " +
-                                "на паркувальному місці \""+pp.ParkPlaceNumber+"\".\n" +
-                                "Відкорегуйте реэстраційний номер ТЗ ");
-                            return;
-                        };                       
-                    }
+                            newVehicle = new Vehicle
+                            {
+                                RegNumber = CurrentRecord.SomeVehicle.RegNumber,
+                                SomeVehicleType = db.VehicleTypes.Find(VType.VehicleTypeId),
+                                VPhoto = CurrentRecord.SomeVehicle.VPhoto
+                            };
+                            newVehicle.SomeVehicleColor = db.Colors.Find(CurrentRecord.VehColor.VehicleColorId);
+                            db.Vehicles.Add(newVehicle);
+                            newVehicle.ClientOwner = Cl;
+                        }
+                        else
+                        {
+                            ParkingPlace pp = lib.GetPPByVehNumber(newVehicle.RegNumber);
+                            if (pp != null)
+                            {
+                                dialogService.ShowMessage("Цей транспортний зазіб вже стоїть " +
+                                    "на паркувальному місці \"" + pp.ParkPlaceNumber + "\".\n" +
+                                    "Відкорегуйте реэстраційний номер ТЗ ");
+                                return;
+                            };
+                        }
+                   
+                    
 
                     User user = db.Users.Find(UserId);
                     db.Entry(user).State = EntityState.Modified;
@@ -984,6 +980,7 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                     db.SaveChanges();
 
+                    saved = true;
 
                     NextDeadLine = ProlongDate;
 
@@ -1120,7 +1117,7 @@ namespace Parking.ViewModel.ParkPlacesOps
                         editableVehicle.SomeVehicleColor = db.Colors.Find(CurrentRecord.VehColor.VehicleColorId);
                     }
 
-                    if (VType.TypeName != CurrentRecord.SomeVehicleType.TypeName)
+                    if (PreviousState.VType != VType.TypeName)
                     {
                         Vehicle editableVehicle = db.Vehicles.Find(CurrentRecord.SomeVehicle.VehicleId);
                         db.Entry(editableVehicle).State = EntityState.Modified;
@@ -1132,18 +1129,19 @@ namespace Parking.ViewModel.ParkPlacesOps
                     {
                         User user = db.Users.Find(UserId);
                         db.Entry(user).State = EntityState.Modified;
-
-                        ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog 
+                        ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog();
+                        
+                            
+                        if (PreviousState.Coast != CurrentState.Coast)
                         {
-                            DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month, ProlongDate.Day),
-                            Money = CurrentRecord.SomeParkingPlaceLog.Money,                           
-                            DateOfChange = DateTime.Now
-                        };
-                        if (CurrentRecord.SomeParkingPlaceLog.Money > 0)                        
-                            parkingPlaceLog.PayingDate = DateTime.Now;
+                            parkingPlaceLog.Money = CurrentRecord.SomeParkingPlaceLog.Money;
+                            if (CurrentRecord.SomeParkingPlaceLog.Money > 0)
+                                parkingPlaceLog.PayingDate = DateTime.Now;
+                        }
+                        parkingPlaceLog.DeadLine = new DateTime(ProlongDate.Year, ProlongDate.Month, ProlongDate.Day);
+                        parkingPlaceLog.DateOfChange = DateTime.Now;
 
                         db.ParkingPlaceLogs.Add(parkingPlaceLog);
-                        
                         user.ParkingPlaceLogs.Add(parkingPlaceLog);
 
                         ParkingPlace parkingPlace = db.ParkingPlaces.Find(CurrentRecord.SomeParkingPlace.ParkingPlaceId);
@@ -1306,9 +1304,11 @@ namespace Parking.ViewModel.ParkPlacesOps
 
             if (RegNumber is null || RegNumber=="" || RegNumber.Length<8 )
             {
-                dialogService.ShowMessage("Значення номера держ. реэстрації НЕ корректне.\n або не задано\n \t\t Відкорегуйте" +
-                    ".\n\t\tВідкорегуйте");
-                return false;
+                if (dialogService.YesNoDialog("Номер держ реєстрації не задано або задано не корректно.\n" +
+                                            "\t\tПродовжити?"))
+                    RegNumber = "не задано";
+                else
+                    return false;
             }
 
             if (decimal.TryParse(Coast, out decimal result))            

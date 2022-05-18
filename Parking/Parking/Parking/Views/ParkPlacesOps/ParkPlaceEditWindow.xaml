@@ -39,7 +39,14 @@
                     <scm1:SortDescription PropertyName="ColorName"/>
                 </CollectionViewSource.SortDescriptions>
             </CollectionViewSource>
+            <CollectionViewSource x:Key="SortedTypes" Source="{Binding  VehicleTypeList}"
+                xmlns:scm="clr-namespace:System.ComponentModel;assembly=Win‌​dowsBase">
+                <CollectionViewSource.SortDescriptions>
+                    <scm1:SortDescription PropertyName="TypeName"/>
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
 
+            
         </ResourceDictionary>
 
     </Window.Resources>
@@ -80,13 +87,14 @@
                         <TextBlock Text="Задати проміжок " FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,6"/>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text=" з  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
+                            <DatePicker x:Name="StartDate" IsDropDownOpen="False" SelectedDateFormat="Short"                             
                                                 HorizontalAlignment="Center"                                                 
                                                 SelectedDate="{Binding StartHistoryDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                 HorizontalContentAlignment="Center"/>
                             <TextBlock Text=" до  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
-                                                HorizontalAlignment="Center"                                                 
+                                                HorizontalAlignment="Center"  
+                                                DisplayDateStart="{Binding StartHistoryDate,UpdateSourceTrigger=PropertyChanged}"
                                                 SelectedDate="{Binding EndHistoryDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                 HorizontalContentAlignment="Center"/>
 
@@ -246,7 +254,7 @@
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <TextBlock Text="Тип ТЗ " TextWrapping="Wrap" FontSize="12" FontWeight="Bold"  
                                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <ComboBox   MinWidth="130"  VerticalAlignment="Center"
+                                    <!--<ComboBox   MinWidth="130"  VerticalAlignment="Center"
                                           IsEditable="False" IsSynchronizedWithCurrentItem="True"                                     
                                          SelectedItem="{Binding VType, UpdateSourceTrigger=PropertyChanged}"                        
                                          ItemsSource="{Binding  VehicleTypeList}" 
@@ -254,8 +262,20 @@
                                          DisplayMemberPath="TypeName"
                                          Background="White" 
                                          FontSize="14" >
+                                    </ComboBox>-->
+                                    <ComboBox   MinWidth="130"  VerticalAlignment="Center" 
+                                         IsEditable="True" IsSynchronizedWithCurrentItem="True"  
+                                         ItemsSource="{Binding  Source={StaticResource SortedTypes}}"                                          
+                                         SelectedValue="{Binding VType.TypeName}"
+                                            SelectedValuePath="TypeName"
+                                         SelectedItem="{Binding VType, UpdateSourceTrigger=PropertyChanged}"                                                                 
+                                         HorizontalContentAlignment="Left"
+                                         DisplayMemberPath="TypeName"
+                                                Text="{Binding NewVType, UpdateSourceTrigger=PropertyChanged}"
+                                         Background="White" 
+                                         FontSize="14" >
                                     </ComboBox>
-                                    </StackPanel>
+                                </StackPanel>
                                 </StackPanel>
                            
                         </Border>
@@ -271,7 +291,7 @@
                                 <TextBlock Text="Подовжити дату оренди до" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,1"/>
                                 <DatePicker  IsDropDownOpen="False" SelectedDateFormat="Short"                             
                                                 HorizontalAlignment="Center"  
-                                               DisplayDateStart="{Binding Mode=OneWay, Source={x:Static System:DateTime.Today}}"
+                                              
                                                 SelectedDate="{Binding ProlongDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                 HorizontalContentAlignment="Center"/>
 

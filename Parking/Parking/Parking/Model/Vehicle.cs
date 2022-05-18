@@ -23,7 +23,7 @@ namespace Parking.Model
 
 
         [Column("RegNumber", TypeName = "nvarchar")]
-        [MaxLength(8)]
+        [MaxLength(9)]
         private string regNumber;
         public string RegNumber
         {

@@ -347,6 +347,7 @@ namespace Parking.ViewModel
                                 CurrentRecord.TrustedPerson = new Person();
                                 CurrentRecord.FemaleTrustPers = !CurrentRecord.TrustedPerson.Sex;
                                 CurrentRecord.TrContacts = new Contacts();
+                                CurrentRecord.VehColor = lib.GetVehicleColor();
                                 DateTime dt = DateTime.Now; ;
                                 DeadLine = new DateTime(dt.Year, dt.Month, dt.Day).ToString("dd/MM/yyyy");
                                 OutOfDeadLine = "не просрочено";
@@ -483,6 +484,7 @@ namespace Parking.ViewModel
                        // AddtestData();
                         ParkPlaceEditWindow parkWindow = new ParkPlaceEditWindow(IncomUserId, CurrentRecord);
                         showWindow.ShowDialog(parkWindow);
+                        UpdateRecord();
                         DefaultDataLoad();//update all data in the window
                     }
                     ));
