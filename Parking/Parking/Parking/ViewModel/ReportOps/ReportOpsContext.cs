@@ -1,5 +1,7 @@
 ﻿using Parking.Helpes;
 using Parking.Model;
+using Parking.ViewModel.FilterOps;
+using Parking.Views.FilterOps;
 using Parking.Views.ParkPlacesOps;
 using Parking.Views.PrintOps;
 using System;
@@ -101,17 +103,34 @@ namespace Parking.ViewModel.ReportOps
 
         Library lib;//for call methods from here
 
+        
+
+        private FilterContext filter;
+        public FilterContext Filter
+        {
+            get { return filter; }
+            set
+            {
+                if (filter != value)
+                {
+                    filter = value;
+                    OnPropertyChanged(nameof(Filter));
+                }
+            }
+        }
+
         public ReportOpsContext() 
         {
             showWindow = new DefaultShowWindowService();
             dialogService = new DefaultDialogService();
-            lib = new Library();
+         
         }
         public ReportOpsContext(int inputUserid) 
         {
             showWindow = new DefaultShowWindowService();
             dialogService = new DefaultDialogService();
             lib = new Library();
+            Filter = new FilterContext();
             CurretnUserId = inputUserid;
             OwnerRecords = new ObservableCollection<OwnerRecord>();
             ReportOpsRecords = new ObservableCollection<ReportOpsRecord>(); 
@@ -417,6 +436,37 @@ namespace Parking.ViewModel.ReportOps
                         FillReportRecods(ParPlaceSelecteRecord.PPlace.ParkingPlaceId, StartHistoryDate, EndHistoryDate);                       
                     }
                     ));
+
+        FolterForReportWindow win;
+
+        private RelayCommand callFilterCommand;
+        public RelayCommand CallFilterCommand => callFilterCommand ?? (callFilterCommand = new RelayCommand(
+                    (obj) =>
+                    {
+                        if (win != null)
+                            return;
+                        win = new FolterForReportWindow(obj);
+                        showWindow.ShowDialog(win);
+                      
+                    }
+                    ));
+        private RelayCommand findCommand;
+        public RelayCommand FindCommand => findCommand ?? (findCommand = new RelayCommand(
+                    (obj) =>
+                    {
+                        //methode name
+                    }
+                    ));
+
+        private RelayCommand clearFiltersCommand;
+        public RelayCommand ClearFiltersCommand => clearFiltersCommand ?? (clearFiltersCommand = new RelayCommand(
+                    (obj) =>
+                    {
+                        Filter.ClearFilters();
+                    }
+                    ));
+
+
 
 
     }

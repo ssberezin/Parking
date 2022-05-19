@@ -54,6 +54,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Expression.Blend.Sdk.1.0.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -106,6 +107,7 @@
     <Compile Include="Model\VehicleType.cs" />
     <Compile Include="ViewModel\Authorezation.cs" />
     <Compile Include="ViewModel\CompanyOps\CompanyInfoContext.cs" />
+    <Compile Include="ViewModel\FilterOps\FilterContext.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ParkPlacesOps\CompareStatesForParkingPlace.cs" />
     <Compile Include="ViewModel\ParkPlacesOps\ParkPlaceHisrtoryRecord.cs" />
@@ -114,6 +116,9 @@
     <Compile Include="ViewModel\PersonOperations\EmployeeState.cs" />
     <Compile Include="ViewModel\PersonOperations\EmployeeWindowContext.cs" />
     <Compile Include="ViewModel\PrintOps\PrintBlankContext.cs" />
+    <Compile Include="ViewModel\ReportOps\MoneyMoveReportOps\MoneyMoveRepDetailRecord.cs" />
+    <Compile Include="ViewModel\ReportOps\MoneyMoveReportOps\MoneyMoveReportContext.cs" />
+    <Compile Include="ViewModel\ReportOps\MoneyMoveReportOps\StuffMoneyRecord.cs" />
     <Compile Include="ViewModel\ReportOps\OwnerRecord.cs" />
     <Compile Include="ViewModel\ReportOps\ParPlaceRecord.cs" />
     <Compile Include="ViewModel\ReportOps\ReportOpsContext.cs" />
@@ -121,6 +126,9 @@
     <Compile Include="ViewModel\VehicleTypesOps\VehicleTypesOpsContext.cs" />
     <Compile Include="Views\CompanyOps\CompanyInfo.xaml.cs">
       <DependentUpon>CompanyInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FilterOps\FolterForReportWindow.xaml.cs">
+      <DependentUpon>FolterForReportWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ParkPlacesOps\ParkPlaceEditWindow.xaml.cs">
       <DependentUpon>ParkPlaceEditWindow.xaml</DependentUpon>
@@ -130,6 +138,9 @@
     </Compile>
     <Compile Include="Views\PrintOps\PrintBlank.xaml.cs">
       <DependentUpon>PrintBlank.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReportOps\MoneyMoveReport.xaml.cs">
+      <DependentUpon>MoneyMoveReport.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ReportOps\ReportOpsWindow.xaml.cs">
       <DependentUpon>ReportOpsWindow.xaml</DependentUpon>
@@ -167,6 +178,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\FilterOps\FolterForReportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ParkPlacesOps\ParkPlaceEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -178,6 +193,10 @@
     <Page Include="Views\PrintOps\PrintBlank.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ReportOps\MoneyMoveReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ReportOps\ReportOpsWindow.xaml">
       <SubType>Designer</SubType>

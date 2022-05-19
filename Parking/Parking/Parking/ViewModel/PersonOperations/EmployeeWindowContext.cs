@@ -520,7 +520,7 @@ namespace Parking.ViewModel.PersonOperations
 
         private void SaveNewData()
         {
-            EmployeeRecord tmpEmpRec;
+           
             using (DBConteiner db = new DBConteiner())
             {
                 try

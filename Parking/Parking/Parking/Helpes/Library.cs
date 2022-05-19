@@ -788,7 +788,48 @@ namespace Parking.Helpes
                         join ParkingPlaceLogs PPl on Ppl.SomeParkingPlace_ParkingPlaceId=ppl.ParkingPlaceLogId
                         where cl.ClientId=@clId and pp.FreeStatus = 0
                          ");
+                    db.Database.ExecuteSqlCommand
+                      (@"
+                       create proc sp_GetPreviousStuffRecord
+                        as
+                        select emp.EmployeeId '0_EmployeeId', pers.SecondName +' '+pers.FirstName+' '+pers.Patronimic '1_PIB', emp.HireDate '2_HireDate', pers.PersonId '3_PersId', us.UserId '4_UserId'
+                        From People Pers 
+                        join Employees Emp on Pers.PersonId=Emp.SomePerson_PersonId
+                        join Users us on us.SomeEmployee_EmployeeId=emp.EmployeeId
+                        join ParkingPlaceLogs PPl on PPl.SomeUser_UserId=us.UserId
+	                    Where emp.FireDate is null
+                        Group by us.UserId, pers.PersonId, emp.EmployeeId ,pers.SecondName, pers.FirstName,pers.Patronimic
+						                        , emp.HireDate
+                            ");
+                    db.Database.ExecuteSqlCommand
+                       (@"
+                            create proc sp_GetDetalesStuffRecord
+                            @userId int,
+	                        @startDate date,
+							@endDate date
+                                as
+                                Select veh.VehicleId '0_VehicleId',veh.RegNumber '1_RegNumber', ppl.ParkingPlaceLogId '2_ParkingPlaceLogId', 
+            					                    ppl.Money '3_Money', ppl.PayingDate '4_PayingDate', ppl.DeadLine '5_DeadLine'
+                                From Vehicles veh
+                                join ParkingPlaces PP on Veh.ParkingPlace_ParkingPlaceId = Pp.ParkingPlaceId
+                                join ParkingPlaceLogs PPl on pp.ParkingPlaceId = Ppl.SomeParkingPlace_ParkingPlaceId
+                                join Users Us on Ppl.SomeUser_UserId = us.UserId
+                                 where us.UserId = @userId and ppl.Money>0 and ppl.PayingDate>=@startDate and ppl.PayingDate<=@endDate
+                       ");
 
+                    db.Database.ExecuteSqlCommand
+                      (@"
+                            create proc sp_TotalSumForPeriod                           
+                                @startDate date,
+                                @endDate date
+                                as
+                                Select Sum(ppl.Money)
+                                From Vehicles veh
+                                join ParkingPlaces PP on Veh.ParkingPlace_ParkingPlaceId = Pp.ParkingPlaceId
+                                join ParkingPlaceLogs PPl on pp.ParkingPlaceId = Ppl.SomeParkingPlace_ParkingPlaceId
+                                join Users Us on Ppl.SomeUser_UserId = us.UserId
+                                where  ppl.Money>0 and ppl.PayingDate>=@startDate and ppl.PayingDate<=@endDate
+                       ");
 
 
                     db.SaveChanges();
@@ -816,6 +857,79 @@ namespace Parking.Helpes
                     dialogService.ShowMessage(ex.Message);
                 }
             }
+        }
+
+
+        public decimal  GetTotalSum(DateTime startDate, DateTime endDate)
+        {
+                        
+            string sqlExpression = "sp_TotalSumForPeriod";
+
+            var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
+            var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
+
+            using (SqlConnection connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
+            {
+                try
+                {
+
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(sqlExpression, connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                    SqlParameter firstParam = new SqlParameter
+                    {
+                        ParameterName = "@startDate",
+                        Value = startDate
+                    };
+                    SqlParameter secondParam = new SqlParameter
+                    {
+                        ParameterName = "@endDate",
+                        Value = endDate
+                    };
+                    
+                    command.Parameters.Add(firstParam);
+                    command.Parameters.Add(secondParam);
+                    
+
+                    SqlDataReader result = command.ExecuteReader();
+
+                    if (result.HasRows)
+                    {                        
+                        while (result.Read())
+                        {
+                            return result.GetValue(0) is DBNull?0: (decimal)result.GetValue(0);
+                        };
+                    }
+                    else
+                        dialogService.ShowMessage("Щось пішло не так при зчитуванні данних про загальну суму");
+                }
+
+
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+
+            }
+            return 0;
+
         }
 
     }

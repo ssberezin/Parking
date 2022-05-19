@@ -33,8 +33,7 @@
                 <MenuItem Header="Звіти"   VerticalAlignment="Top" >
 
                     <MenuItem Header="Звіт за власниками ТЗ" Command="{Binding CallOwnersReportCommand}"/>
-                    <MenuItem Header="Виручка каси"  
-                                  Command="{Binding RestoreDBCommand}"/>
+                    <MenuItem Header="Виручка каси"  Command="{Binding  CallMoneyMoveReportCommand}"/>
                     <MenuItem Header="Зайнятість місць" Command="{Binding CloseMainWindow}"/>
                     
                     <MenuItem Header="Робота користувача" Command="{Binding CloseMainWindow}"/>

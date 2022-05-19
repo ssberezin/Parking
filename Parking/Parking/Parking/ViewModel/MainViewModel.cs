@@ -558,5 +558,20 @@ namespace Parking.ViewModel
                     }
                     ));
 
+
+        private RelayCommand callMoneyMoveReportCommand;
+        public RelayCommand CallMoneyMoveReportCommand => callMoneyMoveReportCommand ?? (callMoneyMoveReportCommand = new RelayCommand(
+                    (obj) =>
+                    {
+                        if (CheckAccessRights())
+                        {
+                            MoneyMoveReport win = new MoneyMoveReport();
+                            showWindow.ShowDialog(win);
+                        }
+                        else
+                            dialogService.ShowMessage("Не достатньо прав доступу");
+                    }
+                    ));
+       
     }
 }

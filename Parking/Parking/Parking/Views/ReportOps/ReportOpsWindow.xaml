@@ -32,6 +32,11 @@
             </Style>
         </ResourceDictionary>
     </Window.Resources>
+    <Window.InputBindings>        
+        <KeyBinding Gesture="Ctrl+F" Command="{Binding CallFindCommand}" 
+                    CommandParameter="{Binding DataContext, RelativeSource=
+                    {RelativeSource AncestorType={x:Type Window}}}"/>
+    </Window.InputBindings>
 
     <Border  BorderBrush="#FF9BECE6" BorderThickness="3">
         <Grid>
@@ -47,97 +52,12 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox  Content=" Фільтри " Foreground="Green" HorizontalContentAlignment="Left" 
-                          VerticalAlignment="Center"
-                              FontWeight="Bold" Margin="3,0,0,0" />
-                        <Popup PlacementTarget="{Binding ElementName=Filter2}" 
-                               HorizontalAlignment="Left"  
-                                IsOpen="{Binding IsChecked, ElementName=Filter2}" 
-                               StaysOpen="True"  
-                                PopupAnimation="Slide" Margin="1,3,5,3"
-                               AllowsTransparency="True">
-                            <Border BorderBrush="Black" BorderThickness="1">
-                                <StackPanel >
-                                    <StackPanel   >
-                                        <RadioButton GroupName="A" Content="Лише зайняті парко. місця " VerticalAlignment="Center" FontWeight="Bold"/>
-                                        <RadioButton GroupName="A" Content=" Вся інформація " VerticalAlignment="Center"  FontWeight="Bold"/>
-                                    </StackPanel>
-                                    <StackPanel>
-                                        <StackPanel   Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
-                                            <CheckBox x:Name="FIO" TabIndex="2" Content=" ПІБ співробітника " VerticalAlignment="Center"
-                                              FontWeight="Bold"                              
-                                              IsChecked="{Binding _Filters.Check2, UpdateSourceTrigger=PropertyChanged}"/>
-
-                                            <TextBox  Text="{Binding _Filters.Param2, Mode=TwoWay}" TabIndex="3" Margin="5,5"
-                                             MinWidth="250" ToolTip="Можна щось одне з ПІБ"/>
-                                        </StackPanel>
-                                        <StackPanel    Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
-                                            <CheckBox x:Name="ClientPhone"  Content="№ телефона  " VerticalAlignment="Center"                               
-                                              FontWeight="Bold"
-                                              IsChecked="{Binding _Filters.Check13,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                                            <TextBox  Text="{Binding _Filters.Param11, UpdateSourceTrigger=PropertyChanged}"  Margin="5,5"
-                                    MinWidth="190"/>
-                                        </StackPanel>
-                                        <StackPanel    Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
-                                            <CheckBox   Content="Адреса " VerticalAlignment="Center"                               
-                                              FontWeight="Bold"
-                                              IsChecked="{Binding _Filters.Check23,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                                            <TextBox  Text="{Binding _Filters.Param21, UpdateSourceTrigger=PropertyChanged}"  Margin="5,5"
-                                    MinWidth="215" MaxLength="30"/>
-                                        </StackPanel>
-                                    </StackPanel>
-                                    <StackPanel   Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
-                                        <CheckBox  Content=" Посада " VerticalAlignment="Center"
-                                          
-                                          FontWeight="Bold"
-                                          IsChecked="{Binding _Filters.Check8, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <ComboBox x:Name="WorkTypeList"  MinWidth="280"                                            
-                                             HorizontalContentAlignment="Center" SelectedIndex="0"
-                                             IsEditable="False" IsSynchronizedWithCurrentItem="True"
-                                             ItemsSource="{Binding  _Filters.TypeOfWorkList}"                                             
-                                             SelectedItem="{Binding _Filters.Param5 , UpdateSourceTrigger=PropertyChanged }"                                            
-                                             DisplayMemberPath="TypeOfWork">
-                                        </ComboBox>
-
-                                    </StackPanel>
-
-
-
-
-
-                                    <StackPanel >
-
-                                        <TextBlock Text="Заробітна плата" FontWeight="Bold"
-                                               Foreground="Blue"
-                                               HorizontalAlignment="Center"
-                                               Margin="10,10,10,5"/>
-
-                                        <StackPanel Orientation="Horizontal" >
-                                            <CheckBox  Margin="3" Content=" від "                                                 
-                                                 IsChecked="{Binding _Filters.Check16, UpdateSourceTrigger=PropertyChanged}"/>
-                                            <TextBox MinWidth="100" Text="{Binding _Filters.Param9}" />
-                                            <TextBlock Text=" до " VerticalAlignment="Center"/>
-                                            <TextBox MinWidth="100" Text="{Binding _Filters.Param10}" />
-                                        </StackPanel>
-                                    </StackPanel>
-
-
-                                    <Button Content="Шукати"  HorizontalAlignment="Stretch"
-                                    Command="{Binding ApplyRightFiltersCommand}"
-                                    Background="#FF7E4A00"   Margin="3" MinHeight="25" MaxWidth="270"/>
-                                    <Button Content="Очистити фільтри" Margin="3" MinHeight="25" MaxWidth="270"
-                                    Command="{Binding ClearRightFilterCommand}" HorizontalAlignment="Stretch"
-                                    Background="Orange" />
-
-
-
-                                </StackPanel>
-                            </Border>
-                        </Popup>
+                      
 
                         <CheckBox  Content=" Боржники " Foreground="Red" HorizontalContentAlignment="Left" 
-                          VerticalAlignment="Center"
-                              FontWeight="Bold" Margin="5,0,0,0" />
+                          VerticalAlignment="Center" FontWeight="Bold" Margin="5,0,0,0" />
+                        <Button Content=" Фільтри " Background="#FF2E5614" Foreground="LightBlue" Command="{Binding CallFilterCommand}" />
+                              
                     </StackPanel>
                     <DataGrid x:Name="GridOrders" Grid.Row="1"
                               ItemsSource="{Binding OwnerRecords}" 
