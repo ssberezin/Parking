@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-E:\Parking\Parking\Parking\Parking\obj\Debug\
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\
 Parking
 none
 false
 DEBUG;TRACE
-E:\Parking\Parking\Parking\Parking\App.xaml
-111533798966
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\App.xaml
+11-448099904
 
-63-620388860
-261468107246
+63-1076587457
+26-942143286
 MainWindow.xaml;Views\Buttons.xaml;Views\CompanyOps\CompanyInfo.xaml;Views\FilterOps\FolterForReportWindow.xaml;Views\ParkPlacesOps\ParkPlaceEditWindow.xaml;Views\PersonOperations\EmployeeWindow.xaml;Views\PrintOps\PrintBlank.xaml;Views\ReportOps\MoneyMoveReport.xaml;Views\ReportOps\ReportOpsWindow.xaml;Views\SecondWindow.xaml;Views\VehicleTypesOps\VehicleTypesOpsWin.xaml;
 
 True
