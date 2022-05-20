@@ -18,7 +18,7 @@ namespace Parking.ViewModel.FilterOps
                 if (strArg1 != value)
                 {
                     strArg1 = value;
-                    OnPropertyChanged(nameof(StrArg1));
+                    OnPropertyChanged8(nameof(StrArg1));
                 }
             }
         }
@@ -32,7 +32,7 @@ namespace Parking.ViewModel.FilterOps
                 if (strArg2 != value)
                 {
                     strArg2 = value;
-                    OnPropertyChanged(nameof(StrArg2));
+                    OnPropertyChanged8(nameof(StrArg2));
                 }
             }
         }
@@ -46,7 +46,7 @@ namespace Parking.ViewModel.FilterOps
                 if (strArg3 != value)
                 {
                     strArg3 = value;
-                    OnPropertyChanged(nameof(StrArg3));
+                    OnPropertyChanged8(nameof(StrArg3));
                 }
             }
         }
@@ -60,7 +60,7 @@ namespace Parking.ViewModel.FilterOps
                 if (strArg4 != value)
                 {
                     strArg4 = value;
-                    OnPropertyChanged(nameof(StrArg4));
+                    OnPropertyChanged8(nameof(StrArg4));
                 }
             }
         }
@@ -74,7 +74,7 @@ namespace Parking.ViewModel.FilterOps
                 if (strArg5 != value)
                 {
                     strArg5 = value;
-                    OnPropertyChanged(nameof(StrArg5));
+                    OnPropertyChanged8(nameof(StrArg5));
                 }
             }
         }
@@ -88,7 +88,7 @@ namespace Parking.ViewModel.FilterOps
                 if (strArg6 != value)
                 {
                     strArg6 = value;
-                    OnPropertyChanged(nameof(StrArg6));
+                    OnPropertyChanged8(nameof(StrArg6));
                 }
             }
         }
@@ -102,7 +102,7 @@ namespace Parking.ViewModel.FilterOps
                 if (strArg7 != value)
                 {
                     strArg7 = value;
-                    OnPropertyChanged(nameof(StrArg7));
+                    OnPropertyChanged8(nameof(StrArg7));
                 }
             }
         }
@@ -117,7 +117,7 @@ namespace Parking.ViewModel.FilterOps
                 if (dateArg1 != value)
                 {
                     dateArg1 = value;
-                    OnPropertyChanged(nameof(DateArg1));
+                    OnPropertyChanged8(nameof(DateArg1));
                 }
             }
         }
@@ -131,7 +131,7 @@ namespace Parking.ViewModel.FilterOps
                 if (dateArg2 != value)
                 {
                     dateArg2 = value;
-                    OnPropertyChanged(nameof(DateArg2));
+                    OnPropertyChanged8(nameof(DateArg2));
                 }
             }
         }
@@ -144,7 +144,7 @@ namespace Parking.ViewModel.FilterOps
                 if (dateArg3 != value)
                 {
                     dateArg3 = value;
-                    OnPropertyChanged(nameof(DateArg3));
+                    OnPropertyChanged8(nameof(DateArg3));
                 }
             }
         }
@@ -157,7 +157,7 @@ namespace Parking.ViewModel.FilterOps
                 if (dateArg4 != value)
                 {
                     dateArg4 = value;
-                    OnPropertyChanged(nameof(DateArg4));
+                    OnPropertyChanged8(nameof(DateArg4));
                 }
             }
         }
@@ -172,7 +172,7 @@ namespace Parking.ViewModel.FilterOps
                 if (checkArg1 != value)
                 {
                     checkArg1 = value;
-                    OnPropertyChanged(nameof(CheckArg1));
+                    OnPropertyChanged8(nameof(CheckArg1));
                 }
             }
         }
@@ -186,7 +186,7 @@ namespace Parking.ViewModel.FilterOps
                 if (checkArg2 != value)
                 {
                     checkArg2 = value;
-                    OnPropertyChanged(nameof(CheckArg2));
+                    OnPropertyChanged8(nameof(CheckArg2));
                 }
             }
         }
@@ -200,7 +200,7 @@ namespace Parking.ViewModel.FilterOps
                 if (checkArg3 != value)
                 {
                     checkArg3 = value;
-                    OnPropertyChanged(nameof(CheckArg3));
+                    OnPropertyChanged8(nameof(CheckArg3));
                 }
             }
         }
@@ -214,7 +214,7 @@ namespace Parking.ViewModel.FilterOps
                 if (checkArg4 != value)
                 {
                     checkArg4 = value;
-                    OnPropertyChanged(nameof(CheckArg4));
+                    OnPropertyChanged8(nameof(CheckArg4));
                 }
             }
         }
@@ -228,7 +228,7 @@ namespace Parking.ViewModel.FilterOps
                 if (checkArg6 != value)
                 {
                     checkArg6 = value;
-                    OnPropertyChanged(nameof(CheckArg6));
+                    OnPropertyChanged8(nameof(CheckArg6));
                 }
             }
         }
@@ -242,7 +242,7 @@ namespace Parking.ViewModel.FilterOps
                 if (checkArg7 != value)
                 {
                     checkArg7 = value;
-                    OnPropertyChanged(nameof(CheckArg7));
+                    OnPropertyChanged8(nameof(CheckArg7));
                 }
             }
         }
@@ -256,7 +256,7 @@ namespace Parking.ViewModel.FilterOps
                 if (checkArg8 != value)
                 {
                     checkArg8 = value;
-                    OnPropertyChanged(nameof(CheckArg8));
+                    OnPropertyChanged8(nameof(CheckArg8));
                 }
             }
         }
@@ -270,7 +270,7 @@ namespace Parking.ViewModel.FilterOps
                 if (checkArg9 != value)
                 {
                     checkArg9 = value;
-                    OnPropertyChanged(nameof(CheckArg9));
+                    OnPropertyChanged8(nameof(CheckArg9));
                 }
             }
         }
@@ -284,7 +284,7 @@ namespace Parking.ViewModel.FilterOps
                 if (checkArg10 != value)
                 {
                     checkArg10 = value;
-                    OnPropertyChanged(nameof(CheckArg10));
+                    OnPropertyChanged8(nameof(CheckArg10));
                 }
             }
         }
@@ -298,7 +298,7 @@ namespace Parking.ViewModel.FilterOps
                 if (checkArg11 != value)
                 {
                     checkArg11 = value;
-                    OnPropertyChanged(nameof(CheckArg11));
+                    OnPropertyChanged8(nameof(CheckArg11));
                 }
             }
         }
@@ -312,7 +312,7 @@ namespace Parking.ViewModel.FilterOps
                 if (checkArg12 != value)
                 {
                     checkArg12 = value;
-                    OnPropertyChanged(nameof(CheckArg12));
+                    OnPropertyChanged8(nameof(CheckArg12));
                 }
             }
         }
@@ -327,7 +327,7 @@ namespace Parking.ViewModel.FilterOps
                 if (intArg1 != value)
                 {
                     intArg1 = value;
-                    OnPropertyChanged(nameof(IntArg1));
+                    OnPropertyChanged8(nameof(IntArg1));
                 }
             }
         }
@@ -340,7 +340,7 @@ namespace Parking.ViewModel.FilterOps
                 if (intArg2 != value)
                 {
                     intArg2 = value;
-                    OnPropertyChanged(nameof(IntArg2));
+                    OnPropertyChanged8(nameof(IntArg2));
                 }
             }
         }

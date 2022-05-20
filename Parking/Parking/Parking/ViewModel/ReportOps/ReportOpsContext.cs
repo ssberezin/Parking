@@ -80,7 +80,7 @@ namespace Parking.ViewModel.ReportOps
                 if (startHistoryDate != value)
                 {
                     startHistoryDate = value;
-                    OnPropertyChanged(nameof(StartHistoryDate));
+                    OnPropertyChanged8(nameof(StartHistoryDate));
                 }
             }
         }
@@ -94,10 +94,81 @@ namespace Parking.ViewModel.ReportOps
                 if (endHistoryDate != value)
                 {
                     endHistoryDate = value;
-                    OnPropertyChanged(nameof(EndHistoryDate));
+                    OnPropertyChanged8(nameof(EndHistoryDate));
                 }
             }
         }
+
+        private FilterContext filter1;
+        public FilterContext Filter1
+        {
+            get { return filter1; }
+            set
+            {
+                if (filter1 != value)
+                {
+                    filter1 = value;
+                    OnPropertyChanged8(nameof(Filter1));
+                }
+            }
+        }
+
+        private FilterContext filter2;
+        public FilterContext Filter2
+        {
+            get { return filter2; }
+            set
+            {
+                if (filter2 != value)
+                {
+                    filter2 = value;
+                    OnPropertyChanged(nameof(Filter2));
+                }
+            }
+        }
+
+        private FilterContext filter3;
+        public FilterContext Filter3
+        {
+            get { return filter3; }
+            set
+            {
+                if (filter3 != value)
+                {
+                    filter3 = value;
+                    OnPropertyChanged(nameof(Filter3));
+                }
+            }
+        }
+
+        private bool enableFilter2;
+        public bool EnableFilter2
+        {
+            get { return enableFilter2; }
+            set
+            {
+                if (enableFilter2 != value)
+                {
+                    enableFilter2 = value;
+                    OnPropertyChanged4(nameof(EnableFilter2));
+                }
+            }
+        }
+
+        private bool enableFilter3;
+        public bool EnableFilter3
+        {
+            get { return enableFilter3; }
+            set
+            {
+                if (enableFilter3 != value)
+                {
+                    enableFilter3 = value;
+                    OnPropertyChanged(nameof(EnableFilter3));
+                }
+            }
+        }
+
 
         int CurretnUserId { get; set; }
 
@@ -105,19 +176,7 @@ namespace Parking.ViewModel.ReportOps
 
         
 
-        private FilterContext filter;
-        public FilterContext Filter
-        {
-            get { return filter; }
-            set
-            {
-                if (filter != value)
-                {
-                    filter = value;
-                    OnPropertyChanged(nameof(Filter));
-                }
-            }
-        }
+
 
         public ReportOpsContext() 
         {
@@ -130,7 +189,7 @@ namespace Parking.ViewModel.ReportOps
             showWindow = new DefaultShowWindowService();
             dialogService = new DefaultDialogService();
             lib = new Library();
-            Filter = new FilterContext();
+            SetDefaultFilters();
             CurretnUserId = inputUserid;
             OwnerRecords = new ObservableCollection<OwnerRecord>();
             ReportOpsRecords = new ObservableCollection<ReportOpsRecord>(); 
@@ -142,14 +201,27 @@ namespace Parking.ViewModel.ReportOps
             PropertyChanged2 += ChangeParkPlaceSelecteRecord;
         }
 
+        private void SetDefaultFilters()
+        {
+            Filter1 = new FilterContext();
+            Filter1.CheckArg3 = true;//it will be like only 'not free' parking places to found
+            Filter2 = new FilterContext();
+            Filter3 = new FilterContext();
+        }
+
         private void ChangeSelectedRecord(object sender, PropertyChangedEventArgs e)
         {
-            SelectedRecord.ParPlaceRecords = GetClientParkingPlaces(SelectedRecord.ClientId, StartHistoryDate, EndHistoryDate);
+            if (OwnerRecords.Count() > 0)
+            {
+                SelectedRecord.ParPlaceRecords = GetClientParkingPlaces(SelectedRecord.ClientId, StartHistoryDate, EndHistoryDate);
+                EnableFilter2 = true;
+            };
         }
 
         private void ChangeParkPlaceSelecteRecord(object sender, PropertyChangedEventArgs e)
         {            
             FillReportRecods(ParPlaceSelecteRecord.PPlace.ParkingPlaceId, StartHistoryDate, EndHistoryDate);
+            EnableFilter3 = true;
         }
 
 
@@ -158,6 +230,7 @@ namespace Parking.ViewModel.ReportOps
         {            
             OwnerRecords.Clear();
 
+            //get record only from park places with 'not free' status
             string sqlExpression = "sp_GetClientInfoForReport";
 
             var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
@@ -199,6 +272,8 @@ namespace Parking.ViewModel.ReportOps
 
                         dialogService.ShowMessage("Немає збігів");
                     }
+
+                    EnableFilter2 = EnableFilter3 = false;
                 }
 
                 catch (ArgumentNullException ex)
@@ -439,17 +514,51 @@ namespace Parking.ViewModel.ReportOps
 
         FolterForReportWindow win;
 
-        private RelayCommand callFilterCommand;
-        public RelayCommand CallFilterCommand => callFilterCommand ?? (callFilterCommand = new RelayCommand(
+        private RelayCommand callFilter1Command;
+        public RelayCommand CallFilter1Command => callFilter1Command ?? (callFilter1Command = new RelayCommand(
                     (obj) =>
                     {
-                        if (win != null)
-                            return;
-                        win = new FolterForReportWindow(obj);
-                        showWindow.ShowDialog(win);
-                      
+                        Filter1.DateArg1 = StartHistoryDate;
+                        Filter1.DateArg2 = EndHistoryDate;
+                        OwnerRecords.Clear();
+
+                        if (Filter1.CheckArg4)
+                        {
+
+                            if (Filter1.CheckArg1)
+                            {
+                                foreach (var item in lib.GetFiltered1OwnerRecordsAllStatuses(Filter1.DateArg1.Value, Filter1.DateArg2.Value))
+                                    if(item.OwnerName.Contains(Filter1.StrArg1))
+                                           OwnerRecords.Add(item);
+                            }
+                            else
+                                foreach (var item in lib.GetFiltered1OwnerRecordsAllStatuses(Filter1.DateArg1.Value, Filter1.DateArg2.Value))
+                                    OwnerRecords.Add(item);
+                        }
+                        else
+                        {
+                            if (Filter1.CheckArg1)
+                            {
+                                foreach (var item in lib.GetFiltered1OwnerRecordsByStatusAndDate(Filter1.CheckArg2, Filter1.DateArg1.Value, Filter1.DateArg2.Value))
+                                    if (item.OwnerName.Contains(Filter1.StrArg1))
+                                        OwnerRecords.Add(item);
+                            }
+                            else                                
+                                foreach (var item in lib.GetFiltered1OwnerRecordsByStatusAndDate(Filter1.CheckArg2, Filter1.DateArg1.Value, Filter1.DateArg2.Value))
+                                    OwnerRecords.Add(item);
+                        }
+                        if (OwnerRecords.Count() == 0)
+                        {
+                            FillOwnerRecords();
+                            dialogService.ShowMessage("Не було співпадінь. Завантажено актуальну \n" +
+                                                       "інформацію щодо власників на зайнятих місцях");
+                        }
+
+                        EnableFilter2 = EnableFilter3 = false;
                     }
                     ));
+
+        //for filtering byte date in right side of PerortOpsWindow.xaml
         private RelayCommand findCommand;
         public RelayCommand FindCommand => findCommand ?? (findCommand = new RelayCommand(
                     (obj) =>
@@ -458,13 +567,34 @@ namespace Parking.ViewModel.ReportOps
                     }
                     ));
 
-        private RelayCommand clearFiltersCommand;
-        public RelayCommand ClearFiltersCommand => clearFiltersCommand ?? (clearFiltersCommand = new RelayCommand(
+        private RelayCommand clearFilter1Command;
+        public RelayCommand ClearFilter1Command => clearFilter1Command ?? (clearFilter1Command = new RelayCommand(
                     (obj) =>
                     {
-                        Filter.ClearFilters();
+                        Filter1.ClearFilters();
                     }
                     ));
+
+        private RelayCommand findDeptorsCommand;
+        public RelayCommand FindDeptorsCommand => findDeptorsCommand ?? (findDeptorsCommand = new RelayCommand(
+                    (obj) =>
+                    {
+
+                        OwnerRecords.Clear();
+                        foreach (var item in lib.GetDeptors(DateTime.Now))
+                            OwnerRecords.Add(item);
+                        if (OwnerRecords.Count() == 0)
+                        {
+                            FillOwnerRecords();
+                            dialogService.ShowMessage("Не було співпадінь.\n Завантажено актуальну \n" +
+                                                       "інформацію щодо власників \nна зайнятих місцях");
+                        }
+
+                        EnableFilter2 = EnableFilter3 = false;
+
+                    }
+                    ));
+
 
 
 

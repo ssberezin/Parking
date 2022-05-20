@@ -1,5 +1,7 @@
  use DbParking
 
+ 
+
  drop proc sp_GetparkingPlacesRecord
 
  create proc sp_GetparkingPlacesRecord                        
@@ -69,4 +71,86 @@ create proc sp_GetPPHistory
                         join Clients Cl on Cl.ClientId=veh.ClientOwner_ClientId
                         where Cl.ClientId=@clId and Pp.ParkPlaceNumber= @ppNumber and Ppl.DateOfChange>=@startDate and ppl.DateOfChange<=@endDate
                         
-	sp_GetPPHistory
+drop proc sp_GetClientInfoForReportByStatus
+create proc sp_GetClientInfoForReportByStatus
+@free bit,
+@startDate date,
+@endDate date
+                            as
+                            Select Cl.ClientId '0_ClientId' ,  Cl.OrgName '1_OrgName', Pers.PersonId '2_PersonId', Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic '3_FIO',
+                                  MAX(ppl.DeadLine) '4_Max deadline', pp.FreeStatus '5_FreeStatus'
+                            From Clients Cl
+                            join People Pers on Cl.PersonCustomer_PersonId=Pers.PersonId
+							join Vehicles veh on veh.ClientOwner_ClientId=Cl.ClientId
+                            join ParkingPlaces PP on pp.ParkingPlaceId=veh.ParkingPlace_ParkingPlaceId
+                            join ParkingPlaceLogs PPl on PP.ParkingPlaceId=Ppl.SomeParkingPlace_ParkingPlaceId
+                            where pp.FreeStatus = @free and ppl.DeadLine>=@startDate and ppl.DeadLine<=@endDate
+                            group by Cl.ClientId ,  Cl.OrgName , Pers.PersonId , Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic, pp.FreeStatus
+
+							sp_GetClientInfoForReportByStatus '0', '2022.04.01','2022.05.20'
+
+drop proc sp_GetClientInfoForReportAllStatuses
+create proc sp_GetClientInfoForReportAllStatuses
+@startDate date,
+@endDate date
+                            as
+                            Select Cl.ClientId 'ClientId_0' ,  Cl.OrgName 'OrgName_1', Pers.PersonId 'PersonId_2', Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic 'FIO_3',
+                                  MAX(ppl.DeadLine) 'MaxDeadline_4', pp.FreeStatus 'FreeStatus_5'
+                            From Clients Cl
+                            join People Pers on Cl.PersonCustomer_PersonId=Pers.PersonId
+							join Vehicles veh on veh.ClientOwner_ClientId=Cl.ClientId
+                            join ParkingPlaces PP on pp.ParkingPlaceId=veh.ParkingPlace_ParkingPlaceId
+                            join ParkingPlaceLogs PPl on PP.ParkingPlaceId=Ppl.SomeParkingPlace_ParkingPlaceId
+                            where  ppl.DeadLine>=@startDate	 and ppl.DeadLine<=@endDate
+                            group by Cl.ClientId ,  Cl.OrgName , Pers.PersonId , Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic, pp.FreeStatus
+
+sp_GetClientInfoForReportAllStatuses  '2022.04.01','2022.10.20'
+
+drop proc sp_GetDeptors
+create proc sp_GetDeptors
+@curDate date
+                            as
+                            Select Cl.ClientId 'ClientId_0' ,  Cl.OrgName 'OrgName_1', Pers.PersonId 'PersonId_2', Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic 'FIO_3',
+                                  MAX(ppl.DeadLine) 'MaxDeadline_4', pp.FreeStatus 'FreeStatus_5'
+                            From Clients Cl
+                            join People Pers on Cl.PersonCustomer_PersonId=Pers.PersonId
+							join Vehicles veh on veh.ClientOwner_ClientId=Cl.ClientId
+                            join ParkingPlaces PP on pp.ParkingPlaceId=veh.ParkingPlace_ParkingPlaceId
+                            join ParkingPlaceLogs PPl on PP.ParkingPlaceId=Ppl.SomeParkingPlace_ParkingPlaceId
+                            where  ppl.DeadLine < @curDate and pp.FreeStatus=0
+                            group by Cl.ClientId ,  Cl.OrgName , Pers.PersonId , Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic, pp.FreeStatus
+
+execute sp_GetDeptors '2022.10.20'
+
+--Create temp table
+
+--drop proc sp_FindByFIO
+
+--create proc sp_FindByFIO
+--@str nvarchar(100),
+--@startDate date,
+--@endDate date,
+--@status bit           
+--as
+--CREATE TABLE #tmpTable (
+--	ClientId_0 INT,
+--	OrgName_1 VARCHAR(255),
+--	PersonId_2 int,
+--	FIO_3 VARCHAR(100),
+--	MaxDeadline_4 Date,
+--	FreeStatus_5 bit
+--	);
+--Insert into #tmpTable
+--exec sp_GetClientInfoForReportByStatus @status, @startDate, @endDate
+--Select *
+--From #tmpTable
+--Where FIO_3 like @str
+
+--execute sp_FindByFIO '%Петров%','2022.04.01','2022.10.20','0'
+
+--GO
+
+--Storing values from procedure into temp table
+INSERT INTO #tmpMaleRecords
+EXEC  MaleRecords
+GO

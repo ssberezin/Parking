@@ -1,6 +1,9 @@
 ﻿using Parking.Model;
+using Parking.ViewModel.FilterOps;
+using Parking.ViewModel.ReportOps;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
@@ -831,6 +834,64 @@ namespace Parking.Helpes
                                 where  ppl.Money>0 and ppl.PayingDate>=@startDate and ppl.PayingDate<=@endDate
                        ");
 
+//-----------------------------------------------FOR FILTERING ------------------------------------------
+
+                    db.Database.ExecuteSqlCommand
+                     (@"
+                         create proc sp_GetClientInfoForReportByStatus
+                            @free bit,
+                            @startDate date,
+                            @endDate date
+                            as
+                            Select Cl.ClientId '0_ClientId' ,  Cl.OrgName '1_OrgName', Pers.PersonId '2_PersonId', Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic '3_FIO',
+                            MAX(ppl.DeadLine) '4_Max deadline', pp.FreeStatus '5_FreeStatus'
+                            From Clients Cl
+                            join People Pers on Cl.PersonCustomer_PersonId=Pers.PersonId
+							join Vehicles veh on veh.ClientOwner_ClientId=Cl.ClientId
+                            join ParkingPlaces PP on pp.ParkingPlaceId=veh.ParkingPlace_ParkingPlaceId
+                            join ParkingPlaceLogs PPl on PP.ParkingPlaceId=Ppl.SomeParkingPlace_ParkingPlaceId
+                            where pp.FreeStatus = @free and ppl.DeadLine>=@startDate and ppl.DeadLine<=@endDate
+                            group by Cl.ClientId ,  Cl.OrgName , Pers.PersonId , Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic, pp.FreeStatus
+
+                       ");
+
+                    db.Database.ExecuteSqlCommand
+                     (@"
+                         create proc sp_GetClientInfoForReportAllStatuses
+                            @startDate date,
+                            @endDate date
+                            as
+                            Select Cl.ClientId 'ClientId_0' ,  Cl.OrgName 'OrgName_1', Pers.PersonId 'PersonId_2', Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic 'FIO_3',
+                                  MAX(ppl.DeadLine) 'MaxDeadline_4', pp.FreeStatus 'FreeStatus_5'
+                            From Clients Cl
+                            join People Pers on Cl.PersonCustomer_PersonId=Pers.PersonId
+							join Vehicles veh on veh.ClientOwner_ClientId=Cl.ClientId
+                            join ParkingPlaces PP on pp.ParkingPlaceId=veh.ParkingPlace_ParkingPlaceId
+                            join ParkingPlaceLogs PPl on PP.ParkingPlaceId=Ppl.SomeParkingPlace_ParkingPlaceId
+                            where  ppl.DeadLine>=@startDate	 and ppl.DeadLine<=@endDate
+                            group by Cl.ClientId ,  Cl.OrgName , Pers.PersonId , Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic, pp.FreeStatus
+
+
+                       ");
+
+                    db.Database.ExecuteSqlCommand
+                    (@"
+                         create proc sp_GetDeptors
+                           @curDate date
+                            as
+                            Select Cl.ClientId 'ClientId_0' ,  Cl.OrgName 'OrgName_1', Pers.PersonId 'PersonId_2', Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic 'FIO_3',
+                                  MAX(ppl.DeadLine) 'MaxDeadline_4', pp.FreeStatus 'FreeStatus_5'
+                            From Clients Cl
+                            join People Pers on Cl.PersonCustomer_PersonId=Pers.PersonId
+							join Vehicles veh on veh.ClientOwner_ClientId=Cl.ClientId
+                            join ParkingPlaces PP on pp.ParkingPlaceId=veh.ParkingPlace_ParkingPlaceId
+                            join ParkingPlaceLogs PPl on PP.ParkingPlaceId=Ppl.SomeParkingPlace_ParkingPlaceId
+                            where  ppl.DeadLine < @curDate and pp.FreeStatus=0
+                            group by Cl.ClientId ,  Cl.OrgName , Pers.PersonId , Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic, pp.FreeStatus
+
+
+                       ");
+
 
                     db.SaveChanges();
 
@@ -901,8 +962,7 @@ namespace Parking.Helpes
                             return result.GetValue(0) is DBNull?0: (decimal)result.GetValue(0);
                         };
                     }
-                    else
-                        dialogService.ShowMessage("Щось пішло не так при зчитуванні данних про загальну суму");
+                  
                 }
 
 
@@ -929,7 +989,257 @@ namespace Parking.Helpes
 
             }
             return 0;
+        }
 
+        //---------------------------FILTERING OPERATIONS ---------------------------------
+
+        
+
+        public ObservableCollection<OwnerRecord> GetFiltered1OwnerRecordsAllStatuses( DateTime startDate, DateTime endDate)
+        {
+            ObservableCollection<OwnerRecord> tmpCollection = new ObservableCollection<OwnerRecord>();
+
+            string sqlExpression = "sp_GetClientInfoForReportAllStatuses";
+
+            var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
+            var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
+
+            using (SqlConnection connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(sqlExpression, connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                   
+                    SqlParameter secondParam = new SqlParameter
+                    {
+                        ParameterName = "@startDate",
+                        Value = startDate
+                    };
+                    SqlParameter thirdParam = new SqlParameter
+                    {
+                        ParameterName = "@endDate",
+                        Value = endDate
+                    };
+                                        
+                    command.Parameters.Add(secondParam);
+                    command.Parameters.Add(thirdParam);
+
+
+                    SqlDataReader result = command.ExecuteReader();
+
+                    if (result.HasRows)
+                    {
+
+                        while (result.Read())
+                        {
+                            OwnerRecord rec = new OwnerRecord
+                            {
+                                ClientId = (int)result.GetValue(0),
+                                OwnerName = result.GetValue(1) is DBNull ? "" : (string)result.GetValue(1),
+                                PersonId = (int)result.GetValue(2),
+                                MaxDeadLine = (DateTime)result.GetValue(4)
+                            };
+
+
+                            if (rec.OwnerName == "" || rec.OwnerName == "не задано")
+                                rec.OwnerName = (string)result.GetValue(3);
+                            tmpCollection.Add(rec);
+
+                        };
+                    }                    
+
+                    return tmpCollection;
+                }
+
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+            return null;
+        }
+
+        public ObservableCollection<OwnerRecord> GetFiltered1OwnerRecordsByStatusAndDate(bool status, DateTime startDate, DateTime endDate)
+        {
+            ObservableCollection<OwnerRecord> tmpCollection = new ObservableCollection<OwnerRecord>();
+
+            string sqlExpression = "sp_GetClientInfoForReportByStatus";
+
+            var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
+            var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
+
+            using (SqlConnection connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(sqlExpression, connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                    SqlParameter firstParam = new SqlParameter
+                    {
+                        ParameterName = "@free",
+                        Value = status
+                    };
+                    SqlParameter secondParam = new SqlParameter
+                    {
+                        ParameterName = "@startDate",
+                        Value = startDate
+                    };
+                    SqlParameter thirdParam = new SqlParameter
+                    {
+                        ParameterName = "@endDate",
+                        Value = endDate
+                    };
+
+                    command.Parameters.Add(firstParam);
+                    command.Parameters.Add(secondParam);
+                    command.Parameters.Add(thirdParam);
+
+                    SqlDataReader result = command.ExecuteReader();
+
+                    if (result.HasRows)
+                    {
+
+                        while (result.Read())
+                        {
+                            OwnerRecord rec = new OwnerRecord
+                            {
+                                ClientId = (int)result.GetValue(0),
+                                OwnerName = result.GetValue(1) is DBNull ? "" : (string)result.GetValue(1),
+                                PersonId = (int)result.GetValue(2),
+                                MaxDeadLine = (DateTime)result.GetValue(4)
+                            };
+
+
+                            if (rec.OwnerName == "" || rec.OwnerName == "не задано")
+                                rec.OwnerName = (string)result.GetValue(3);
+                            tmpCollection.Add(rec);
+
+                        };
+                    }
+                    
+
+                    return tmpCollection;
+                }
+
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+            return null;
+        }
+
+        public ObservableCollection<OwnerRecord> GetDeptors( DateTime curDate)
+        {
+            ObservableCollection<OwnerRecord> tmpCollection = new ObservableCollection<OwnerRecord>();
+
+            string sqlExpression = "sp_GetDeptors";
+
+            var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
+            var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
+
+            using (SqlConnection connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(sqlExpression, connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                    SqlParameter firstParam = new SqlParameter
+                    {
+                        ParameterName = "@curDate",
+                        Value = curDate
+                    };
+
+                    command.Parameters.Add(firstParam);                
+
+                    SqlDataReader result = command.ExecuteReader();
+
+                    if (result.HasRows)
+                    {
+
+                        while (result.Read())
+                        {
+                            OwnerRecord rec = new OwnerRecord
+                            {
+                                ClientId = (int)result.GetValue(0),
+                                OwnerName = result.GetValue(1) is DBNull ? "" : (string)result.GetValue(1),
+                                PersonId = (int)result.GetValue(2),
+                                MaxDeadLine = (DateTime)result.GetValue(4)
+                            };
+
+
+                            if (rec.OwnerName == "" || rec.OwnerName == "не задано")
+                                rec.OwnerName = (string)result.GetValue(3);
+                            tmpCollection.Add(rec);
+
+                        };
+                    }
+                   
+
+                    return tmpCollection;
+                }
+
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+            return null;
         }
 
     }
