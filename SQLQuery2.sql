@@ -70,7 +70,45 @@ create proc sp_GetPPHistory
                         join Vehicles veh on veh.ParkingPlace_ParkingPlaceId = pp.ParkingPlaceId
                         join Clients Cl on Cl.ClientId=veh.ClientOwner_ClientId
                         where Cl.ClientId=@clId and Pp.ParkPlaceNumber= @ppNumber and Ppl.DateOfChange>=@startDate and ppl.DateOfChange<=@endDate
+
+
+ create proc sp_GetClRepRecord
+                        @ppId int,
+                        @startDate date,
+                        @endDate date
+                        as
+                        Select  veh.VehicleId '0_VehicleId',veh.RegNumber '1_RegNumber',
+                        PPl.DateOfChange '2_DateOfChange'
+                        ,Us.UserId '3_UserId' 
+                        ,Pers.SecondName+' '+Pers.FirstName+' '+pers.Patronimic '4_PIB'
+                        From Clients Cl                         
+                        join Vehicles veh on veh.ClientOwner_ClientId=Cl.ClientId
+                        join ParkingPlaces PP on pp.ParkingPlaceId=veh.ParkingPlace_ParkingPlaceId
+                        join ParkingPlaceLogs PPl on Ppl.SomeParkingPlace_ParkingPlaceId=pp.ParkingPlaceId                         
+                        join.Users us on ppl.SomeUser_UserId=us.UserId
+                        join People Pers on cl.PersonCustomer_PersonId=pers.PersonId
+                        where pp.ParkingPlaceId=@ppId and Ppl.DateOfChange>=@startDate and Ppl.DateOfChange <@endDate
                         
+
+ create proc sp_GetClRepOnlyRecord
+                        @ppId int,
+                        @vehId int
+                        as
+                        Select  veh.VehicleId '0_VehicleId',veh.RegNumber '1_RegNumber',
+                        PPl.DateOfChange '2_DateOfChange'
+                        ,Us.UserId '3_UserId' 
+                        ,Pers.SecondName+' '+Pers.FirstName+' '+pers.Patronimic '4_PIB'
+                        From Clients Cl                         
+                        join Vehicles veh on veh.ClientOwner_ClientId=Cl.ClientId
+                        join ParkingPlaces PP on pp.ParkingPlaceId=veh.ParkingPlace_ParkingPlaceId
+                        join ParkingPlaceLogs PPl on Ppl.SomeParkingPlace_ParkingPlaceId=pp.ParkingPlaceId                         
+                        join.Users us on ppl.SomeUser_UserId=us.UserId
+                        join People Pers on cl.PersonCustomer_PersonId=pers.PersonId
+                        where pp.ParkingPlaceId=@ppId and veh.VehicleId=@vehId
+
+exec sp_GetClRepOnlyRecord '2','1'
+
+
 drop proc sp_GetClientInfoForReportByStatus
 create proc sp_GetClientInfoForReportByStatus
 @free bit,
@@ -151,6 +189,17 @@ execute sp_GetDeptors '2022.10.20'
 --GO
 
 --Storing values from procedure into temp table
-INSERT INTO #tmpMaleRecords
-EXEC  MaleRecords
-GO
+
+
+
+create proc sp_GetClientInfoForReport
+                            as
+                            Select Cl.ClientId '0_ClientId' ,  Cl.OrgName '1_OrgName', Pers.PersonId '2_PersonId', Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic '3_FIO',
+                                  MAX(ppl.DeadLine) '4_Max deadline'
+                            From Clients Cl
+                            join People Pers on Cl.PersonCustomer_PersonId=Pers.PersonId
+							join Vehicles veh on veh.ClientOwner_ClientId=Cl.ClientId
+                            join ParkingPlaces PP on Pp.ParkingPlaceId=veh.ParkingPlace_ParkingPlaceId
+                            join ParkingPlaceLogs PPl on PP.ParkingPlaceId=Ppl.SomeParkingPlace_ParkingPlaceId
+                            where pp.FreeStatus = 0
+                            group by Cl.ClientId ,  Cl.OrgName , Pers.PersonId , Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic		

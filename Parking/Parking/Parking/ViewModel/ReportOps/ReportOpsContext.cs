@@ -26,7 +26,9 @@ namespace Parking.ViewModel.ReportOps
 
         public ObservableCollection<OwnerRecord> OwnerRecords { get; set; }
         public ObservableCollection<ReportOpsRecord> ReportOpsRecords { get; set; }
-
+        public ObservableCollection<ParPlaceRecord> ParPlaceRecords { get; set; }
+        
+        
 
         private OwnerRecord selectedRecord;
         public OwnerRecord SelectedRecord
@@ -150,7 +152,7 @@ namespace Parking.ViewModel.ReportOps
                 if (enableFilter2 != value)
                 {
                     enableFilter2 = value;
-                    OnPropertyChanged4(nameof(EnableFilter2));
+                    OnPropertyChanged(nameof(EnableFilter2));
                 }
             }
         }
@@ -192,7 +194,9 @@ namespace Parking.ViewModel.ReportOps
             SetDefaultFilters();
             CurretnUserId = inputUserid;
             OwnerRecords = new ObservableCollection<OwnerRecord>();
-            ReportOpsRecords = new ObservableCollection<ReportOpsRecord>(); 
+            ReportOpsRecords = new ObservableCollection<ReportOpsRecord>();
+            ParPlaceRecords = new ObservableCollection<ParPlaceRecord>();
+
             StartHistoryDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddMonths(-1);
             EndHistoryDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddHours(23).AddMinutes(59).AddSeconds(59);
             FillOwnerRecords();//default filling data 
@@ -213,13 +217,18 @@ namespace Parking.ViewModel.ReportOps
         {
             if (OwnerRecords.Count() > 0)
             {
-                SelectedRecord.ParPlaceRecords = GetClientParkingPlaces(SelectedRecord.ClientId, StartHistoryDate, EndHistoryDate);
+                //ParPlaceRecords = GetClientParkingPlaces(SelectedRecord.ClientId, StartHistoryDate, EndHistoryDate);
+                ParPlaceRecords.Clear();
+                foreach (var item in GetClientParkingPlaces(SelectedRecord.ClientId, StartHistoryDate, EndHistoryDate))
+                    ParPlaceRecords.Add(item);
                 EnableFilter2 = true;
             };
         }
 
         private void ChangeParkPlaceSelecteRecord(object sender, PropertyChangedEventArgs e)
-        {            
+        {
+            if (ParPlaceSelecteRecord is null)
+                return;
             FillReportRecods(ParPlaceSelecteRecord.PPlace.ParkingPlaceId, StartHistoryDate, EndHistoryDate);
             EnableFilter3 = true;
         }
@@ -273,7 +282,7 @@ namespace Parking.ViewModel.ReportOps
                         dialogService.ShowMessage("Немає збігів");
                     }
 
-                    EnableFilter2 = EnableFilter3 = false;
+                   
                 }
 
                 catch (ArgumentNullException ex)
@@ -507,12 +516,12 @@ namespace Parking.ViewModel.ReportOps
                         ParkPlaceEditWindow parkWindow = new ParkPlaceEditWindow(CurretnUserId, CurrentPPRecord);
                         showWindow.ShowDialog(parkWindow);
                         //update visible data
-                        SelectedRecord.ParPlaceRecords = GetClientParkingPlaces(SelectedRecord.ClientId, StartHistoryDate, EndHistoryDate);
+                        ParPlaceRecords = GetClientParkingPlaces(SelectedRecord.ClientId, StartHistoryDate, EndHistoryDate);
                         FillReportRecods(ParPlaceSelecteRecord.PPlace.ParkingPlaceId, StartHistoryDate, EndHistoryDate);                       
                     }
                     ));
 
-        FolterForReportWindow win;
+        
 
         private RelayCommand callFilter1Command;
         public RelayCommand CallFilter1Command => callFilter1Command ?? (callFilter1Command = new RelayCommand(
@@ -558,20 +567,44 @@ namespace Parking.ViewModel.ReportOps
                     }
                     ));
 
-        //for filtering byte date in right side of PerortOpsWindow.xaml
-        private RelayCommand findCommand;
-        public RelayCommand FindCommand => findCommand ?? (findCommand = new RelayCommand(
+        private RelayCommand callFilter2Command;
+        public RelayCommand CallFilter2Command => callFilter2Command ?? (callFilter2Command = new RelayCommand(
                     (obj) =>
                     {
-                        //methode name
+                        if (!Filter2.CheckArg1 && !Filter2.CheckArg2)
+                        {
+                            dialogService.ShowMessage("Не активовано жодного фыльтру.");
+                            return;
+                        }
+                        ParPlaceRecords = lib.GetFilteredParPlaceRecords(Filter2.CheckArg1, Filter2.CheckArg2, Filter2.IntArg1, Filter2.CheckArg3, ParPlaceRecords);
+                        
+                        if (ParPlaceRecords.Count() == 0)
+                        {
+                            dialogService.ShowMessage("Немаэ співпадінь.\n Показуэмо попредны данні." );
+                            ParPlaceRecords.Clear();
+                            foreach (var item in GetClientParkingPlaces(SelectedRecord.ClientId, StartHistoryDate, EndHistoryDate))
+                                ParPlaceRecords.Add(item);
+                        }
                     }
                     ));
+       
+
+
+
 
         private RelayCommand clearFilter1Command;
         public RelayCommand ClearFilter1Command => clearFilter1Command ?? (clearFilter1Command = new RelayCommand(
                     (obj) =>
                     {
                         Filter1.ClearFilters();
+                    }
+                    ));
+
+        private RelayCommand clearFilter2Command;
+        public RelayCommand ClearFilter2Command => clearFilter2Command ?? (clearFilter2Command = new RelayCommand(
+                    (obj) =>
+                    {
+                        Filter2.ClearFilters();
                     }
                     ));
 

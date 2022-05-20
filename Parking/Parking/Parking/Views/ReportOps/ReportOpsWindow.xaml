@@ -123,6 +123,10 @@
                               AutoGenerateColumns="False" SelectionMode="Single"
                               IsReadOnly="True"    VerticalAlignment="Top"
                               RowHeight="30" FontSize="14">
+                        <DataGrid.InputBindings>
+                            <MouseBinding  MouseAction="LeftDoubleClick" Command="{Binding EditparkPlaceCommand}" /> 
+                        </DataGrid.InputBindings>
+
                         <DataGrid.Columns>
                             <DataGridTextColumn Width="0.82*"  Binding="{Binding OwnerName, UpdateSourceTrigger=PropertyChanged}"  Header="Власник"/>
                             <DataGridTextColumn Width="0.32*"  Binding="{Binding MaxDeadLine,StringFormat=\{0:dd.MM.yy \}, UpdateSourceTrigger=PropertyChanged}"  Header="Сплачено до"/>
@@ -152,26 +156,35 @@
                                 <StackPanel Background="White">
                                     <CheckBox   Content=" Номер паркувального місця " VerticalAlignment="Center"
                                                   FontWeight="Bold" 
-                                                  IsChecked="{Binding Filter.CheckArg8, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                                                  IsChecked="{Binding Filter2.CheckArg1, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
 
-                                    <TextBox  Text="{Binding Filter.IntArg1, Mode=TwoWay}"  Margin="5,00"
-                                                  Width="190" MaxLength="5" TextAlignment="Center" 
-                                                  ToolTip="Лише цифри" />
+
+                                    <ComboBox x:Name="ColorCombo"  Width="185"  VerticalAlignment="Center" Margin="0,0,0,20"
+                                         SelectedIndex="0"
+                                         ItemsSource="{Binding  ParPlaceRecords, UpdateSourceTrigger=PropertyChanged}"                                          
+                                         SelectedValue="{Binding Filter2.IntArg1, Mode=OneWay}"
+                                            SelectedValuePath="ColorName"
+                                                                                                         
+                                         HorizontalContentAlignment="Center"
+                                         DisplayMemberPath="PPlace.ParkPlaceNumber"
+                                         Background="White" 
+                                         FontSize="14" >
+                                    </ComboBox>
                                     <StackPanel Orientation="Horizontal"  Margin="5,5,0,0">
                                         <CheckBox  Content=" Статсус " VerticalAlignment="Center"
                                                   FontWeight="Bold" ToolTip="Можна щось одне: прізвище. ім'я чи по батькові. Більше шансів."                             
-                                                  IsChecked="{Binding Filter.CheckArg4, UpdateSourceTrigger=PropertyChanged}"/>     
+                                                  IsChecked="{Binding Filter2.CheckArg2, UpdateSourceTrigger=PropertyChanged}"/>     
                                         <RadioButton GroupName="С" Content="Заїхав  " FontWeight="Bold" Foreground="Blue"  VerticalAlignment="Center"
-                                                       IsChecked="{Binding  Filter.CheckArg6, UpdateSourceTrigger=PropertyChanged}"/>
+                                                       IsChecked="{Binding  Filter2.CheckArg3, UpdateSourceTrigger=PropertyChanged}"/>
                                         <RadioButton GroupName="С" Content="Виїхав"  FontWeight="Bold" Foreground="Blue" VerticalAlignment="Center" 
-                                                      IsChecked="{Binding Filter.CheckArg7, UpdateSourceTrigger=PropertyChanged}"/>
+                                                      IsChecked="{Binding Filter2.CheckArg4, UpdateSourceTrigger=PropertyChanged}"/>
                                     </StackPanel>
                                     
                                     <Button Content="Застосувати фільтри"  HorizontalAlignment="Stretch"
-                                    Command="{Binding ApplyLeftFiltersCommand}"
+                                    Command="{Binding CallFilter2Command}"
                                     Background="#FF7E4A00"   Margin="3" MinHeight="25" MaxWidth="270"/>
                                     <Button Content="Очистити фільтри" Margin="3" MinHeight="25" MaxWidth="270"
-                                    Command="{Binding ClearLeftFilterCommand}" HorizontalAlignment="Stretch"
+                                    Command="{Binding ClearFilter2Command}" HorizontalAlignment="Stretch"
                                     Background="Orange" />
                                 </StackPanel>
                             </Border>
@@ -187,7 +200,7 @@
 
 
                     <DataGrid x:Name="PPRecords" Grid.Row="1"
-                              ItemsSource="{Binding SelectedRecord.ParPlaceRecords, UpdateSourceTrigger=PropertyChanged}" 
+                              ItemsSource="{Binding ParPlaceRecords, UpdateSourceTrigger=PropertyChanged}" 
                                SelectedItem="{Binding ParPlaceSelecteRecord, UpdateSourceTrigger=PropertyChanged}"
                               Margin="3"            
                               AutoGenerateColumns="False" SelectionMode="Single"
@@ -302,7 +315,7 @@
                                     </StackPanel>
                                 </Border>
                             </Popup>
-                            <TextBlock Text="Задати проміжок " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="30,0,0,0" />
+                            <!--<TextBlock Text="Задати проміжок " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="30,0,0,0" />
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text=" з  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
@@ -320,7 +333,7 @@
                                         Command="{Binding ShowCommandCommand}" 
                                         IsEnabled="{Binding EnableFilter3,UpdateSourceTrigger=PropertyChanged}"/>
 
-                            </StackPanel>
+                            </StackPanel>-->
                         </StackPanel>
                     </StackPanel>
 

@@ -29,7 +29,7 @@ namespace Parking.ViewModel.ParkPlacesOps
 
         public ObservableCollection<VehicleColor> VehicleColors { get; set; }
 
-
+       
         public ObservableCollection<ParkPlaceHisrtoryRecord> ParkPlaceHisrtoryRecords { get; set; }
 
         private ParkingPlaceRecord currentRecord;

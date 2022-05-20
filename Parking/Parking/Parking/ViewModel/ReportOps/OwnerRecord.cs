@@ -10,7 +10,7 @@ namespace Parking.ViewModel.ReportOps
     {
         public OwnerRecord()
         {
-            ParPlaceRecords = new ObservableCollection<ParPlaceRecord>();
+          
         }
 
         public int ClientId { get; set; }
@@ -52,7 +52,7 @@ namespace Parking.ViewModel.ReportOps
         }
 
         
-         public ObservableCollection<ParPlaceRecord> ParPlaceRecords { get; set; }
+         
         //public ObservableCollection<ReportOpsRecord> ReportOpsRecords { get; set; }
 
     }

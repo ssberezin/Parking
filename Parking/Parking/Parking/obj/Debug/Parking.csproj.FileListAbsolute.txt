@@ -73,7 +73,6 @@ D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Vi
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.AssemblyReference.cache
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\ParkPlacesOps\ParkPlaceEditWindow.g.cs
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\ParkPlacesOps\ParkPlaceEditWindow.baml
-D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.SuggestedBindingRedirects.cache
 e:\Parking\Parking\Parking\Parking\obj\Debug\Views\Buttons.baml
 e:\Parking\Parking\Parking\Parking\obj\Debug\MainWindow.g.cs
 e:\Parking\Parking\Parking\Parking\obj\Debug\Views\ParkPlacesOps\ParkPlaceEditWindow.g.cs
@@ -143,3 +142,9 @@ E:\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.g.c
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.baml
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\FilterOps\FolterForReportWindow.g.cs
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\FilterOps\FolterForReportWindow.baml
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\FilterOps\FolterForReportWindow.g.cs
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.g.cs
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleTypesOps\VehicleTypesOpsWin.g.cs
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\FilterOps\FolterForReportWindow.baml
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.baml
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleTypesOps\VehicleTypesOpsWin.baml

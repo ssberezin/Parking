@@ -650,7 +650,7 @@ namespace Parking.Helpes
                 try
                 {
 
-                    db.Database.ExecuteSqlCommand
+                    db.Database.ExecuteSqlCommand//
                        (@"
                          Create proc sp_GetAllParkingPlaces
                             as
@@ -753,10 +753,11 @@ namespace Parking.Helpes
                                   MAX(ppl.DeadLine) '4_Max deadline'
                             From Clients Cl
                             join People Pers on Cl.PersonCustomer_PersonId=Pers.PersonId
-                            join ParkingPlaces PP on Cl.ClientId=PP.SomeClient_ClientId
+							join Vehicles veh on veh.ClientOwner_ClientId=Cl.ClientId
+                            join ParkingPlaces PP on Pp.ParkingPlaceId=veh.ParkingPlace_ParkingPlaceId
                             join ParkingPlaceLogs PPl on PP.ParkingPlaceId=Ppl.SomeParkingPlace_ParkingPlaceId
                             where pp.FreeStatus = 0
-                            group by Cl.ClientId ,  Cl.OrgName , Pers.PersonId , Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic			 
+                            group by Cl.ClientId ,  Cl.OrgName , Pers.PersonId , Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic		
 
                         ");
                     db.Database.ExecuteSqlCommand
@@ -1242,5 +1243,88 @@ namespace Parking.Helpes
             return null;
         }
 
+
+        //---------------------------------FOR SECOND FILTER IN REPORToPSwINDOW-----------------------------------
+
+        public ObservableCollection<ParPlaceRecord> GetFilteredParPlaceRecords(bool check1, bool check2, int pNum, bool released, ObservableCollection<ParPlaceRecord> records)
+        {
+            ObservableCollection<ParPlaceRecord> tmpCollecton = new ObservableCollection<ParPlaceRecord>();
+
+            if (check1)
+            {
+                tmpCollecton = FindByNum(pNum, records, tmpCollecton);
+                if (tmpCollecton.Count() == 0)
+                    return tmpCollecton;
+            }
+            if (check2)
+            {
+                tmpCollecton = FindByReleased(released, records, tmpCollecton);
+                if (tmpCollecton.Count() == 0)
+                    return tmpCollecton;
+            }
+            return tmpCollecton;
+        }
+
+        public ObservableCollection<ParPlaceRecord> FindByNum(int pNum, ObservableCollection<ParPlaceRecord> records, ObservableCollection<ParPlaceRecord> tmpRec1)
+        {
+            ObservableCollection<ParPlaceRecord> tmpRec2 = new ObservableCollection<ParPlaceRecord>();
+            if (tmpRec1.Count() == 0)
+            {
+                foreach (ParPlaceRecord item in records)
+                    if (item.PPlace.ParkPlaceNumber == pNum)
+                        tmpRec1.Add(item);
+            }
+            else
+            {
+                foreach (ParPlaceRecord item in records)
+                    if (item.PPlace.ParkPlaceNumber == pNum)
+                        tmpRec2.Add(item);
+                if (tmpRec2.Count() != 0)
+                {
+                    tmpRec1.Clear();
+                    tmpRec1 = CopyRecords(tmpRec2);
+                    tmpRec2.Clear();
+                }
+                else
+                    return tmpRec2;
+
+            }
+            return tmpRec1;
+        }
+
+        public ObservableCollection<ParPlaceRecord> FindByReleased(bool released, ObservableCollection<ParPlaceRecord> records, ObservableCollection<ParPlaceRecord> tmpRec1)
+        {
+            ObservableCollection<ParPlaceRecord> tmpRec2 = new ObservableCollection<ParPlaceRecord>();
+            if (tmpRec1.Count() == 0)
+            {
+                foreach (ParPlaceRecord item in records)
+                    if (item.PPlace.Released == released)
+                        tmpRec1.Add(item);
+            }
+            else
+            {
+                foreach (ParPlaceRecord item in records)
+                    if (item.PPlace.Released == released)
+                        tmpRec2.Add(item);
+                if (tmpRec2.Count() != 0)
+                {
+                    tmpRec1.Clear();
+                    tmpRec1 = CopyRecords(tmpRec2);
+                    tmpRec2.Clear();
+                }
+                else
+                    return tmpRec2;
+
+            }
+            return tmpRec1;
+        }
+
+        public static ObservableCollection<T> CopyRecords<T>(ObservableCollection<T> Records)
+        {
+            ObservableCollection<T> tmpRecords = new ObservableCollection<T>();
+            foreach (T item in Records)
+                tmpRecords.Add(item);
+            return tmpRecords;
+        }
     }
 }
