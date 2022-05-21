@@ -203,3 +203,17 @@ create proc sp_GetClientInfoForReport
                             join ParkingPlaceLogs PPl on PP.ParkingPlaceId=Ppl.SomeParkingPlace_ParkingPlaceId
                             where pp.FreeStatus = 0
                             group by Cl.ClientId ,  Cl.OrgName , Pers.PersonId , Pers.SecondName + ' ' + pers.FirstName+' '+ pers.Patronimic		
+
+
+
+Create proc sp_GetVehPayDateMoney
+@vehId int
+as
+select ppl.PayingDate, ppl.Money
+From ParkingPlaceLogs ppl
+Where ppl.PayingDate=(Select  max(ppl.PayingDate) 'PayingDate'
+From Vehicles veh
+join ParkingPlaces pp on veh.ParkingPlace_ParkingPlaceId=pp.ParkingPlaceId
+join ParkingPlaceLogs ppl on pp.ParkingPlaceId=ppl.SomeParkingPlace_ParkingPlaceId
+where veh.VehicleId=@vehId and ppl.Money!=0)
+

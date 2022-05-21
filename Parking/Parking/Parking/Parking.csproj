@@ -127,9 +127,6 @@
     <Compile Include="Views\CompanyOps\CompanyInfo.xaml.cs">
       <DependentUpon>CompanyInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FilterOps\FolterForReportWindow.xaml.cs">
-      <DependentUpon>FolterForReportWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\ParkPlacesOps\ParkPlaceEditWindow.xaml.cs">
       <DependentUpon>ParkPlaceEditWindow.xaml</DependentUpon>
     </Compile>
@@ -175,10 +172,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CompanyOps\CompanyInfo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\FilterOps\FolterForReportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

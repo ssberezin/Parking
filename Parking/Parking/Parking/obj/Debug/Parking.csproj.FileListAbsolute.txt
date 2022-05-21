@@ -121,7 +121,6 @@ e:\Parking\Parking\Parking\Parking\obj\Debug\Parking.Properties.Resources.resour
 e:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.GenerateResource.cache
 e:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.CoreCompileInputs.cache
 e:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.CopyComplete
-E:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.AssemblyReference.cache
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\CompanyOps\CompanyInfo.g.cs
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\CompanyOps\CompanyInfo.baml
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\PrintOps\PrintBlank.g.cs
@@ -140,11 +139,11 @@ E:\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleTypesOps\VehicleTypesO
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleTypesOps\VehicleTypesOpsWin.baml
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.g.cs
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.baml
-E:\Parking\Parking\Parking\Parking\obj\Debug\Views\FilterOps\FolterForReportWindow.g.cs
-E:\Parking\Parking\Parking\Parking\obj\Debug\Views\FilterOps\FolterForReportWindow.baml
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\FilterOps\FolterForReportWindow.g.cs
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.g.cs
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleTypesOps\VehicleTypesOpsWin.g.cs
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\FilterOps\FolterForReportWindow.baml
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.baml
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleTypesOps\VehicleTypesOpsWin.baml
+E:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.AssemblyReference.cache
+E:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.SuggestedBindingRedirects.cache

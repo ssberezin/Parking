@@ -1,7 +1,7 @@
 ﻿using Parking.Helpes;
 using Parking.Model;
 using Parking.ViewModel.FilterOps;
-using Parking.Views.FilterOps;
+
 using Parking.Views.ParkPlacesOps;
 using Parking.Views.PrintOps;
 using System;
@@ -452,15 +452,12 @@ namespace Parking.ViewModel.ReportOps
                                 VehicleNumber = (string)result.GetValue(1),
                                 UserId = (int)result.GetValue(3),
                                 UserData = (string)result.GetValue(4)
-                            };
-                            if (!(result.GetValue(4) is DBNull))
-                            {
-                                DateTime dat = (DateTime)result.GetValue(2);
-                                rec.EventDate = dat.ToString("dd/MM/yyyy");
-                                rec.EventTime = dat.ToString("HH:mm:ss");
-                            };
-                           ReportOpsRecords.Add(rec);
 
+                            };
+                            if (!(result.GetValue(4) is DBNull))                            
+                                rec.EventDate = (DateTime)result.GetValue(2);                                                              
+                            
+                           ReportOpsRecords.Add(rec);
                         };                        
                     }
                     else
@@ -587,7 +584,27 @@ namespace Parking.ViewModel.ReportOps
                         }
                     }
                     ));
-       
+
+        private RelayCommand callFilter3Command;
+        public RelayCommand CallFilter3Command => callFilter3Command ?? (callFilter3Command = new RelayCommand(
+                    (obj) =>
+                    {
+                        if (!Filter3.CheckArg1 && !Filter3.CheckArg2 && !Filter3.CheckArg3)
+                        {
+                            dialogService.ShowMessage("Не активовано жодного фыльтру.");
+                            return;
+                        }
+                        ReportOpsRecords = lib.GetFilteredParPlaceRecords(Filter3, StartHistoryDate, EndHistoryDate, ReportOpsRecords);
+
+                        if (ReportOpsRecords.Count() == 0)
+                        {
+                            dialogService.ShowMessage("Немаэ співпадінь.\n Показуэмо попредны данні.");
+                            ReportOpsRecords.Clear();
+                            FillReportRecods(ParPlaceSelecteRecord.PPlace.ParkingPlaceId, StartHistoryDate, EndHistoryDate);
+                        }
+                    }
+                    ));
+
 
 
 
@@ -605,6 +622,14 @@ namespace Parking.ViewModel.ReportOps
                     (obj) =>
                     {
                         Filter2.ClearFilters();
+                    }
+                    ));
+
+        private RelayCommand clearFilter3Command;
+        public RelayCommand ClearFilter3Command => clearFilter3Command ?? (clearFilter3Command = new RelayCommand(
+                    (obj) =>
+                    {
+                        Filter3.ClearFilters();
                     }
                     ));
 

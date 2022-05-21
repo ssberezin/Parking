@@ -7,13 +7,12 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:w="clr-namespace:Parking.Helpes"
         xmlns:helpes ="clr-namespace:Parking.Helpes"
-        xmlns:reportops="clr-namespace:Parking.ViewModel.ReportOps" xmlns:wpfTool="http://schemas.xceed.com/wpf/xaml/toolkit" d:DataContext="{d:DesignInstance Type=reportops:ReportOpsContext}"
+        xmlns:reportops="clr-namespace:Parking.ViewModel.ReportOps" xmlns:wpfTool="http://schemas.xceed.com/wpf/xaml/toolkit"
+        d:DataContext="{d:DesignInstance Type=reportops:ReportOpsContext}"
         mc:Ignorable="d"
         Title="ReportOps" Height="450" Width="1200"
         WindowStartupLocation="CenterScreen" >
-    <i:Interaction.Behaviors>
-        <w:HideCloseButtonOnWindow />
-    </i:Interaction.Behaviors>
+   
     <Window.Resources>
         <ResourceDictionary>
             
@@ -154,13 +153,13 @@
                                AllowsTransparency="True">
                             <Border BorderBrush="Black" BorderThickness="1">
                                 <StackPanel Background="White">
-                                    <CheckBox   Content=" Номер паркувального місця " VerticalAlignment="Center"
+                                    <CheckBox x:Name="Check2_1"  Content=" Номер паркувального місця " VerticalAlignment="Center"
                                                   FontWeight="Bold" 
                                                   IsChecked="{Binding Filter2.CheckArg1, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
 
 
                                     <ComboBox x:Name="ColorCombo"  Width="185"  VerticalAlignment="Center" Margin="0,0,0,20"
-                                         SelectedIndex="0"
+                                         SelectedIndex="0" IsEnabled="{Binding ElementName=Check2_1,  Path=IsChecked}"
                                          ItemsSource="{Binding  ParPlaceRecords, UpdateSourceTrigger=PropertyChanged}"                                          
                                          SelectedValue="{Binding Filter2.IntArg1, Mode=OneWay}"
                                             SelectedValuePath="ColorName"
@@ -171,13 +170,17 @@
                                          FontSize="14" >
                                     </ComboBox>
                                     <StackPanel Orientation="Horizontal"  Margin="5,5,0,0">
-                                        <CheckBox  Content=" Статсус " VerticalAlignment="Center"
+                                        <CheckBox x:Name="Check2_2"  Content=" Статсус " VerticalAlignment="Center"
                                                   FontWeight="Bold" ToolTip="Можна щось одне: прізвище. ім'я чи по батькові. Більше шансів."                             
-                                                  IsChecked="{Binding Filter2.CheckArg2, UpdateSourceTrigger=PropertyChanged}"/>     
-                                        <RadioButton GroupName="С" Content="Заїхав  " FontWeight="Bold" Foreground="Blue"  VerticalAlignment="Center"
+                                                  IsChecked="{Binding Filter2.CheckArg2, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <StackPanel Orientation="Horizontal" IsEnabled="{Binding ElementName=Check2_1,  Path=IsChecked}">
+                                            <RadioButton GroupName="С" Content="Заїхав  " FontWeight="Bold" Foreground="Blue"  VerticalAlignment="Center"
                                                        IsChecked="{Binding  Filter2.CheckArg3, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <RadioButton GroupName="С" Content="Виїхав"  FontWeight="Bold" Foreground="Blue" VerticalAlignment="Center" 
+                                            <RadioButton GroupName="С" Content="Виїхав"  FontWeight="Bold" Foreground="Blue" VerticalAlignment="Center" 
                                                       IsChecked="{Binding Filter2.CheckArg4, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        </StackPanel>
+                                        
                                     </StackPanel>
                                     
                                     <Button Content="Застосувати фільтри"  HorizontalAlignment="Stretch"
@@ -252,65 +255,57 @@
                                 <Border BorderBrush="Black" BorderThickness="1">
                                     <StackPanel Background="White">
                                         <StackPanel>
-                                            <StackPanel    Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
-                                                <CheckBox   Content="Держ.номер ТЗ  " VerticalAlignment="Center"                               
-                                              FontWeight="Bold"
-                                              IsChecked="{Binding  Filter.CheckArg9, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                                                <TextBox  Text="{Binding Filter.StrArg3, UpdateSourceTrigger=PropertyChanged}"  Margin="5,5"
-                                    Width="170" MaxLength="8"/>
-                                            </StackPanel>
+
+                                            <CheckBox x:Name="Check3_1"  Content="Держ.номер ТЗ  " HorizontalAlignment="Center"                               
+                                              FontWeight="Bold" Margin="0,3,0,0"
+                                              IsChecked="{Binding  Filter3.CheckArg1, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBox  IsEnabled="{Binding ElementName=Check3_1, Path=IsChecked}"
+                                                Text="{Binding Filter3.StrArg1, UpdateSourceTrigger=PropertyChanged}"  Margin="5,5"
+                                                Width="170" MaxLength="8"/>
+                                           
                                         </StackPanel>
                                         <StackPanel HorizontalAlignment="Center">
 
-                                            <CheckBox   Content="Дата виїзду/заїзду  " VerticalAlignment="Center" HorizontalAlignment="Center" 
-                                              FontWeight="Bold" Margin="0,5,0,0"
-                                              IsChecked="{Binding  Filter.CheckArg10,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                            <CheckBox x:Name="Check3_2"
+                                                  Content="Дата виїзду/заїзду  " VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                                  FontWeight="Bold" Margin="0,5,0,0"
+                                                  IsChecked="{Binding  Filter3.CheckArg2,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
 
-                                                <TextBlock Text=" з  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                <DatePicker x:Name="StartDate" IsDropDownOpen="False" SelectedDateFormat="Short"                             
-                                                HorizontalAlignment="Center"                                                 
-                                                SelectedDate="{Binding StartHistoryDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                HorizontalContentAlignment="Center"/>
+                                            <TextBlock Text=" з  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <wpfTool:DateTimePicker  HorizontalAlignment="Center" IsEnabled="{Binding ElementName=Check3_2, Path=IsChecked}"
+                                                                          Value="{Binding StartHistoryDate}"
+                                                                         HorizontalContentAlignment="Center"/>
                                                 <TextBlock Text=" до  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short"                             
-                                                HorizontalAlignment="Center"  
-                                                DisplayDateStart="{Binding StartHistoryDate,UpdateSourceTrigger=PropertyChanged}"
-                                                SelectedDate="{Binding EndHistoryDate,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                HorizontalContentAlignment="Center"/>
+                                            <wpfTool:DateTimePicker  HorizontalAlignment="Center"  IsEnabled="{Binding ElementName=Check3_2, Path=IsChecked}"
+                                                                         Value="{Binding EndHistoryDate}"
+                                                                         HorizontalContentAlignment="Center"/>
+                                           
+                                            <StackPanel   Margin="3" VerticalAlignment="Center" >
+                                                <CheckBox  x:Name="Check3_3" Content=" Піб оператора " HorizontalAlignment="Center"
+                                                          FontWeight="Bold" ToolTip="Можна щось одне: прізвище. ім'я чи по батькові. Більше шансів."                             
+                                                          IsChecked="{Binding Filter3.CheckArg3, UpdateSourceTrigger=PropertyChanged}"/>        
 
-                                            </StackPanel>
-                                        </StackPanel>
-
-                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,0">
-                                            <CheckBox IsChecked="{Binding  Filter.CheckArg11}"   Content="Час виїзду/заїзду  " VerticalAlignment="Center" HorizontalAlignment="Center"
-                                                        Margin="0,5,0,0"/>
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,0">
-                                                <TextBlock Text=" з  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                <wpfTool:DateTimePicker  HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
-                                                <TextBlock Text=" до  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                <wpfTool:DateTimePicker  HorizontalAlignment="Center"  
-                                                HorizontalContentAlignment="Center"/>
-                                            </StackPanel>
-                                            <StackPanel   Margin="3" VerticalAlignment="Center" Orientation="Horizontal" >
-                                                <CheckBox  Content=" Піб оператора " VerticalAlignment="Center"
-                              FontWeight="Bold" ToolTip="Можна щось одне: прізвище. ім'я чи по батькові. Більше шансів."                             
-                              IsChecked="{Binding Filter.CheckArg12, UpdateSourceTrigger=PropertyChanged}"/>
-
-                                                <TextBox  Text="{Binding Filter.StrArg4, Mode=TwoWay}"  Margin="5,5"
-                                  Width="180" MaxLength="28"
+                                                <TextBox  Text="{Binding Filter3.StrArg2, Mode=TwoWay}"
+                                                          Margin="5,5" IsEnabled="{Binding ElementName=Check3_3, Path=IsChecked}"
+                                                          Width="180" MaxLength="28"
                                       ToolTip="Можно указать или имя или фамилию, или отчество"/>
                                             </StackPanel>
 
 
                                         </StackPanel>
 
+                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,0">
+                                           
+                                            
+
+                                        </StackPanel>
+
 
                                         <Button Content="Застосувати фільтри"  HorizontalAlignment="Stretch"
-                                                Command="{Binding ApplyLeftFiltersCommand}"
+                                                Command="{Binding CallFilter3Command}"
                                                 Background="#FF7E4A00"   Margin="3" MinHeight="25" MaxWidth="270"/>
                                         <Button Content="Очистити фільтри" Margin="3" MinHeight="25" MaxWidth="270"
-                                                Command="{Binding ClearLeftFilterCommand}" HorizontalAlignment="Stretch"
+                                                Command="{Binding ClearFilter3Command}" HorizontalAlignment="Stretch"
                                                 Background="Orange" />      
                                     </StackPanel>
                                 </Border>
@@ -353,8 +348,8 @@
 
                             <DataGridTextColumn Width="0.40*"  Binding="{Binding VehicleNumber, UpdateSourceTrigger=PropertyChanged}"  Header="Держ.номер ТЗ"/>
 
-                            <DataGridTextColumn Width="0.34*"  Binding="{Binding EventDate}"  Header="Дата"/>
-                            <DataGridTextColumn Width="0.34*"  Binding="{Binding EventTime}"  Header="Час"/>
+                            <DataGridTextColumn Width="0.34*"  Binding="{Binding EventDate, StringFormat=\{0:dd.MM.yy \}}"  Header="Дата"/>
+                            <DataGridTextColumn Width="0.34*"  Binding="{Binding EventDate, StringFormat=\{0:hh.mm.ss \}}"  Header="Час"/>
                             <DataGridTextColumn Width="0.84*"  Binding="{Binding UserData}"  Header="ПІБ оператора"/>
 
 

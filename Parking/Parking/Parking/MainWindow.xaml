@@ -27,39 +27,61 @@
 
             <RowDefinition/>
             <RowDefinition/>
+            
             <RowDefinition Height="0.75*"/>
         </Grid.RowDefinitions>
         <Viewbox   MaxHeight="20"  Stretch="Uniform" Margin="5" HorizontalAlignment="Center" 
                      VerticalAlignment="Stretch" >
-            <TextBlock  Text="Логін:" FontWeight="Bold"/>
+            <TextBlock  Text="Логін:" FontWeight="Bold" Visibility="{Binding ConnectionWell, UpdateSourceTrigger=PropertyChanged}"/>
         </Viewbox>
 
         <TextBox x:Name="Login" Grid.Column="1" Grid.ColumnSpan="2"  Margin="5" 
                  Background="White"  MaxLength="30" HorizontalContentAlignment="Center"                 
                  Text="{Binding  UserLogin , Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center"
-                  TextAlignment="Center"  TabIndex="0">
+                  TextAlignment="Center"  TabIndex="0" Visibility="{Binding ConnectionWell, UpdateSourceTrigger=PropertyChanged}">
+
+        </TextBox>
+
+        <TextBox  Grid.Row="1"  Grid.ColumnSpan="3"  Margin="5" 
+                  Visibility="{Binding SqlEditVisability, UpdateSourceTrigger=PropertyChanged}"
+                  Background="White"  MaxLength="30" HorizontalContentAlignment="Center"                 
+                  Text="{Binding NewServerName, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center"
+                  TextAlignment="Center"  TabIndex="0" >
 
         </TextBox>
 
         <Viewbox Grid.Row="1"  MaxHeight="20"  Stretch="Uniform" Margin="5" HorizontalAlignment="Center" 
                      VerticalAlignment="Stretch" >
-            <TextBlock  Text="Пароль:" FontWeight="Bold" />
+            <TextBlock  Text="Пароль:" FontWeight="Bold" Visibility="{Binding ConnectionWell, UpdateSourceTrigger=PropertyChanged}"/>
+        </Viewbox>
+
+        <Viewbox Grid.ColumnSpan="3"  MaxHeight="20"  Stretch="Uniform" Margin="5" HorizontalAlignment="Center" 
+                     VerticalAlignment="Stretch" >
+            <TextBlock  Text="Введіть назву SQl серверу" FontWeight="Bold" 
+                        Visibility="{Binding SqlEditVisability, UpdateSourceTrigger=PropertyChanged}"
+                        Foreground="Red"/>
         </Viewbox>
 
 
         <PasswordBox x:Name="passwordBox"  Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1"
                       Margin="5.2,5.4,0,5.2" Background="White" HorizontalAlignment="Left"
                       PasswordChar="*" Width="230" TabIndex="1" HorizontalContentAlignment="Center"
-                     VerticalAlignment="Stretch" VerticalContentAlignment="Center"/>
-        <TextBlock Padding="10,0" x:Name="plain" />
+                     VerticalAlignment="Stretch" VerticalContentAlignment="Center"
+                     Visibility="{Binding ConnectionWell, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Padding="10,0" x:Name="plain" Visibility="{Binding ConnectionWell, UpdateSourceTrigger=PropertyChanged}" />
 
 
         <Viewbox MaxHeight="18"  Stretch="Uniform" Margin="2" HorizontalAlignment="Right" Grid.Row="2"                 
                      VerticalAlignment="Center" >
         </Viewbox>
+        <Button Grid.Column="1" Grid.Row="2" Content="Ok"
+                Command="{Binding NewServerConnectionCommand }"
+                CommandParameter="{Binding ElementName=LogWindow}"
+                Visibility="{Binding SqlEditVisability, UpdateSourceTrigger=PropertyChanged}"/>
 
         <Button  Grid.Row="2" Grid.Column="2" Content="Ok" Background="Blue" Foreground="White"                
-                TabIndex="3" >
+                TabIndex="3"
+                 Visibility="{Binding ConnectionWell, UpdateSourceTrigger=PropertyChanged}">
             <!-- For using few commands we have setup Microsoft.Xaml.Behaviors.Wpf NuGet package 
             and set  xmlns:i="http://schemas.microsoft.com/xaml/behaviors"-->
             <i:Interaction.Triggers>

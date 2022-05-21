@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Parking.ViewModel
 {
-    public class MainViewModel: Helpes.ObservableObject
+    public class MainViewModel : Helpes.ObservableObject
     {
         IDialogService dialogService;
         IShowWindowService showWindow;
@@ -64,8 +64,6 @@ namespace Parking.ViewModel
             }
         }
 
-        
-
         private string deadLine;
         public string DeadLine
         {
@@ -93,6 +91,24 @@ namespace Parking.ViewModel
                 }
             }
         }
+
+        private string reportMessage;
+        public string ReportMessage
+        {
+            get { return reportMessage; }
+            set
+            {
+                if (reportMessage != value)
+                {
+                    reportMessage = value;
+                    OnPropertyChanged(nameof(ReportMessage));
+                }
+            }
+        }
+
+        private int FreeCount { get; set; }
+        private int ReleasedCount { get; set; }
+
 
         Library lib;
         public MainViewModel()
@@ -159,6 +175,11 @@ namespace Parking.ViewModel
                             };
 
                             Records.Add(record);
+                            if (!record.SomeParkingPlace.FreeStatus.Value)
+                                FreeCount++;
+                            if (record.SomeParkingPlace.Released)
+                                ReleasedCount++;
+                            ReportMessage = "Зайнято "+FreeCount+" місць. На місці "+ReleasedCount;
                         };                        
                     }
                     else

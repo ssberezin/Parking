@@ -2,14 +2,14 @@
 using Parking.ViewModel.FilterOps;
 using Parking.ViewModel.ReportOps;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+
 
 namespace Parking.Helpes
 {
@@ -22,6 +22,47 @@ namespace Parking.Helpes
         {
             showWindow = new DefaultShowWindowService();
             dialogService = new DefaultDialogService();
+        }
+
+
+        public bool CheckSqlConnection()
+        {
+            
+            string servNameFromFile = ReadServerNameFromFile();
+            string connectString = ConfigurationManager.ConnectionStrings["ParkingDB"].ToString();
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connectString);
+            string serverNameInConString = builder.DataSource;
+            //if (servNameFromFile == serverNameInConString)
+            return servNameFromFile == serverNameInConString;
+
+        }
+
+        public void WriteServerNameToFile(string serverName)
+        {
+            string flePath = "ServerName.txt";
+            using (FileStream fs = new FileStream(flePath,
+            FileMode.OpenOrCreate))
+            {
+                using (StreamWriter sw = new StreamWriter(fs))
+                {
+                    sw.Write(serverName);
+                }
+            }
+        }
+
+        public string ReadServerNameFromFile()
+        {
+            string flePath = "ServerName.txt";
+            string result;
+            using (FileStream fs = new FileStream(flePath,FileMode.Open))
+            {
+                using (StreamReader sr =
+                new StreamReader(fs))
+                {
+                    result= sr.ReadToEnd();
+                }
+            }
+            return result;
         }
 
         public byte[] CopyPhoto(byte[] obj)
@@ -642,7 +683,7 @@ namespace Parking.Helpes
         //adding storage procedures to DB
         public void AddSP()
         {
-
+            
             using (DBConteiner db = new DBConteiner())
             {
                 if (db.Persons.Count() != 0)
@@ -893,6 +934,20 @@ namespace Parking.Helpes
 
                        ");
 
+                    db.Database.ExecuteSqlCommand
+                  (@"
+                         Create proc sp_GetVehPayDateMoney
+                            @vehId int
+                            as
+                            select ppl.PayingDate, ppl.Money
+                            From ParkingPlaceLogs ppl
+                            Where ppl.PayingDate=(Select  max(ppl.PayingDate) 'PayingDate'
+                            From Vehicles veh
+                            join ParkingPlaces pp on veh.ParkingPlace_ParkingPlaceId=pp.ParkingPlaceId
+                            join ParkingPlaceLogs ppl on pp.ParkingPlaceId=ppl.SomeParkingPlace_ParkingPlaceId
+                            where veh.VehicleId=@vehId and ppl.Money!=0)
+                       ");
+
 
                     db.SaveChanges();
 
@@ -910,6 +965,7 @@ namespace Parking.Helpes
                 {
                     dialogService.ShowMessage(ex.Message);
                 }
+          
                 catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
                 {
                     dialogService.ShowMessage(ex.Message);
@@ -918,6 +974,7 @@ namespace Parking.Helpes
                 {
                     dialogService.ShowMessage(ex.Message);
                 }
+                
             }
         }
 
@@ -992,9 +1049,79 @@ namespace Parking.Helpes
             return 0;
         }
 
+        public void GetLastVehicleDateAndPay(int vehicleId, out decimal  coast, out DateTime? lastDate )
+        {
+            lastDate = null; coast = 0;
+
+
+            string sqlExpression = "sp_GetVehPayDateMoney";
+
+            var connectionString = ConfigurationManager.ConnectionStrings["ParkingDB"].ConnectionString;
+            var sqlConStrBuilder = new SqlConnectionStringBuilder(connectionString);
+
+            using (SqlConnection connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
+            {
+                try
+                {
+
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(sqlExpression, connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                    SqlParameter firstParam = new SqlParameter
+                    {
+                        ParameterName = "@vehId",
+                        Value = vehicleId
+                    };
+                  
+                    command.Parameters.Add(firstParam);                    
+
+
+                    SqlDataReader result = command.ExecuteReader();
+
+                    if (result.HasRows)
+                    {
+                        while (result.Read())
+                        {                            
+                            if (result.GetValue(0) is DBNull)
+                                lastDate = null;
+                            else
+                                lastDate = (DateTime)result.GetValue(0);
+                            coast = result.GetValue(1) is DBNull ? 0:(decimal)result.GetValue(1);
+                        };
+                    }
+                }
+
+
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+
+            }
+         
+        }
+
         //---------------------------FILTERING OPERATIONS ---------------------------------
 
-        
+        //---------------------------For first filter ---------------------------------
+
 
         public ObservableCollection<OwnerRecord> GetFiltered1OwnerRecordsAllStatuses( DateTime startDate, DateTime endDate)
         {
@@ -1326,5 +1453,115 @@ namespace Parking.Helpes
                 tmpRecords.Add(item);
             return tmpRecords;
         }
+
+        //---------------------------------FOR THIRD FILTER IN REPORTOPSWINDOW-----------------------------------
+
+        public ObservableCollection<ReportOpsRecord> GetFilteredParPlaceRecords(FilterContext filter, DateTime startDay, DateTime endDay, ObservableCollection<ReportOpsRecord> records)
+        {
+            ObservableCollection<ReportOpsRecord> tmpCollecton = new ObservableCollection<ReportOpsRecord>();
+
+            if (filter.CheckArg1)
+            {
+                tmpCollecton = FindByRegNumber(filter.StrArg1, records, tmpCollecton);                    
+                if (tmpCollecton.Count() == 0)
+                    return tmpCollecton;
+            }
+            if (filter.CheckArg2)
+            {
+                tmpCollecton = FindByDate(startDay,endDay, records, tmpCollecton);                    
+                if (tmpCollecton.Count() == 0)
+                    return tmpCollecton;
+            }
+            if (filter.CheckArg3)
+            {
+                tmpCollecton = FindByPIB(filter.StrArg2, records, tmpCollecton);
+                if (tmpCollecton.Count() == 0)
+                    return tmpCollecton;
+            }
+            return tmpCollecton;
+        }
+
+        public ObservableCollection<ReportOpsRecord> FindByRegNumber(string pNum, ObservableCollection<ReportOpsRecord> records, ObservableCollection<ReportOpsRecord> tmpRec1)
+        {
+            ObservableCollection<ReportOpsRecord> tmpRec2 = new ObservableCollection<ReportOpsRecord>();
+            if (tmpRec1.Count() == 0)
+            {
+                foreach (ReportOpsRecord item in records)
+                    if (item.VehicleNumber is null && pNum is null || (item.VehicleNumber !=null && pNum != null && item.VehicleNumber == pNum ))
+                        tmpRec1.Add(item);                  
+            }
+            else
+            {
+                foreach (ReportOpsRecord item in records)
+                    if (item.VehicleNumber is null && pNum is null || (item.VehicleNumber != null && pNum != null && item.VehicleNumber == pNum))
+                        tmpRec2.Add(item);
+                if (tmpRec2.Count() != 0)
+                {
+                    tmpRec1.Clear();
+                    tmpRec1 = CopyRecords(tmpRec2);
+                    tmpRec2.Clear();
+                }
+                else
+                    return tmpRec2;
+
+            }
+            return tmpRec1;
+        }
+
+        
+        public ObservableCollection<ReportOpsRecord> FindByDate(DateTime startDate, DateTime endDate, ObservableCollection<ReportOpsRecord> records, ObservableCollection<ReportOpsRecord> tmpRec1)
+        {
+            ObservableCollection<ReportOpsRecord> tmpRec2 = new ObservableCollection<ReportOpsRecord>();
+            if (tmpRec1.Count() == 0)
+            {
+                foreach (ReportOpsRecord item in records)
+                    if (item.EventDate>=startDate && item.EventDate<=endDate )
+                        tmpRec1.Add(item);
+            }
+            else
+            {
+                foreach (ReportOpsRecord item in records)
+                    if (item.EventDate >= startDate && item.EventDate <= endDate)
+                        tmpRec2.Add(item);
+                if (tmpRec2.Count() != 0)
+                {
+                    tmpRec1.Clear();
+                    tmpRec1 = CopyRecords(tmpRec2);
+                    tmpRec2.Clear();
+                }
+                else
+                    return tmpRec2;
+
+            }
+            return tmpRec1;
+        }
+
+        public ObservableCollection<ReportOpsRecord> FindByPIB(string pib,  ObservableCollection<ReportOpsRecord> records, ObservableCollection<ReportOpsRecord> tmpRec1)
+        {
+            ObservableCollection<ReportOpsRecord> tmpRec2 = new ObservableCollection<ReportOpsRecord>();
+            if (tmpRec1.Count() == 0)
+            {
+                foreach (ReportOpsRecord item in records)
+                    if (item.UserData.Contains(pib))
+                        tmpRec1.Add(item);
+            }
+            else
+            {
+                foreach (ReportOpsRecord item in records)
+                    if (item.UserData.Contains(pib))
+                        tmpRec2.Add(item);
+                if (tmpRec2.Count() != 0)
+                {
+                    tmpRec1.Clear();
+                    tmpRec1 = CopyRecords(tmpRec2);
+                    tmpRec2.Clear();
+                }
+                else
+                    return tmpRec2;
+
+            }
+            return tmpRec1;
+        }
+
     }
 }

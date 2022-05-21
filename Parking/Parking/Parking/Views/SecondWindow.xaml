@@ -33,10 +33,7 @@
                 <MenuItem Header="Звіти"   VerticalAlignment="Top" >
 
                     <MenuItem Header="Звіт за власниками ТЗ" Command="{Binding CallOwnersReportCommand}"/>
-                    <MenuItem Header="Виручка каси"  Command="{Binding  CallMoneyMoveReportCommand}"/>
-                    <MenuItem Header="Зайнятість місць" Command="{Binding CloseMainWindow}"/>
-                    
-                    <MenuItem Header="Робота користувача" Command="{Binding CloseMainWindow}"/>
+                    <MenuItem Header="Виручка каси"  Command="{Binding  CallMoneyMoveReportCommand}"/>                  
                     
                 </MenuItem>
 
@@ -54,14 +51,10 @@
                                   VerticalAlignment="Top"
                                   Command="{Binding CallStuffListCommand}"/>
                     </MenuItem>
-                    
-                    <MenuItem Header="Список кліентів" Command="{Binding CallClientListCommand}"
-                                  VerticalAlignment="Top"/>
-                    
                 </MenuItem>
                
                 
-                <MenuItem Header="Основні дії"  VerticalAlignment="Top" >
+                <!--<MenuItem Header="Основні дії"  VerticalAlignment="Top" >
                     <MenuItem Header="Паркувальні місця">
                         <MenuItem Header="Додати" Command="{Binding UsrOps.AddNewUserCommand}"
                                   VerticalAlignment="Top"  >
@@ -77,12 +70,11 @@
                         <MenuItem Header="Видалити" Command="{Binding UsrOps.ShowUsersListCommand}"
                                   VerticalAlignment="Top"/>                        
                     </MenuItem>
-                    <MenuItem Header="Зайняти паркувальне місце" Foreground="Green" Command="{Binding ShowTomorrowOrdersCommand}"/>
-                    <MenuItem Header="Звільнити паркувальне місце" Foreground="Brown" Command="{Binding ShowTomorrowOrdersCommand}"/>
-                </MenuItem>
+                    
+                </MenuItem>-->
 
             </Menu>
-            <Button Content="Фільтри" Background="White" Foreground="Black"/>
+            <TextBlock Text="{Binding ReportMessage}" Margin="20,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="Green"/>
         </StackPanel>
         <TextBlock Grid.Column ="1" Text="Інформація про траспортний засіб і клієнта" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
         <!--<TextBlock Grid.Column ="2" Text="Фото автівки" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>-->

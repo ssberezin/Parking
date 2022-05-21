@@ -22,6 +22,7 @@ namespace Parking.ViewModel.PrintOps
         public ParkingPlaceRecord Record { get; set; }
         public string EpmloyeeData { get; set; }
         public string CurrentDate { get; set; }
+        public string LastpayDate  { get; set; }
         public string DeadLine { get; set; }
         public Company Comp { get; set; }
 
@@ -32,6 +33,8 @@ namespace Parking.ViewModel.PrintOps
             EpmloyeeData = inputFIO;
             Record = parkRecord;
             Comp = comp;
+            LastpayDate = parkRecord.SomeParkingPlaceLog.PayingDate.Value.ToString("dd/MM/yyyy")+"\nЧас:  "+
+                          parkRecord.SomeParkingPlaceLog.PayingDate.Value.ToString("hh/mm/ss");
             CurrentDate = DateTime.Now.ToString();
             DeadLine = Record.SomeParkingPlaceLog.DeadLine.Value.ToString("dd/MM/yyyy");
             

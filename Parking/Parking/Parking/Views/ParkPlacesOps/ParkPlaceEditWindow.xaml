@@ -310,8 +310,6 @@
                 <StackPanel Grid.Row="1" Grid.Column="2">
                     <Border   BorderThickness="1" Background="#FFCCE6BF" BorderBrush="Gray">
                         <StackPanel HorizontalAlignment="Center">
-
-
                             <StackPanel  >
                                 <TextBlock Text="Підібрати інше паркувальне місце" TextWrapping="Wrap" TextAlignment="Center" Foreground="DarkGreen"  FontWeight="Bold" HorizontalAlignment="Center" FontSize="12"/>
 
@@ -340,6 +338,7 @@
 
 
                             <StackPanel  >
+                                <TextBlock Text="{Binding LastPayDateMessage, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red"  FontWeight="Bold" HorizontalAlignment="Center" FontSize="12"/>
 
 
 

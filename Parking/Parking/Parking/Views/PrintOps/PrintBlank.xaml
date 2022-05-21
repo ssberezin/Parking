@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Parking.Views.PrintOps"
-       
+        xmlns:local="clr-namespace:Parking.Views.PrintOps" xmlns:printops="clr-namespace:Parking.ViewModel.PrintOps" d:DataContext="{d:DesignInstance Type=printops:PrintBlankContext}"
         mc:Ignorable="d"
         Title="Друк товарного чека" Height="1126" Width="796" MinHeight="1126" MinWidth="796" MaxHeight="1126" MaxWidth="796">
     <Window.InputBindings>
@@ -33,7 +32,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="0.075*"/>
             
-            <RowDefinition/>
+            <RowDefinition Height="1.15*"/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -62,12 +61,16 @@
                 <TextBlock Text="{Binding CurrentDate}" Foreground="Red" FontSize="14"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
-                <TextBlock Text="Послуги паркування транспортного засобу до " FontSize="14" FontWeight="Bold"/>
+                <TextBlock Text="Послуги паркування дійсна до " FontSize="14" FontWeight="Bold"/>
                 <TextBlock Text="{Binding DeadLine}" Foreground="Red" FontSize="14"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                 <TextBlock Text="Сплачено " FontSize="14" FontWeight="Bold"/>
                 <TextBlock Text="{Binding Record.SomeParkingPlaceLog.Money}" Foreground="Red" FontSize="14"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
+                <TextBlock Text="Дата оплати " FontSize="14" FontWeight="Bold"/>
+                <TextBlock Text="{Binding LastpayDate}" Foreground="Red" FontSize="14"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                 <TextBlock Text="Товарний чек роздрукував " FontSize="14" FontWeight="Bold"/>

@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Parking.ViewModel.ReportOps
 {
     public class ReportOpsRecord:Helpes.ObservableObject
@@ -19,8 +21,7 @@ namespace Parking.ViewModel.ReportOps
                 }
             }
         }
-        public string EventDate { get; set; }
-        public string EventTime { get; set; }
+        public DateTime EventDate { get; set; }      
        
         public int UserId { get; set; }
         public string UserData { get; set; }

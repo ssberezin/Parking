@@ -14,6 +14,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 using System.Configuration;
 using Parking.Views;
+using System.ComponentModel;
+using System.Data.Sql;
+using System.Data;
+
+using User = Parking.Model.User;
 
 namespace Parking.ViewModel
 {
@@ -22,17 +27,23 @@ namespace Parking.ViewModel
 
         IDialogService dialogService;
         IShowWindowService showWindow;
-        public Authorezation() 
+        //if we have some problems with connection to SQL server
+        //we have to set the other SQL-server name. This marker is for this one.
+
+        private bool isConnection;
+        public bool IsConnection
         {
-            Library lib = new Library();
-            showWindow = new DefaultShowWindowService();
-            dialogService = new DefaultDialogService();
-            lib.AddSP();
-            PreviosDataLoad(50);//adding some previous data at first start
+            get { return isConnection; }
+            set
+            {
+                if (value != isConnection)
+                {
+                    isConnection = value;
+                    OnPropertyChanged2(nameof(IsConnection));
+                }
+            }
         }
 
-        
-        
         private string userLogin;
         public string UserLogin
         {
@@ -47,6 +58,74 @@ namespace Parking.ViewModel
             }
         }
 
+        //for hide right controls on main window if right sql server wasn't found
+        private string  connectionWell;
+        public string ConnectionWell
+        {
+            get { return connectionWell; }
+            set
+            {
+                if (value != connectionWell)
+                {
+                    connectionWell = value;
+                    OnPropertyChanged(nameof(ConnectionWell));
+                }
+            }
+        }
+        //for display right controls on main window if right sql server wasn't found
+        private string sqlEditVisability;
+        public string SqlEditVisability
+        {
+            get { return sqlEditVisability; }
+            set
+            {
+                if (value != sqlEditVisability)
+                {
+                    sqlEditVisability = value;
+                    OnPropertyChanged(nameof(SqlEditVisability));
+                }
+            }
+        }
+
+        private string newServerName;
+        public string NewServerName
+        {
+            get { return newServerName; }
+            set
+            {
+                if (value != newServerName)
+                {
+                    newServerName = value;
+                    OnPropertyChanged(nameof(NewServerName));
+                }
+            }
+        }
+
+        
+
+        Library lib;
+        public Authorezation() 
+        {
+            showWindow = new DefaultShowWindowService();
+            dialogService = new DefaultDialogService();
+            lib = new Library();
+            IsConnection = true;
+            if (lib.CheckSqlConnection())
+            {
+                ConnectionWell = "Visible";
+                SqlEditVisability = "Collapsed";
+            }
+            else
+            {
+                ConnectionWell = "Collapsed";
+                SqlEditVisability = "Visible";
+                return;
+            }
+                        
+            lib.AddSP(); //adding storage procedures to DB if it is the first app starting
+            PreviosDataLoad(50);//adding some previous data at first start . 50 - here we set parkinplace count           
+            
+        }
         //ForCloseLogWinCommand 
         //for closing authorezation window after authorezation
         Window win;
@@ -73,7 +152,7 @@ namespace Parking.ViewModel
             User user1 = new User { Login = UserLogin};
              user1.Pass = SHA.ComputeSHA256Hash(passwordBox.Password);
             
-            passwordBox.Clear();
+          //  passwordBox.Clear();
 
             using (DBConteiner db = new DBConteiner())
             {
@@ -252,9 +331,7 @@ namespace Parking.ViewModel
                     parkingPlace1.Vehicles.Add(SomeVehicle1);
 
 
-                    db.Clients.Add(client1);                  
-
-
+                    db.Clients.Add(client1); 
                     
                      db.SaveChanges();
 
@@ -280,6 +357,7 @@ namespace Parking.ViewModel
                 {
                      dialogService.ShowMessage(ex.Message);
                 }
+                IsConnection = false;
             }
         }
 
@@ -294,6 +372,31 @@ namespace Parking.ViewModel
                     }
                     ));
 
+
+        private RelayCommand newServerConnectionCommand;
+        public RelayCommand NewServerConnectionCommand => newServerConnectionCommand ?? (newServerConnectionCommand = new RelayCommand(
+                    (obj) =>
+                    {
+                       
+                        win = obj as Window;
+                        ChangeConnection(NewServerName);
+                        lib.WriteServerNameToFile(NewServerName);
+                        dialogService.ShowMessage("Необхідно перезапустити програму.");
+                        showWindow.CloseWindow(win);
+                        
+                    }
+                    ));
+
+        private void ChangeConnection(string param)
+        {
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            var connectionStringsSection = (ConnectionStringsSection)config.GetSection("connectionStrings");            
+            connectionStringsSection.ConnectionStrings["ParkingDB"].ConnectionString = @"data source=" + param + ";Initial Catalog=ParkingDB;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework;Connect Timeout = 1";
+            config.Save();
+            ConfigurationManager.RefreshSection("connectionStrings");
+
+
+        }
 
     }
 }
