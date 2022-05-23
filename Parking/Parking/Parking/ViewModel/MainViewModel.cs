@@ -4,6 +4,7 @@ using Parking.Views.CompanyOps;
 using Parking.Views.ParkPlacesOps;
 using Parking.Views.PersonOperations;
 using Parking.Views.ReportOps;
+using Parking.Views.VehicleTypesOps;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -593,6 +594,36 @@ namespace Parking.ViewModel
                             dialogService.ShowMessage("Не достатньо прав доступу");
                     }
                     ));
-       
+
+        //VehicleTypesOpsWin(IColorTypeInterface obj)
+
+        private RelayCommand callColorOpsCommand;
+        public RelayCommand CallColorOpsCommand => callColorOpsCommand ?? (callColorOpsCommand = new RelayCommand(
+                    (obj) =>
+                    {
+                        if (CheckAccessRights())
+                        {                            
+                            VehicleTypesOpsWin win = new VehicleTypesOpsWin(new VehicleColor());
+                            showWindow.ShowDialog(win);
+                        }
+                        else
+                            dialogService.ShowMessage("Не достатньо прав доступу");
+                    }
+                    ));
+
+        private RelayCommand callVehTypeOpsCommand;
+        public RelayCommand CallVehTypeOpsCommand => callVehTypeOpsCommand ?? (callVehTypeOpsCommand = new RelayCommand(
+                    (obj) =>
+                    {
+                        if (CheckAccessRights())
+                        {
+                            VehicleTypesOpsWin win = new VehicleTypesOpsWin(new VehicleType());
+                            showWindow.ShowDialog(win);
+                        }
+                        else
+                            dialogService.ShowMessage("Не достатньо прав доступу");
+                    }
+                    ));
+
     }
 }

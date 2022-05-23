@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Parking.Helpes;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Parking.Model
 {
-    public class VehicleType : Helpes.ObservableObject
+    public class VehicleType : Helpes.ObservableObject, IColorTypeInterface
     {
         public VehicleType()        
         {

@@ -51,6 +51,15 @@
                                   VerticalAlignment="Top"
                                   Command="{Binding CallStuffListCommand}"/>
                     </MenuItem>
+                    <MenuItem Header="Словники"  VerticalAlignment="Top">
+                        
+                        <MenuItem Header="Типи ТЗ" 
+                                  VerticalAlignment="Top"
+                                  Command="{Binding CallVehTypeOpsCommand}"/>
+                        <MenuItem Header="Кольори" 
+                                  VerticalAlignment="Top"
+                                  Command="{Binding CallColorOpsCommand}"/>
+                    </MenuItem>
                 </MenuItem>
                
                 

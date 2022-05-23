@@ -234,7 +234,7 @@ namespace Parking.ViewModel
 
                     db.SaveChanges();
 
-                    VehicleType vtype2 = new VehicleType { TypeName = "-не здано-" };
+                    VehicleType vtype2 = new VehicleType { TypeName = "-не задано-" };
                     VehicleType vtype = new VehicleType { TypeName = "легкове авто" };
                     VehicleType vtype1 = new VehicleType { TypeName = "мотоцикл" };
                     VehicleType vtype3 = new VehicleType { TypeName = "причеп" };

@@ -1,4 +1,6 @@
-﻿using Parking.ViewModel.VehicleTypesOps;
+﻿using Parking.Helpes;
+using Parking.ViewModel.DictionaryOps;
+using Parking.ViewModel.VehicleTypesOps;
 using System.Windows;
 
 namespace Parking.Views.VehicleTypesOps
@@ -8,10 +10,10 @@ namespace Parking.Views.VehicleTypesOps
     /// </summary>
     public partial class VehicleTypesOpsWin : Window
     {
-        public VehicleTypesOpsWin()
+        public VehicleTypesOpsWin(IColorTypeInterface obj)
         {
             InitializeComponent();
-            DataContext = new VehicleTypesOpsContext();
+            DataContext = new DictOpsContext(obj);
         }
     }
 }

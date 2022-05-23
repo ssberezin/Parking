@@ -1,9 +1,12 @@
 ﻿using Parking.Model;
+using Parking.ViewModel.DictionaryOps;
 using Parking.ViewModel.FilterOps;
 using Parking.ViewModel.ReportOps;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -636,6 +639,144 @@ namespace Parking.Helpes
 
         }
 
+        public bool CheckAddVehicleColor(string colorName)
+        {
+            if (colorName == "-не задано-")
+                return false;
+
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {
+                    VehicleColor vehColor = db.Colors.Where(w => w.ColorName == colorName).FirstOrDefault();
+
+                    if (vehColor is null)
+                    {
+                        db.Colors.Add(new VehicleColor { ColorName = colorName });
+                        db.SaveChanges();
+                        return true;
+                    }
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+            return false;
+        }
+
+        public bool EditColor(string colorName, int id)
+        {
+            if (id == 1)//-не задано-
+                return false;
+
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {
+                    VehicleColor vehColor1 = db.Colors.Where(w => w.VehicleColorId == id).FirstOrDefault();
+                    VehicleColor incomeColor = db.Colors.Where(w => w.ColorName == colorName).FirstOrDefault();
+                    List<Vehicle> vehicles = db.Vehicles.Where(v => v.SomeVehicleColor.ColorName == colorName).ToList();
+                    if (vehicles.Count() == 0)
+                        return false;
+                    if (incomeColor is null)
+                    {
+                        db.Entry(vehColor1).State = EntityState.Modified;
+                        vehColor1.ColorName = colorName;
+                        db.SaveChanges();
+                        return true;
+                    }
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+            return false;
+        }
+
+
+
+        //if false  - 'не можна видалити цю позицію або такого кольору не існує'
+        // if null - 'Щось пішло не так з видалення або в\n БД э ТЗ з цим кольором.\n Не можна видалити цю позицію'
+        public bool CheckDeleteVehicleColor(SomeType  obj)
+        {
+            if ( obj.Id == 1)//-не задано-
+                return false;
+
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {
+
+                    List <Vehicle> vehs = db.Vehicles.Where(v => v.SomeVehicleColor.VehicleColorId == obj.Id).ToList();
+                    if (vehs.Count()==0)
+                    {
+                        db.Colors.Remove(db.Colors.Find(obj.Id));
+                        db.SaveChanges();
+                        return true;
+                    }
+                    else
+                        return false;
+
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+            return false;
+        }
+
+
         //Check for existing color. If it doesn't exist in DB it'll be
         public void CheckVehicleType(string vehTypeName, out int vTypeId)
         {
@@ -648,7 +789,7 @@ namespace Parking.Helpes
                     if (col is null)
                     {
                         VehicleType newType = new VehicleType { TypeName = vehTypeName };
-                        db.VehicleTypes.Add(newType);
+                        db.VehicleTypes.Add(new VehicleType { TypeName = vehTypeName });
                         db.SaveChanges();
                         vTypeId = newType.VehicleTypeId; 
                     }
@@ -679,6 +820,142 @@ namespace Parking.Helpes
 
         }
 
+        //if false  - 'не можна видалити цю позицію або такого кольору не існує'
+        // if null - 'Щось пішло не так з видалення або в\n БД э ТЗ з цим кольором.\n Не можна видалити цю позицію'
+        public bool CheckDeleteVehicleType(SomeType obj)
+        {
+            if (obj.Id == 1)//-не задано-
+                return false;
+
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {
+                    List <Vehicle> vehs = db.Vehicles.Where(v => v.SomeVehicleType.VehicleTypeId == obj.Id).ToList();
+                    if (vehs.Count()==0)
+                    {
+                        db.VehicleTypes.Remove(db.VehicleTypes.Find(obj.Id));
+                        db.SaveChanges();
+                        return true;
+                    }
+                    else
+                        return false;
+
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+            return false;
+        }
+
+
+
+        public bool CheckAddVehicleType(string vehTypeName)
+        {
+            if (vehTypeName == "-не задано-")
+                return false;
+
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {
+                    VehicleType vehType = db.VehicleTypes.Where(w => w.TypeName == vehTypeName).FirstOrDefault();
+                    if (vehType is null)
+                    {
+                        db.VehicleTypes.Add(new VehicleType { TypeName = vehTypeName });
+                        db.SaveChanges();
+                        return true;
+                    }                   
+                   
+
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+            return false;
+        }
+
+        public bool EditVehType(string typeName, int id)
+        {
+            if (id == 1)//-не задано-
+                return false;
+
+            using (DBConteiner db = new DBConteiner())
+            {
+                try
+                {
+                    VehicleType vehType = db.VehicleTypes.Where(w => w.VehicleTypeId == id).FirstOrDefault();
+                    VehicleType incomeType = db.VehicleTypes.Where(w => w.TypeName == typeName).FirstOrDefault();
+                    List<Vehicle> vehicles = db.Vehicles.Where(v => v.SomeVehicleType.TypeName == typeName).ToList();
+                    if (vehicles.Count() == 0)
+                        return false;
+                    if (incomeType is null)
+                    {
+                        db.Entry(vehType).State = EntityState.Modified;
+                        vehType.TypeName = typeName;
+                        db.SaveChanges();
+                        return true;
+                    }
+                }
+                catch (ArgumentNullException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (OverflowException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+                catch (System.Data.Entity.Core.EntityException ex)
+                {
+                    dialogService.ShowMessage(ex.Message);
+                }
+            }
+            return false;
+        }
 
         //adding storage procedures to DB
         public void AddSP()
