@@ -968,7 +968,7 @@ namespace Parking.Helpes
                 try
                 {
 
-                    db.Database.ExecuteSqlCommand//
+                    db.Database.ExecuteSqlCommand
                        (@"
                          Create proc sp_GetAllParkingPlaces
                             as
