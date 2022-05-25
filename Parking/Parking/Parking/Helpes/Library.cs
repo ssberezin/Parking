@@ -824,7 +824,7 @@ namespace Parking.Helpes
         // if null - 'Щось пішло не так з видалення або в\n БД э ТЗ з цим кольором.\n Не можна видалити цю позицію'
         public bool CheckDeleteVehicleType(SomeType obj)
         {
-            if (obj.Id == 1)//-не задано-
+            if (obj.Id == 3)//-не задано-
                 return false;
 
             using (DBConteiner db = new DBConteiner())

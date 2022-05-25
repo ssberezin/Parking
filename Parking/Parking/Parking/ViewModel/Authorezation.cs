@@ -243,7 +243,7 @@ namespace Parking.ViewModel
                     db.VehicleTypes.Add(vtype1);
                     db.VehicleTypes.Add(vtype2);
                     db.VehicleTypes.Add(vtype3);
-
+                    db.SaveChanges();
 
 
                     Vehicle SomeVehicle1 = new Vehicle { RegNumber = "AE2865BO", DateOfmanufacture = new DateTime(2020, 12, 12) };
