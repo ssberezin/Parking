@@ -23,6 +23,8 @@ namespace Parking.ViewModel.ReportOps
         }
         public DateTime EventDate { get; set; }      
        
+        public bool Released { get; set; }
+
         public int UserId { get; set; }
         public string UserData { get; set; }
 

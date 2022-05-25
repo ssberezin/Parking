@@ -1080,15 +1080,15 @@ namespace Parking.Helpes
                         ");
                     db.Database.ExecuteSqlCommand
                      (@"
-                    create proc sp_GetClRepRecord
+                      create proc sp_GetClRepRecord
                         @ppId int,
                         @startDate date,
                         @endDate date
                         as
                         Select  veh.VehicleId '0_VehicleId',veh.RegNumber '1_RegNumber',
                         PPl.DateOfChange '2_DateOfChange'
-                        ,Us.UserId '3_UserId' 
-                        ,Pers.SecondName+' '+Pers.FirstName+' '+pers.Patronimic '4_PIB'
+                        ,Us.UserId '3_UserId'  
+                        ,Pers.SecondName+' '+Pers.FirstName+' '+pers.Patronimic '4_PIB', ppl.Released '5_released'
                         From Clients Cl                         
                         join Vehicles veh on veh.ClientOwner_ClientId=Cl.ClientId
                         join ParkingPlaces PP on pp.ParkingPlaceId=veh.ParkingPlace_ParkingPlaceId

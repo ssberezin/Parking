@@ -215,6 +215,12 @@ namespace Parking.ViewModel.ReportOps
 
         private void ChangeSelectedRecord(object sender, PropertyChangedEventArgs e)
         {
+            if (SelectedRecord is null)
+            {
+                ParPlaceRecords.Clear();
+                return;
+            }
+
             if (OwnerRecords.Count() > 0)
             {
                 //ParPlaceRecords = GetClientParkingPlaces(SelectedRecord.ClientId, StartHistoryDate, EndHistoryDate);
@@ -227,6 +233,12 @@ namespace Parking.ViewModel.ReportOps
 
         private void ChangeParkPlaceSelecteRecord(object sender, PropertyChangedEventArgs e)
         {
+            if (SelectedRecord is null)
+            {
+                ReportOpsRecords.Clear();
+                return;
+            }
+
             if (ParPlaceSelecteRecord is null)
                 return;
             FillReportRecods(ParPlaceSelecteRecord.PPlace.ParkingPlaceId, StartHistoryDate, EndHistoryDate);
@@ -451,7 +463,9 @@ namespace Parking.ViewModel.ReportOps
                                 VehicleId = (int)result.GetValue(0),
                                 VehicleNumber = (string)result.GetValue(1),
                                 UserId = (int)result.GetValue(3),
-                                UserData = (string)result.GetValue(4)
+                                UserData = (string)result.GetValue(4),
+                                Released = (bool)result.GetValue(5)
+
 
                             };
                             if (!(result.GetValue(4) is DBNull))                            
@@ -512,9 +526,13 @@ namespace Parking.ViewModel.ReportOps
                         CurrentPPRecord = lib.GetPPRecord(ParPlaceSelecteRecord.PPlace.ParkingPlaceId);
                         ParkPlaceEditWindow parkWindow = new ParkPlaceEditWindow(CurretnUserId, CurrentPPRecord);
                         showWindow.ShowDialog(parkWindow);
-                        //update visible data
-                        ParPlaceRecords = GetClientParkingPlaces(SelectedRecord.ClientId, StartHistoryDate, EndHistoryDate);
-                        FillReportRecods(ParPlaceSelecteRecord.PPlace.ParkingPlaceId, StartHistoryDate, EndHistoryDate);                       
+                        //update visible data                       
+                        ParPlaceRecords.Clear();
+                        foreach (ParPlaceRecord item in GetClientParkingPlaces(SelectedRecord.ClientId, StartHistoryDate, EndHistoryDate))
+                            ParPlaceRecords.Add(item);
+
+                        FillReportRecods(CurrentPPRecord.SomeParkingPlace.ParkingPlaceId, StartHistoryDate, EndHistoryDate);
+
                     }
                     ));
 
@@ -637,15 +655,20 @@ namespace Parking.ViewModel.ReportOps
         public RelayCommand FindDeptorsCommand => findDeptorsCommand ?? (findDeptorsCommand = new RelayCommand(
                     (obj) =>
                     {
-
+                        
                         OwnerRecords.Clear();
                         foreach (var item in lib.GetDeptors(DateTime.Now))
                             OwnerRecords.Add(item);
                         if (OwnerRecords.Count() == 0)
                         {
+                            int tmpId=1;
+                            if (SelectedRecord !=null)
+                                tmpId = SelectedRecord.ClientId;
                             FillOwnerRecords();
-                            dialogService.ShowMessage("Не було співпадінь.\n Завантажено актуальну \n" +
-                                                       "інформацію щодо власників \nна зайнятих місцях");
+                            ReportOpsRecords.Clear();
+                            ParPlaceRecords.Clear();
+                            dialogService.ShowMessage("Не було співпадінь.");
+                     
                         }
 
                         EnableFilter2 = EnableFilter3 = false;

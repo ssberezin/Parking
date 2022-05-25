@@ -112,6 +112,7 @@ namespace Parking.ViewModel.ReportOps.MoneyMoveReportOps
 
         private void ChangeSelectedRecord(object sender, PropertyChangedEventArgs e)
         {
+            
             GetMoneyMoveRepDetailRecords(SelectedStuffRec.UserId, out decimal sTotal, StartHistoryDate, EndHistoryDate);            
             SubTotal = sTotal;
         }
@@ -188,8 +189,11 @@ namespace Parking.ViewModel.ReportOps.MoneyMoveReportOps
 
         private void GetMoneyMoveRepDetailRecords(int userId, out decimal sTotal, DateTime startDate, DateTime enddate)
         {
-            sTotal = 0;
-            
+            MoneyMoveRepDetailRecords.Clear();
+
+          
+
+            sTotal = 0;           
 
             string sqlExpression = "sp_GetDetalesStuffRecord";
 

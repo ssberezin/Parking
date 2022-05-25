@@ -12,10 +12,10 @@
         mc:Ignorable="d"
         Title="ReportOps" Height="450" Width="1200"
         WindowStartupLocation="CenterScreen" >
-   
+
     <Window.Resources>
         <ResourceDictionary>
-            
+
             <helpes:BoolToStringConverter x:Key="boolToStringConverter"/>
             <helpes:BoolToStringConverter2 x:Key="boolToStringConverter2"/>
             <helpes:BoolToBrushConverterForStatus x:Key="boolToBrushConverterForStatus"/>
@@ -31,7 +31,7 @@
             </Style>
         </ResourceDictionary>
     </Window.Resources>
-    <Window.InputBindings>        
+    <Window.InputBindings>
         <KeyBinding Gesture="Ctrl+F" Command="{Binding CallFindCommand}" 
                     CommandParameter="{Binding DataContext, RelativeSource=
                     {RelativeSource AncestorType={x:Type Window}}}"/>
@@ -58,7 +58,7 @@
                                IsOpen="{Binding IsChecked, ElementName=Filter1}" 
                                StaysOpen="True"  
                                 PopupAnimation="Slide" Margin="1,3,5,3"
-                               AllowsTransparency="True">       
+                               AllowsTransparency="True">
                             <Border BorderBrush="Black" BorderThickness="1">
                                 <StackPanel Background="White">
                                     <StackPanel Margin="0,5,0,0">
@@ -97,7 +97,7 @@
                                                 HorizontalContentAlignment="Center"/>
                                         </StackPanel>
                                     </StackPanel>
-                                   
+
                                     <Button Content="Застосувати фільтри"  HorizontalAlignment="Stretch"
                                     Command="{Binding CallFilter1Command}"
                                     Background="#FF7E4A00"   Margin="3" MinHeight="25" MaxWidth="270"/>
@@ -112,8 +112,8 @@
                         <Button  Content=" Показати боржників " Background="Red" HorizontalContentAlignment="Left" 
                           VerticalAlignment="Center" FontWeight="Bold" Margin="5,0,0,0" 
                                    Command="{Binding FindDeptorsCommand}"/>
-                        
-                              
+
+
                     </StackPanel>
                     <DataGrid x:Name="GridOrders" Grid.Row="1"
                               ItemsSource="{Binding OwnerRecords}" 
@@ -122,9 +122,7 @@
                               AutoGenerateColumns="False" SelectionMode="Single"
                               IsReadOnly="True"    VerticalAlignment="Top"
                               RowHeight="30" FontSize="14">
-                        <DataGrid.InputBindings>
-                            <MouseBinding  MouseAction="LeftDoubleClick" Command="{Binding EditparkPlaceCommand}" /> 
-                        </DataGrid.InputBindings>
+
 
                         <DataGrid.Columns>
                             <DataGridTextColumn Width="0.82*"  Binding="{Binding OwnerName, UpdateSourceTrigger=PropertyChanged}"  Header="Власник"/>
@@ -180,9 +178,9 @@
                                                       IsChecked="{Binding Filter2.CheckArg4, UpdateSourceTrigger=PropertyChanged}"/>
 
                                         </StackPanel>
-                                        
+
                                     </StackPanel>
-                                    
+
                                     <Button Content="Застосувати фільтри"  HorizontalAlignment="Stretch"
                                     Command="{Binding CallFilter2Command}"
                                     Background="#FF7E4A00"   Margin="3" MinHeight="25" MaxWidth="270"/>
@@ -194,7 +192,7 @@
                         </Popup>
 
 
-                        
+
 
                     </StackPanel>
 
@@ -205,7 +203,7 @@
                     <DataGrid x:Name="PPRecords" Grid.Row="1"
                               ItemsSource="{Binding ParPlaceRecords, UpdateSourceTrigger=PropertyChanged}" 
                                SelectedItem="{Binding ParPlaceSelecteRecord, UpdateSourceTrigger=PropertyChanged}"
-                              Margin="3"            
+                              Margin="9,3,-4,0"            
                               AutoGenerateColumns="False" SelectionMode="Single"
                               IsReadOnly="True"    VerticalAlignment="Top"
                               RowHeight="30" FontSize="14">
@@ -262,7 +260,7 @@
                                             <TextBox  IsEnabled="{Binding ElementName=Check3_1, Path=IsChecked}"
                                                 Text="{Binding Filter3.StrArg1, UpdateSourceTrigger=PropertyChanged}"  Margin="5,5"
                                                 Width="170" MaxLength="8"/>
-                                           
+
                                         </StackPanel>
                                         <StackPanel HorizontalAlignment="Center">
 
@@ -275,15 +273,15 @@
                                             <wpfTool:DateTimePicker  HorizontalAlignment="Center" IsEnabled="{Binding ElementName=Check3_2, Path=IsChecked}"
                                                                           Value="{Binding StartHistoryDate}"
                                                                          HorizontalContentAlignment="Center"/>
-                                                <TextBlock Text=" до  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <TextBlock Text=" до  " FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             <wpfTool:DateTimePicker  HorizontalAlignment="Center"  IsEnabled="{Binding ElementName=Check3_2, Path=IsChecked}"
                                                                          Value="{Binding EndHistoryDate}"
                                                                          HorizontalContentAlignment="Center"/>
-                                           
+
                                             <StackPanel   Margin="3" VerticalAlignment="Center" >
                                                 <CheckBox  x:Name="Check3_3" Content=" Піб оператора " HorizontalAlignment="Center"
                                                           FontWeight="Bold" ToolTip="Можна щось одне: прізвище. ім'я чи по батькові. Більше шансів."                             
-                                                          IsChecked="{Binding Filter3.CheckArg3, UpdateSourceTrigger=PropertyChanged}"/>        
+                                                          IsChecked="{Binding Filter3.CheckArg3, UpdateSourceTrigger=PropertyChanged}"/>
 
                                                 <TextBox  Text="{Binding Filter3.StrArg2, Mode=TwoWay}"
                                                           Margin="5,5" IsEnabled="{Binding ElementName=Check3_3, Path=IsChecked}"
@@ -295,8 +293,8 @@
                                         </StackPanel>
 
                                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,0">
-                                           
-                                            
+
+
 
                                         </StackPanel>
 
@@ -306,7 +304,7 @@
                                                 Background="#FF7E4A00"   Margin="3" MinHeight="25" MaxWidth="270"/>
                                         <Button Content="Очистити фільтри" Margin="3" MinHeight="25" MaxWidth="270"
                                                 Command="{Binding ClearFilter3Command}" HorizontalAlignment="Stretch"
-                                                Background="Orange" />      
+                                                Background="Orange" />
                                     </StackPanel>
                                 </Border>
                             </Popup>
@@ -342,6 +340,13 @@
                               AutoGenerateColumns="False" SelectionMode="Single"
                               IsReadOnly="True"    VerticalAlignment="Top"
                               RowHeight="30" FontSize="14">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <!--here we are setting the background for orders that are free-->
+                                <Setter Property="Foreground"                          
+                            Value="{Binding Released ,Converter={StaticResource boolToBrushConverterForInOut}, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Style>
+                        </DataGrid.RowStyle>
 
                         <DataGrid.Columns>
 
@@ -350,6 +355,7 @@
 
                             <DataGridTextColumn Width="0.34*"  Binding="{Binding EventDate, StringFormat=\{0:dd.MM.yy \}}"  Header="Дата"/>
                             <DataGridTextColumn Width="0.34*"  Binding="{Binding EventDate, StringFormat=\{0:hh.mm.ss \}}"  Header="Час"/>
+                            <DataGridTextColumn Width="0.34*"  Binding="{Binding Released, Converter={StaticResource boolToStringConverter2 }}"  Header="Подія"/>
                             <DataGridTextColumn Width="0.84*"  Binding="{Binding UserData}"  Header="ПІБ оператора"/>
 
 

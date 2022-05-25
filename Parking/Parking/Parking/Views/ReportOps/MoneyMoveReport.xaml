@@ -11,7 +11,8 @@
         d:DataContext="{d:DesignInstance Type=moneymovereportops:MoneyMoveReportContext}"
         mc:Ignorable="d"
         Title="Звіт з руху грошових коштів, прийнятих персоналом" Height="450" Width="1200"
-        WindowStartupLocation="CenterScreen" >
+        WindowStartupLocation="CenterScreen" 
+        >
     <i:Interaction.Behaviors>
         <w:HideCloseButtonOnWindow />
     </i:Interaction.Behaviors>

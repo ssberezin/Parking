@@ -146,3 +146,4 @@ D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Vi
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleOps\VehicleOpsWin.g.cs
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleOps\VehicleOpsWin.baml
 E:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.AssemblyReference.cache
+E:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.SuggestedBindingRedirects.cache
