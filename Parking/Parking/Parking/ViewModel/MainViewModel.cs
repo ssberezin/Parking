@@ -138,7 +138,7 @@ namespace Parking.ViewModel
 
         private void DefaultDataLoad()
         {
-            Records.Clear();
+            Records.Clear(); FreeCount =  ReleasedCount = 0;
             //here we are forming data for datagid at SecondWindow.xaml. The main info.
 
 
@@ -266,7 +266,7 @@ namespace Parking.ViewModel
                                 CurrentRecord.SomeClient = new Client
                                 {
                                     ClientId = (int)result.GetValue(4),
-                                    OrgName = result.GetValue(4) is System.DBNull ? (string)result.GetValue(7) + " " + (string)result.GetValue(8) + " " + (string)result.GetValue(7) : (string)result.GetValue(5)
+                                    OrgName = result.GetValue(5) is System.DBNull ? (string)result.GetValue(7) + " " + (string)result.GetValue(8) + " " + (string)result.GetValue(7) : (string)result.GetValue(5)
                                 };
 
                                 CurrentRecord.SomePerson = new Person
@@ -288,7 +288,7 @@ namespace Parking.ViewModel
                                 CurrentRecord.SomeVehicle = new Vehicle
                                 {
                                     VehicleId = (int)result.GetValue(12),
-                                    RegNumber = (string)result.GetValue(13),                                    
+                                    RegNumber = result.GetValue(13) is System.DBNull?null:(string)result.GetValue(13),                                    
                                     VPhoto = result.GetValue(22) is System.DBNull ? null: (byte[])result.GetValue(22)
 
                                 };

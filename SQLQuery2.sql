@@ -71,7 +71,8 @@ create proc sp_GetPPHistory
                         join Clients Cl on Cl.ClientId=veh.ClientOwner_ClientId
                         where Cl.ClientId=@clId and Pp.ParkPlaceNumber= @ppNumber and Ppl.DateOfChange>=@startDate and ppl.DateOfChange<=@endDate
 
-
+						
+drop proc sp_GetClRepRecord						
  create proc sp_GetClRepRecord
                         @ppId int,
                         @startDate date,
@@ -79,8 +80,8 @@ create proc sp_GetPPHistory
                         as
                         Select  veh.VehicleId '0_VehicleId',veh.RegNumber '1_RegNumber',
                         PPl.DateOfChange '2_DateOfChange'
-                        ,Us.UserId '3_UserId' 
-                        ,Pers.SecondName+' '+Pers.FirstName+' '+pers.Patronimic '4_PIB'
+                        ,Us.UserId '3_UserId'  
+                        ,Pers.SecondName+' '+Pers.FirstName+' '+pers.Patronimic '4_PIB', ppl.Released '5_released'
                         From Clients Cl                         
                         join Vehicles veh on veh.ClientOwner_ClientId=Cl.ClientId
                         join ParkingPlaces PP on pp.ParkingPlaceId=veh.ParkingPlace_ParkingPlaceId

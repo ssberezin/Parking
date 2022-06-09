@@ -368,8 +368,10 @@ namespace Parking.ViewModel.ParkPlacesOps
                 if (CurrentRecord.SomePerson.PersonId == 0)
                 {
                     CurrentRecord.SomeParkingPlace.Released = !parkRecord.SomeParkingPlace.Released;
+                    saved = false;
 
                 }
+            LastPayDateMessage = "";
             //if there is some client by this parking place we have an opportunity to change parking place number
             NewDataAddedSaved = CurrentRecord.SomeClient.ClientId == 0 ? false : true;
             CurrentRecord.SomeClient.OrgName = CurrentRecord.SomeClient.OrgName == null ? "фізична особа" : CurrentRecord.SomeClient.OrgName;
@@ -856,7 +858,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             if (!ValidationInputData())
                 return;
 
-
+            
 
 
             //next we have to save data to DB
@@ -944,7 +946,7 @@ namespace Parking.ViewModel.ParkPlacesOps
 
 
                     Vehicle newVehicle = db.Vehicles.Where(veh => veh.RegNumber == CurrentRecord.SomeVehicle.RegNumber).FirstOrDefault();
-                    if (newVehicle is null)
+                    if (newVehicle is null || RegNumber == "не задано")
                     {
                         newVehicle = new Vehicle
                         {
@@ -958,14 +960,18 @@ namespace Parking.ViewModel.ParkPlacesOps
                     }
                     else
                     {
-                        ParkingPlace pp = lib.GetPPByVehNumber(newVehicle.RegNumber);
-                        if (pp != null)
-                        {
-                            dialogService.ShowMessage("Цей транспортний зазіб вже стоїть " +
-                                "на паркувальному місці \"" + pp.ParkPlaceNumber + "\".\n" +
-                                "Відкорегуйте реэстраційний номер ТЗ ");
-                            return;
-                        };
+                      
+                            ParkingPlace pp = lib.GetPPByVehNumber(newVehicle.RegNumber);
+                            if (pp != null)
+                            {
+                                dialogService.ShowMessage("Цей транспортний зазіб вже стоїть " +
+                                    "на паркувальному місці \"" + pp.ParkPlaceNumber + "\".\n" +
+                                    "Відкорегуйте реэстраційний номер ТЗ ");
+                                return;
+                            };                   
+
+
+                        
                     }
 
 
@@ -979,12 +985,13 @@ namespace Parking.ViewModel.ParkPlacesOps
                     parkingPlaceLog.Money = CurrentRecord.SomeParkingPlaceLog.Money;
 
                     parkingPlaceLog.PayingDate = DateTime.Now;
+                    CurrentRecord.SomeParkingPlaceLog.PayingDate = DateTime.Now;
                     parkingPlaceLog.DateOfChange = DateTime.Now;
                     db.ParkingPlaceLogs.Add(parkingPlaceLog);
 
                     user.ParkingPlaceLogs.Add(parkingPlaceLog);
 
-
+                    
                     ParkingPlace parkingPlace = db.ParkingPlaces.Find(CurrentRecord.SomeParkingPlace.ParkingPlaceId);
 
                     parkingPlaceLog.SomeParkingPlace = parkingPlace;
@@ -1009,9 +1016,9 @@ namespace Parking.ViewModel.ParkPlacesOps
                     FillFreeParkingPlacesList();
                     FillHistoryList(Cl.ClientId, CurrentRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
                     
-                    GetLatPayInfo(CurrentRecord.SomeParkingPlaceLog.PayingDate, CurrentRecord.SomeParkingPlaceLog.Money);
+                    GetLatPayInfo(parkingPlaceLog.PayingDate, CurrentRecord.SomeParkingPlaceLog.Money);
 
-                    dialogService.ShowMessage("Ok");
+                    //dialogService.ShowMessage("Ok");
                 }
                 catch (ArgumentNullException ex)
                 {
@@ -1333,7 +1340,14 @@ namespace Parking.ViewModel.ParkPlacesOps
             }
 
             if (decimal.TryParse(Coast, out decimal result))
+            {
                 CurrentRecord.SomeParkingPlaceLog.Money = result;
+                if (CurrentRecord.SomeParkingPlaceLog.Money <= 0)
+                {
+                    dialogService.ShowMessage("Значення ціни не корректне\n \t Відкорегуйте");
+                    return false;
+                }
+            }
             else
             {
                 dialogService.ShowMessage("Значення ціни не корректне\n \t Відкорегуйте");
@@ -1373,7 +1387,7 @@ namespace Parking.ViewModel.ParkPlacesOps
                         {
                             if (LastPayDate != null)
                             {
-                                if (dialogService.YesNoDialog("\t\tНе зада сума оплати.\nРоздрукувати квитанцію з останнєю оплатою?"))
+                                if (dialogService.YesNoDialog("\t\tНе задана сума оплати.\nРоздрукувати квитанцію з останнєю оплатою?"))
                                 {
                                     CurrentRecord.SomeParkingPlaceLog.Money = LastPaying;
                                     CurrentRecord.SomeParkingPlaceLog.PayingDate = LastPayDate;
