@@ -368,8 +368,10 @@ namespace Parking.ViewModel.ParkPlacesOps
                 if (CurrentRecord.SomePerson.PersonId == 0)
                 {
                     CurrentRecord.SomeParkingPlace.Released = !parkRecord.SomeParkingPlace.Released;
+                    saved = false;
 
                 }
+            LastPayDateMessage = "";
             //if there is some client by this parking place we have an opportunity to change parking place number
             NewDataAddedSaved = CurrentRecord.SomeClient.ClientId == 0 ? false : true;
             CurrentRecord.SomeClient.OrgName = CurrentRecord.SomeClient.OrgName == null ? "фізична особа" : CurrentRecord.SomeClient.OrgName;
@@ -402,7 +404,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             FillFreeParkingPlacesList();//for display parking places in combox 
             FillVehicleTypeList();
             FillVehicleColorsList();
-            GetLatPayInfo(CurrentRecord.SomeVehicle.VehicleId);//set info about last paying
+            GetLastPayInfo(CurrentRecord.SomeVehicle.VehicleId);//set info about last paying
             if (parkRecord.SomeClient.ClientId != 0)
                 FillHistoryList(parkRecord.SomeClient.ClientId, parkRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
 
@@ -856,7 +858,7 @@ namespace Parking.ViewModel.ParkPlacesOps
             if (!ValidationInputData())
                 return;
 
-
+            
 
 
             //next we have to save data to DB
@@ -944,7 +946,7 @@ namespace Parking.ViewModel.ParkPlacesOps
 
 
                     Vehicle newVehicle = db.Vehicles.Where(veh => veh.RegNumber == CurrentRecord.SomeVehicle.RegNumber).FirstOrDefault();
-                    if (newVehicle is null)
+                    if (newVehicle is null || RegNumber == "не задано")
                     {
                         newVehicle = new Vehicle
                         {
@@ -958,14 +960,18 @@ namespace Parking.ViewModel.ParkPlacesOps
                     }
                     else
                     {
-                        ParkingPlace pp = lib.GetPPByVehNumber(newVehicle.RegNumber);
-                        if (pp != null)
-                        {
-                            dialogService.ShowMessage("Цей транспортний зазіб вже стоїть " +
-                                "на паркувальному місці \"" + pp.ParkPlaceNumber + "\".\n" +
-                                "Відкорегуйте реэстраційний номер ТЗ ");
-                            return;
-                        };
+                      
+                            ParkingPlace pp = lib.GetPPByVehNumber(newVehicle.RegNumber);
+                            if (pp != null)
+                            {
+                                dialogService.ShowMessage("Цей транспортний зазіб вже стоїть " +
+                                    "на паркувальному місці \"" + pp.ParkPlaceNumber + "\".\n" +
+                                    "Відкорегуйте реэстраційний номер ТЗ ");
+                                return;
+                            };                   
+
+
+                        
                     }
 
 
@@ -979,12 +985,13 @@ namespace Parking.ViewModel.ParkPlacesOps
                     parkingPlaceLog.Money = CurrentRecord.SomeParkingPlaceLog.Money;
 
                     parkingPlaceLog.PayingDate = DateTime.Now;
+                    CurrentRecord.SomeParkingPlaceLog.PayingDate = DateTime.Now;
                     parkingPlaceLog.DateOfChange = DateTime.Now;
                     db.ParkingPlaceLogs.Add(parkingPlaceLog);
 
                     user.ParkingPlaceLogs.Add(parkingPlaceLog);
 
-
+                    
                     ParkingPlace parkingPlace = db.ParkingPlaces.Find(CurrentRecord.SomeParkingPlace.ParkingPlaceId);
 
                     parkingPlaceLog.SomeParkingPlace = parkingPlace;
@@ -1009,9 +1016,9 @@ namespace Parking.ViewModel.ParkPlacesOps
                     FillFreeParkingPlacesList();
                     FillHistoryList(Cl.ClientId, CurrentRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
                     
-                    GetLatPayInfo(CurrentRecord.SomeParkingPlaceLog.PayingDate, CurrentRecord.SomeParkingPlaceLog.Money);
+                    GetLastPayInfo(parkingPlaceLog.PayingDate, CurrentRecord.SomeParkingPlaceLog.Money);
 
-                    dialogService.ShowMessage("Ok");
+                    //dialogService.ShowMessage("Ok");
                 }
                 catch (ArgumentNullException ex)
                 {
@@ -1175,7 +1182,7 @@ namespace Parking.ViewModel.ParkPlacesOps
                     FillFreeParkingPlacesList();
                     FillHistoryList(CurrentRecord.SomeClient.ClientId, CurrentRecord.SomeParkingPlace.ParkPlaceNumber, StartHistoryDate, EndHistoryDate);
                                         
-                    GetLatPayInfo(CurrentRecord.SomeParkingPlaceLog.PayingDate, CurrentRecord.SomeParkingPlaceLog.Money);
+                    GetLastPayInfo(CurrentRecord.SomeParkingPlaceLog.PayingDate, CurrentRecord.SomeParkingPlaceLog.Money);
                     dialogService.ShowMessage("Ok");
                 }
                 catch (ArgumentNullException ex)
@@ -1234,7 +1241,6 @@ namespace Parking.ViewModel.ParkPlacesOps
             {
                 try
                 {
-
                     TimeSpan val = DateTime.Now - CurrentRecord.SomeParkingPlaceLog.DeadLine.Value;
                     double dayCount = val.TotalDays;
                     if (dayCount > 0)
@@ -1243,7 +1249,49 @@ namespace Parking.ViewModel.ParkPlacesOps
                         return;
                     }
 
-                        ParkingPlace parkingPlace = db.ParkingPlaces.Find(CurrentRecord.SomeParkingPlace.ParkingPlaceId);
+
+                    dayCount = Math.Round(Math.Abs(dayCount),0);
+                   
+
+                    CurrentRecord.SomeParkingPlaceLog.Money = LastPaying;
+                    CurrentRecord.SomeParkingPlaceLog.PayingDate = LastPayDate;
+                    TimeSpan spendDaysOnParking, payedDaysCount, totalPayedDaysCount;
+                    double moneyPerday;
+                    totalPayedDaysCount = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value - CurrentRecord.SomeParkingPlaceLog.PayingDate.Value;
+                    if (CurrentRecord.SomeParkingPlaceLog.PayingDate.Value.Year == DateTime.Now.Year &&
+                        CurrentRecord.SomeParkingPlaceLog.PayingDate.Value.Month == DateTime.Now.Month &&
+                        CurrentRecord.SomeParkingPlaceLog.PayingDate.Value.Day == DateTime.Now.Day)
+                    {
+                        spendDaysOnParking = DateTime.Now - DateTime.Now;
+                        payedDaysCount = DateTime.Now - DateTime.Now;
+                        moneyPerday = (double)CurrentRecord.SomeParkingPlaceLog.Money / totalPayedDaysCount.TotalDays;
+                    }
+                    else
+                    {
+                        
+                        spendDaysOnParking = DateTime.Now - CurrentRecord.SomeParkingPlaceLog.PayingDate.Value;
+                        payedDaysCount = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value - CurrentRecord.SomeParkingPlaceLog.PayingDate.Value;
+                        moneyPerday = (double)CurrentRecord.SomeParkingPlaceLog.Money / totalPayedDaysCount.TotalDays;
+                    }
+                    
+                    
+
+                    decimal newMoney = Math.Round((decimal)(moneyPerday * Math.Round(spendDaysOnParking.TotalDays,2)));
+
+                    User user = db.Users.Find(UserId);
+                    db.Entry(user).State = EntityState.Modified;
+
+                    //this log is for previous park place
+                    ParkingPlaceLog parkingPlaceLog = new ParkingPlaceLog();
+                    parkingPlaceLog.DeadLine = CurrentRecord.SomeParkingPlaceLog.DeadLine;
+                    parkingPlaceLog.Money =-(CurrentRecord.SomeParkingPlaceLog.Money -newMoney);
+                    CurrentRecord.SomeParkingPlaceLog.Money = CurrentRecord.SomeParkingPlaceLog.Money - newMoney;
+
+                    parkingPlaceLog.PayingDate = DateTime.Now;
+                    parkingPlaceLog.DateOfChange = DateTime.Now;
+
+
+                    ParkingPlace parkingPlace = db.ParkingPlaces.Find(CurrentRecord.SomeParkingPlace.ParkingPlaceId);
                     db.Entry(parkingPlace).State = EntityState.Modified;
                     parkingPlace.FreeStatus = true;
                     parkingPlace.Released = false;
@@ -1252,32 +1300,35 @@ namespace Parking.ViewModel.ParkPlacesOps
 
                     ParkingPlace newParkingPlace = db.ParkingPlaces.Where(par => par.ParkPlaceNumber == FreeparkPlace).FirstOrDefault();
                     db.Entry(newParkingPlace).State = EntityState.Modified;
+
+                    parkingPlaceLog.SomeParkingPlace = parkingPlace;
+                    db.ParkingPlaceLogs.Add(parkingPlaceLog);
+                    user.ParkingPlaceLogs.Add(parkingPlaceLog);
+
                     newParkingPlace.FreeStatus = false;
                     newParkingPlace.Released = false;
                     newParkingPlace.Vehicles.Clear();
-                    newParkingPlace.Vehicles.Add(CurrentRecord.SomeVehicle);
+                    newParkingPlace.Vehicles.Add(db.Vehicles.Find(CurrentRecord.SomeVehicle.VehicleId));
+                    
 
-                    dayCount = Math.Abs(dayCount);
-
-
-
-                    CurrentRecord.SomeParkingPlaceLog.Money = LastPaying;
-                    CurrentRecord.SomeParkingPlaceLog.PayingDate = LastPayDate;                    
-
-                    TimeSpan payedDays = CurrentRecord.SomeParkingPlaceLog.DeadLine.Value - CurrentRecord.SomeParkingPlaceLog.PayingDate.Value ;
-
-
-                    //Client curClient = db.Clients.Find(CurrentRecord.SomeClient.ClientId);
-                    //db.Entry(curClient).State = EntityState.Modified;                    
-
+                    //this log is for new new current parking palce
                     ParkingPlaceLog curParkPlaceLog = CurrentRecord.SomeParkingPlaceLog;
+                    curParkPlaceLog.DateOfChange = DateTime.Now;
                     curParkPlaceLog.ParkingPlaceLogId = 0;
-                    db.ParkingPlaceLogs.Add(curParkPlaceLog);
+                    curParkPlaceLog.PayingDate = DateTime.Now;
                     curParkPlaceLog.SomeParkingPlace = newParkingPlace;
-
+                    db.ParkingPlaceLogs.Add(curParkPlaceLog);
+                    user.ParkingPlaceLogs.Add(curParkPlaceLog);
 
                     db.SaveChanges();
-                    dialogService.ShowMessage("\t\tOk");
+                    saved = true;
+                    CurrentRecord.SomeParkingPlace.ParkPlaceNumber = FreeparkPlace;
+                    GetLastPayInfo(CurrentRecord.SomeVehicle.VehicleId);
+
+                    PreviousState.Coast = CurrentRecord.SomeParkingPlaceLog.Money;
+                    CurrentState = SetState();
+                    dialogService.ShowMessage("Зміни збережено");
+
                 }
                 catch (ArgumentNullException ex)
                 {
@@ -1350,7 +1401,14 @@ namespace Parking.ViewModel.ParkPlacesOps
             }
 
             if (decimal.TryParse(Coast, out decimal result))
+            {
                 CurrentRecord.SomeParkingPlaceLog.Money = result;
+                if (CurrentRecord.SomeParkingPlaceLog.Money <= 0)
+                {
+                    dialogService.ShowMessage("Значення ціни не корректне\n \t Відкорегуйте");
+                    return false;
+                }
+            }
             else
             {
                 dialogService.ShowMessage("Значення ціни не корректне\n \t Відкорегуйте");
@@ -1390,7 +1448,7 @@ namespace Parking.ViewModel.ParkPlacesOps
                         {
                             if (LastPayDate != null)
                             {
-                                if (dialogService.YesNoDialog("\t\tНе зада сума оплати.\nРоздрукувати квитанцію з останнєю оплатою?"))
+                                if (dialogService.YesNoDialog("\t\tНе задана сума оплати.\nРоздрукувати квитанцію з останнєю оплатою?"))
                                 {
                                     CurrentRecord.SomeParkingPlaceLog.Money = LastPaying;
                                     CurrentRecord.SomeParkingPlaceLog.PayingDate = LastPayDate;
@@ -1415,7 +1473,7 @@ namespace Parking.ViewModel.ParkPlacesOps
                     ));
 
 
-        private void GetLatPayInfo(int vehId)
+        private void GetLastPayInfo(int vehId)
         {
             decimal coast;
             DateTime? lastDate;
@@ -1428,7 +1486,7 @@ namespace Parking.ViewModel.ParkPlacesOps
 
         }
 
-        private void GetLatPayInfo(DateTime? date, decimal coast)
+        private void GetLastPayInfo(DateTime? date, decimal coast)
 
         {
             if (CurrentRecord.SomeParkingPlaceLog.Money > 0)

@@ -137,13 +137,72 @@ E:\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\ReportOpsWindow.g.c
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\ReportOpsWindow.baml
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.g.cs
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.baml
-D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\FilterOps\FolterForReportWindow.g.cs
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.g.cs
-D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleTypesOps\VehicleTypesOpsWin.g.cs
-D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\FilterOps\FolterForReportWindow.baml
 D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.baml
-D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleTypesOps\VehicleTypesOpsWin.baml
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleOps\VehicleOpsWin.g.cs
 E:\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleOps\VehicleOpsWin.baml
 E:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.AssemblyReference.cache
 E:\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.SuggestedBindingRedirects.cache
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleOps\VehicleOpsWin.g.cs
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Views\VehicleOps\VehicleOpsWin.baml
+D:\работа\заказы\99 834\Parking\Parking\Parking\Parking\obj\Debug\Parking.csproj.SuggestedBindingRedirects.cache
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\Parking.exe.config
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\Parking.exe
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\Parking.pdb
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\EntityFramework.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\Microsoft.Xaml.Behaviors.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\Xceed.Wpf.AvalonDock.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\Xceed.Wpf.AvalonDock.Themes.Aero.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\Xceed.Wpf.AvalonDock.Themes.Metro.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\Xceed.Wpf.AvalonDock.Themes.VS2010.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\Xceed.Wpf.Toolkit.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\EntityFramework.xml
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\Microsoft.Xaml.Behaviors.pdb
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\Microsoft.Xaml.Behaviors.xml
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\cs-CZ\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\de\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\es\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\fr\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\hu\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\it\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\ja-JP\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\pt-BR\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\ro\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\ru\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\Sergey\Desktop\Parking\Parking\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Parking.csproj.AssemblyReference.cache
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\Buttons.baml
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\MainWindow.g.cs
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\CompanyOps\CompanyInfo.g.cs
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\ParkPlacesOps\ParkPlaceEditWindow.g.cs
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\PersonOperations\EmployeeWindow.g.cs
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\PrintOps\PrintBlank.g.cs
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.g.cs
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\ReportOps\ReportOpsWindow.g.cs
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\SecondWindow.g.cs
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\VehicleOps\VehicleOpsWin.g.cs
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\App.g.cs
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Parking_MarkupCompile.cache
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Parking_MarkupCompile.lref
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\App.baml
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\MainWindow.baml
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\CompanyOps\CompanyInfo.baml
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\ParkPlacesOps\ParkPlaceEditWindow.baml
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\PersonOperations\EmployeeWindow.baml
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\PrintOps\PrintBlank.baml
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\ReportOps\MoneyMoveReport.baml
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\ReportOps\ReportOpsWindow.baml
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\SecondWindow.baml
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Views\VehicleOps\VehicleOpsWin.baml
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Parking.g.resources
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Parking.Properties.Resources.resources
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Parking.csproj.GenerateResource.cache
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Parking.csproj.CoreCompileInputs.cache
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Parking.csproj.CopyComplete
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Parking.exe
+C:\Users\Sergey\Desktop\Parking\Parking\obj\Debug\Parking.pdb

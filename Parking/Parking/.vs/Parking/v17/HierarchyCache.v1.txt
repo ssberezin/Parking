@@ -1,0 +1,255 @@
+﻿++Решение "Parking" ‎(проекты: 1 из 1)
+i:{00000000-0000-0000-0000-000000000000}:Parking.sln
+++Parking
+i:{00000000-0000-0000-0000-000000000000}:Parking
+++Properties
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\properties\
+++Ссылки
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++Helpes
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\
+++BoolInverterConverter.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\boolinverterconverter.cs
+++BoolToBrushConverterForInOut.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\booltobrushconverterforinout.cs
+++BoolToBrushConverterForStatus.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\booltobrushconverterforstatus.cs
+++BoolToStringConverter.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\booltostringconverter.cs
+++BoolToStringConverter2.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\booltostringconverter2.cs
+++DefaultDialogService.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\defaultdialogservice.cs
+++DefaultShowWindowService.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\defaultshowwindowservice.cs
+++HideCloseButtonOnWindow.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\hideclosebuttononwindow.cs
+++IColorTypeInterface.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\icolortypeinterface.cs
+++IDialogService.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\idialogservice.cs
+++ImagePathConverter.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\imagepathconverter.cs
+++IShowWindowService.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\ishowwindowservice.cs
+++Library.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\library.cs
+++NullToBooleanConverter.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\nulltobooleanconverter.cs
+++ObservableObject.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\observableobject.cs
+++ParkingPlaceRecord.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\parkingplacerecord.cs
+++RelayCommand.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\helpes\relaycommand.cs
+++Images
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\images\
+++Model
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\
+++Client.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\client.cs
+++Company.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\company.cs
+++Contacts.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\contacts.cs
+++DBConteiner.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\dbconteiner.cs
+++Employee.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\employee.cs
+++EmployeePosition.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\employeeposition.cs
+++ParkingPlace.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\parkingplace.cs
+++ParkingPlaceLog.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\parkingplacelog.cs
+++Person.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\person.cs
+++User.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\user.cs
+++Vehicle.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\vehicle.cs
+++VehicleColor.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\vehiclecolor.cs
+++VehicleType.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\model\vehicletype.cs
+++ViewModel
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\
+++CompanyOps
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\companyops\
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\companyops\
+++DictionaryOps
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\dictionaryops\
+++FilterOps
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\filterops\
+++ParkPlacesOps
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\parkplacesops\
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\parkplacesops\
+++CompareStatesForParkingPlace.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\parkplacesops\comparestatesforparkingplace.cs
+++ParkPlaceHisrtoryRecord.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\parkplacesops\parkplacehisrtoryrecord.cs
+++ParkPlaceWindowContext.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\parkplacesops\parkplacewindowcontext.cs
+++PersonOperations
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\personoperations\
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\personoperations\
+++EmployeeRecord.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\personoperations\employeerecord.cs
+++EmployeeState.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\personoperations\employeestate.cs
+++EmployeeWindowContext.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\personoperations\employeewindowcontext.cs
+++PrintOps
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\printops\
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\printops\
+++ReportOps
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\reportops\
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\reportops\
+++MoneyMoveReportOps
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\reportops\moneymovereportops\
+++OwnerRecord.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\reportops\ownerrecord.cs
+++ParPlaceRecord.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\reportops\parplacerecord.cs
+++ReportOpsContext.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\reportops\reportopscontext.cs
+++ReportOpsRecord.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\reportops\reportopsrecord.cs
+++VehicleTypesOps
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\vehicletypesops\
+++Authorezation.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\authorezation.cs
+++MainViewModel.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\mainviewmodel.cs
+++Views
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\
+++ParkPlaceEditWindow.xaml
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\parkplacesops\parkplaceeditwindow.xaml
+++EmployeeWindow.xaml
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\personoperations\employeewindow.xaml
+++PrintBlank.xaml
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\printops\printblank.xaml
+++MoneyMoveReport.xaml
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\reportops\moneymovereport.xaml
+++ReportOpsWindow.xaml
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\reportops\reportopswindow.xaml
+++VehicleOps
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\vehicleops\
+++Buttons.xaml
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\buttons.xaml
+++SecondWindow.xaml
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\secondwindow.xaml
+++App.config
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\app.config
+++App.xaml
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\app.xaml
+++logo.ico
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\logo.ico
+++MainWindow.xaml
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\mainwindow.xaml
+++packages.config
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\packages.config
+++AssemblyInfo.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\properties\assemblyinfo.cs
+++Resources.resx
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\properties\resources.resx
+++Settings.settings
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\properties\settings.settings
+++EasyEncryption
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++EntityFramework
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++EntityFramework.SqlServer
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++Microsoft.CSharp
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++Microsoft.Xaml.Behaviors
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++PresentationCore
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++PresentationFramework
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++System
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++System.ComponentModel.DataAnnotations
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++System.Configuration
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++System.Core
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++System.Data
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++System.Data.DataSetExtensions
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++System.Net.Http
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++System.Web
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++System.Windows.Interactivity
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++System.Xaml
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++System.Xml
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++System.Xml.Linq
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++WindowsBase
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++Xceed.Wpf.AvalonDock
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++Xceed.Wpf.AvalonDock.Themes.Aero
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++Xceed.Wpf.AvalonDock.Themes.Metro
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++Xceed.Wpf.AvalonDock.Themes.VS2010
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++Xceed.Wpf.Toolkit
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:
+++default_avatar.png
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\images\default_avatar.png
+++default_vehicle_picture.png
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\images\default_vehicle_picture.png
+++CompanyInfoContext.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\companyops\companyinfocontext.cs
+++DictOpsContext.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\dictionaryops\dictopscontext.cs
+++FilterContext.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\filterops\filtercontext.cs
+++PrintBlankContext.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\printops\printblankcontext.cs
+++MoneyMoveRepDetailRecord.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\reportops\moneymovereportops\moneymoverepdetailrecord.cs
+++MoneyMoveReportContext.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\reportops\moneymovereportops\moneymovereportcontext.cs
+++StuffMoneyRecord.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\reportops\moneymovereportops\stuffmoneyrecord.cs
+++VehicleTypesOpsContext.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\viewmodel\vehicletypesops\vehicletypesopscontext.cs
+++CompanyInfo.xaml
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\companyops\companyinfo.xaml
+++ParkPlaceEditWindow.xaml.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\parkplacesops\parkplaceeditwindow.xaml.cs
+++EmployeeWindow.xaml.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\personoperations\employeewindow.xaml.cs
+++PrintBlank.xaml.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\printops\printblank.xaml.cs
+++MoneyMoveReport.xaml.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\reportops\moneymovereport.xaml.cs
+++ReportOpsWindow.xaml.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\reportops\reportopswindow.xaml.cs
+++VehicleOpsWin.xaml
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\vehicleops\vehicleopswin.xaml
+++SecondWindow.xaml.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\secondwindow.xaml.cs
+++App.xaml.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\app.xaml.cs
+++MainWindow.xaml.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\mainwindow.xaml.cs
+++Resources.Designer.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\properties\resources.designer.cs
+++Settings.Designer.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\properties\settings.designer.cs
+++CompanyInfo.xaml.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\companyops\companyinfo.xaml.cs
+++VehicleOpsWin.xaml.cs
+i:{c5934048-6fc0-455d-9345-7b8bf37f5aba}:d:\работа\заказы\99 834\parking\parking\parking\parking\views\vehicleops\vehicleopswin.xaml.cs

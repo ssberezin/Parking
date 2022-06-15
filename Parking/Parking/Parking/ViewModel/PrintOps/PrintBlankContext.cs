@@ -28,11 +28,13 @@ namespace Parking.ViewModel.PrintOps
 
         public PrintBlankContext(ParkingPlaceRecord parkRecord, string inputFIO, Company comp)
         {
+          
             showWindow = new DefaultShowWindowService();
             dialogService = new DefaultDialogService();
             EpmloyeeData = inputFIO;
             Record = parkRecord;
             Comp = comp;
+            
             LastpayDate = parkRecord.SomeParkingPlaceLog.PayingDate.Value.ToString("dd/MM/yyyy")+"\nЧас:  "+
                           parkRecord.SomeParkingPlaceLog.PayingDate.Value.ToString("hh/mm/ss");
             CurrentDate = DateTime.Now.ToString();
