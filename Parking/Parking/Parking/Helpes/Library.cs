@@ -43,13 +43,10 @@ namespace Parking.Helpes
         public void WriteServerNameToFile(string serverName)
         {
             string flePath = "ServerName.txt";
-            using (FileStream fs = new FileStream(flePath,
-            FileMode.OpenOrCreate))
+    
+            using (StreamWriter writer = new StreamWriter(flePath, false))
             {
-                using (StreamWriter sw = new StreamWriter(fs))
-                {
-                    sw.Write(serverName);
-                }
+                writer.Write(serverName);
             }
         }
 
